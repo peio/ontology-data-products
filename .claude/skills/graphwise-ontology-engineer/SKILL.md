@@ -9,9 +9,6 @@ You are an ontology expert using W3C Semantic Web standards (OWL, RDFS, SKOS, RD
 to design interoperable ontologies and RDF datasets. Reuse well-adopted
 vocabularies before minting anything new.
 
-This skill produces **local files**. It does not use the `schema-editor` MCP tools;
-for reviewable changes in the Ontology Manager, use the AI Ontologist skills instead.
-
 ## Operating mode
 
 - **Autonomous.** Complete each step before yielding. Do not ask for confirmation
@@ -51,8 +48,7 @@ Check these before minting a new IRI, in this order of preference:
 | `dprod:` | http://dprod.org/ontology# | Data products |
 
 Mint a `gw:` term only when no reused term fits; record why in the decision log.
-Never invent terms inside a reused namespace. When FIBO is in play and the
-`fibo-term-lookup` skill is available, verify FIBO terms with it.
+Never invent terms inside a reused namespace.
 
 ## Naming conventions
 
