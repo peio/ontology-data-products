@@ -1,0 +1,12 @@
+{
+  "name": "graphwise-ontology",
+  "version": "1.0.0",
+  "description": "Ontology engineering skill for designing OWL/RDFS/SKOS ontologies as Turtle files with the Graphwise methodology.",
+  "author": {
+    "name": "Peio Popov",
+    "email": "peio@peio.org"
+  },
+  "homepage": "https://github.com/peio/ontology-data-products",
+  "repository": "https://github.com/peio/ontology-data-products",
+  "keywords": ["ontology", "owl", "skos", "rdf", "turtle", "shacl", "sparql", "knowledge-graph"]
+}

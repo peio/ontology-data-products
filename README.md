@@ -38,13 +38,38 @@ Elicitation → Modelling → Mapping → Ingesting → Indexing & Retrieving �
 | Indexing and retrieving | [tutorial/05-indexing-retrieving](tutorial/05-indexing-retrieving/) |
 | Integrating | [tutorial/06-integrating](tutorial/06-integrating/) |
 
+## Claude Code plugin
+
+This repository is also a Claude Code plugin marketplace. It ships the
+**graphwise-ontology** plugin, which contains the
+[graphwise-ontology-engineer](skills/graphwise-ontology-engineer/SKILL.md) skill:
+it designs OWL/RDFS/SKOS ontologies as Turtle files, reusing standard vocabularies
+(DCAT, Dublin Core, PROV-O, Schema.org, SKOS, FOAF, FIBO) and testing them with
+SHACL shapes and SPARQL competency-question queries. See
+[SEQUENCE.md](skills/graphwise-ontology-engineer/SEQUENCE.md) for the steps it follows.
+
+Install it from inside Claude Code:
+
+```text
+/plugin marketplace add peio/ontology-data-products
+/plugin install graphwise-ontology@ontology-data-products
+```
+
+Then ask Claude to model a domain, for example _"Design an ontology for wine and
+food pairing"_. The skill triggers on its own; you can also call it directly as
+`/graphwise-ontology:graphwise-ontology-engineer`.
+
+To pick up a newer version later, run `/plugin marketplace update ontology-data-products`.
+
 ## Repository layout
 
 ```text
-docs/        Talk material: case studies, ROI drivers, target state
-tutorial/    Step-by-step pipeline, one folder per step
-data/        Sample source data used in the tutorial
-slides/      Presentation slides
+docs/            Talk material: case studies, ROI drivers, target state
+tutorial/        Step-by-step pipeline, one folder per step
+data/            Sample source data used in the tutorial
+slides/          Presentation slides
+skills/          Claude skills shipped by the plugin
+.claude-plugin/  Plugin and marketplace manifests
 ```
 
 ## Prerequisites

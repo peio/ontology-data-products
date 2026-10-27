@@ -1,0 +1,18 @@
+{
+  "name": "ontology-data-products",
+  "owner": {
+    "name": "Peio Popov",
+    "email": "peio@peio.org"
+  },
+  "metadata": {
+    "description": "Claude Code plugins from the Ontology-Driven Data Products workshop (AI Week Frankfurt 2026)."
+  },
+  "plugins": [
+    {
+      "name": "graphwise-ontology",
+      "source": "./",
+      "description": "Ontology engineering skill for designing OWL/RDFS/SKOS ontologies as Turtle files with the Graphwise methodology.",
+      "version": "1.0.0"
+    }
+  ]
+}
