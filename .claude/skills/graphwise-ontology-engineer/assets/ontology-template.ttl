@@ -1,0 +1,18 @@
+@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix gwi:     <https://graphwise.ai/instance/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+gw: a owl:Ontology ;
+  dcterms:title "Graphwise Core Ontology" ;
+  dcterms:creator "Peio @ Agents" ;
+  dcterms:license <https://graphwise.ai/> ;
+  owl:versionInfo "1.0.0" ;
+  owl:versionIRI <https://graphwise.ai/ontology/1.0.0> ;
+  owl:imports <http://www.w3.org/ns/dcat#>, <http://www.w3.org/ns/prov#> .
