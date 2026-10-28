@@ -40,11 +40,11 @@ for sources and licences.
 
 This repository is also a Claude Code plugin marketplace. It ships the
 **graphwise-ontology** plugin, which contains the
-[graphwise-ontology-engineer](plugins/graphwise-ontology/skills/graphwise-ontology-engineer/SKILL.md) skill:
+[graphwise-ontology-engineer](skills/graphwise-ontology-engineer/SKILL.md) skill:
 it designs OWL/RDFS/SKOS ontologies as Turtle files, reusing standard vocabularies
 (DCAT, Dublin Core, PROV-O, Schema.org, SKOS, FOAF, FIBO) and testing them with
 SHACL shapes and SPARQL competency-question queries. See
-[SEQUENCE.md](plugins/graphwise-ontology/skills/graphwise-ontology-engineer/SEQUENCE.md) for the steps it follows.
+[SEQUENCE.md](skills/graphwise-ontology-engineer/SEQUENCE.md) for the steps it follows.
 
 Install it from inside Claude Code:
 
@@ -62,10 +62,10 @@ To pick up a newer version later, run `/plugin marketplace update ontology-data-
 ## Repository layout
 
 ```text
-tutorial/                    EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
-literature/                  Methodology papers, slide decks and links
-plugins/graphwise-ontology/  The installable Claude Code plugin (manifest and skills)
-.claude-plugin/              Marketplace manifest
+tutorial/        EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
+literature/      Methodology papers, slide decks and links
+skills/          Claude skills shipped by the plugin
+.claude-plugin/  Plugin and marketplace manifests
 ```
 
 ## Prerequisites
