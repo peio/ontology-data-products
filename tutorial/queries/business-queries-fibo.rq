@@ -1,0 +1,83 @@
+# Track B, FIBO variant: the same business questions as business-queries.rq,
+# asked through FIBO terms.
+# Header format: "# @query <id> | <question>"
+# The first projected variable is the row key; the remaining ones are compared
+# with answer-key-fibo.csv by scripts/run_tests.py (decimals rounded to 1 place).
+# Revenue amounts are in billions (see gwf:Revenue). Currency codes come from
+# FIBO's currency identifiers; country names are LCC English short names.
+
+PREFIX gwf:     <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcat:    <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX fibo-be-le-cb:    <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+PREFIX fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/>
+PREFIX fibo-fnd-rel-rel: <https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/>
+PREFIX cmns-cls:         <https://www.omg.org/spec/Commons/Classifiers/>
+PREFIX cmns-id:          <https://www.omg.org/spec/Commons/Identifiers/>
+PREFIX lcc-cr:           <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/>
+
+# @query B1 | Which constituents are banks?
+# Roll-up: any ICB classifier at or below the ICB "Banks" supersector (icb:3010).
+SELECT ?company WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; rdfs:label ?company ;
+     cmns-cls:isClassifiedBy/skos:broader* icb:3010 .
+}
+ORDER BY ?company
+
+# @query B2 | Revenue by ICB industry and reporting currency, rolled up from subsectors via skos:broader+
+# Sums are kept per currency: adding EUR and USD figures without FX conversion is meaningless.
+SELECT (CONCAT(?industry, " (", ?code, ")") AS ?key) (SUM(?amount) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ;
+     gwf:hasRevenue [ fibo-fnd-acc-cur:hasAmount ?amount ; fibo-fnd-acc-cur:hasCurrency ?cur ] ;
+     cmns-cls:isClassifiedBy/skos:broader* ?ind .
+  ?ind skos:topConceptOf icb:scheme ; skos:prefLabel ?industry .
+  ?id a fibo-fnd-acc-cur:CurrencyIdentifier ; cmns-id:identifies ?cur ; fibo-fnd-rel-rel:hasTag ?code .
+}
+GROUP BY ?industry ?code
+ORDER BY DESC(?totalRevenue)
+
+# @query B3 | Revenue by country and reporting currency
+SELECT (CONCAT(STR(?country), " (", ?code, ")") AS ?key) (SUM(?amount) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; gwf:indexAssignedCountry ?ctry ;
+     gwf:hasRevenue [ fibo-fnd-acc-cur:hasAmount ?amount ; fibo-fnd-acc-cur:hasCurrency ?cur ] .
+  ?ctry lcc-cr:hasEnglishShortName ?country .
+  ?id a fibo-fnd-acc-cur:CurrencyIdentifier ; cmns-id:identifies ?cur ; fibo-fnd-rel-rel:hasTag ?code .
+}
+GROUP BY ?country ?code
+ORDER BY DESC(?totalRevenue)
+
+# @query B4 | Which countries' constituents span the most industries?
+SELECT (STR(?country) AS ?countryName) (COUNT(DISTINCT ?ind) AS ?industries) WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; gwf:indexAssignedCountry ?ctry ;
+     cmns-cls:isClassifiedBy/skos:broader* ?ind .
+  ?ind skos:topConceptOf icb:scheme .
+  ?ctry lcc-cr:hasEnglishShortName ?country .
+}
+GROUP BY ?country
+ORDER BY DESC(?industries) ?country
+
+# @query B5 | Which is the largest constituent by revenue in each reporting currency (returned with the comparability caveat)?
+# Ranked within a currency only; across currencies the order would depend on an FX rate.
+SELECT ?company ?amount ?code (BOUND(?caveat) AS ?caveatAttached) WHERE {
+  { SELECT ?cur (MAX(?a) AS ?amount) WHERE {
+      ?x a fibo-be-le-cb:PubliclyHeldCompany ;
+         gwf:hasRevenue [ fibo-fnd-acc-cur:hasAmount ?a ; fibo-fnd-acc-cur:hasCurrency ?cur ] .
+    } GROUP BY ?cur }
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; rdfs:label ?company ;
+     gwf:hasRevenue [ fibo-fnd-acc-cur:hasAmount ?amount ; fibo-fnd-acc-cur:hasCurrency ?cur ] .
+  ?id a fibo-fnd-acc-cur:CurrencyIdentifier ; cmns-id:identifies ?cur ; fibo-fnd-rel-rel:hasTag ?code .
+  OPTIONAL { gwf:Revenue rdfs:comment ?caveat . FILTER(CONTAINS(LCASE(STR(?caveat)), "not comparable")) }
+}
+ORDER BY ?code
+
+# @query B6 | Where do ASML Holding's figures come from, and are they approximate?
+SELECT ?source (CONTAINS(LCASE(STR(?description)), "approximate") AS ?approximate) WHERE {
+  ?c rdfs:label "ASML Holding" ; prov:wasDerivedFrom ?dist .
+  ?dist dcterms:title ?source .
+  ?ds dcat:distribution ?dist ; dcterms:description ?description .
+}
+ORDER BY ?source

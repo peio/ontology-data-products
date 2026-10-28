@@ -1,10 +1,13 @@
 """Step 7: run Track A (robustness) and Track B (business) tests.
 
-Usage: python scripts/run_tests.py   (run from the project root, after map_csv.py
-and make_answer_key.py). Writes reports/test-report.md and reports/shacl-*.txt.
+Usage: python scripts/run_tests.py [--variant fibo]   (run from the project root, after
+map_csv.py and make_answer_key.py; for the FIBO variant, after map_csv_fibo.py and
+build_fibo_files.py). Writes reports/test-report.md and reports/shacl-*.txt, or
+reports/test-report-fibo.md and reports/shacl-fibo-*.txt for the FIBO variant.
 Exits 1 if any check fails.
 """
 import csv
+import importlib
 import re
 import sys
 from datetime import date
@@ -16,12 +19,39 @@ from pyshacl import validate
 from rdflib import Graph, Literal, URIRef
 
 ROOT = Path(__file__).resolve().parent.parent
-ONT = ROOT / "ontology" / "estx50-ontology.ttl"
 ICB = ROOT / "ontology" / "icb-skos.ttl"
-INST = ROOT / "data" / "estx50-instances.ttl"
-DEMO = ROOT / "data" / "violations-demo.ttl"
-SHAPES = ROOT / "shapes" / "shapes.ttl"
 REPORTS = ROOT / "reports"
+
+VARIANTS = {
+    "default": {
+        "title": "EURO STOXX 50 ontology",
+        "ontology": [ROOT / "ontology" / "estx50-ontology.ttl"],
+        "icb": [ICB],
+        "instances": ROOT / "data" / "estx50-instances.ttl",
+        "demo": ROOT / "data" / "violations-demo.ttl",
+        "shapes": ROOT / "shapes" / "shapes.ttl",
+        "tests": ROOT / "queries" / "robustness-tests.rq",
+        "queries": ROOT / "queries" / "business-queries.rq",
+        "answer_key": ROOT / "queries" / "answer-key.csv",
+        "suffix": "",
+        "mapper": "map_csv",
+        "classified_by": "https://graphwise.ai/ontology/estx50/icbSubsector",
+    },
+    "fibo": {
+        "title": "EURO STOXX 50 ontology, FIBO variant",
+        "ontology": [ROOT / "ontology" / "estx50-fibo-ontology.ttl", ROOT / "ontology" / "fibo-extract.ttl"],
+        "icb": [ICB, ROOT / "ontology" / "icb-fibo-alignment.ttl"],
+        "instances": ROOT / "data" / "estx50-fibo-instances.ttl",
+        "demo": ROOT / "data" / "violations-demo-fibo.ttl",
+        "shapes": ROOT / "shapes" / "shapes-fibo.ttl",
+        "tests": ROOT / "queries" / "robustness-tests-fibo.rq",
+        "queries": ROOT / "queries" / "business-queries-fibo.rq",
+        "answer_key": ROOT / "queries" / "answer-key-fibo.csv",
+        "suffix": "-fibo",
+        "mapper": "map_csv_fibo",
+        "classified_by": "https://www.omg.org/spec/Commons/Classifiers/isClassifiedBy",
+    },
+}
 
 
 def load(*paths) -> Graph:
@@ -54,34 +84,39 @@ def fmt(v) -> str:
     return str(v)
 
 
-def main() -> int:
+def main(variant: str = "default") -> int:
+    cfg = VARIANTS[variant]
+    sfx = cfg["suffix"]
     REPORTS.mkdir(exist_ok=True)
-    base = load(ONT, ICB, INST)
-    icb = load(ICB)
+    ont = load(*cfg["ontology"][:1])
+    base = load(*cfg["ontology"], *cfg["icb"], cfg["instances"])
+    icb = load(*cfg["icb"])
     reasoned = Graph()
     for t in base:
         reasoned.add(t)
     owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(reasoned)
-    graphs = {"base": base, "reasoned": reasoned, "icb": icb}
+    graphs = {"ontology": ont, "base": base, "reasoned": reasoned, "icb": icb}
 
     results_a = []  # (id, description, passed, detail)
 
     # Track A: SPARQL ASK tests.
-    for (tid, gname, desc), q in sections(ROOT / "queries" / "robustness-tests.rq", "test"):
+    for (tid, gname, desc), q in sections(cfg["tests"], "test"):
         ok = bool(graphs[gname].query(q).askAnswer)
         results_a.append((tid, desc, ok, f"ASK on {gname} graph"))
 
-    # Track A3: SHACL on the clean data.
-    conforms, _, text = validate(load(INST, ICB), shacl_graph=load(SHAPES), ont_graph=load(ONT),
-                                 inference="none", allow_warnings=False)
-    (REPORTS / "shacl-clean.txt").write_text(text, encoding="utf-8")
+    # Track A3: SHACL on the clean data. The FIBO variant needs the extract and the
+    # ICB alignment in the data graph, for the types of countries, currencies and classifiers.
+    data_extra = [*cfg["icb"], *cfg["ontology"][1:]]
+    conforms, _, text = validate(load(cfg["instances"], *data_extra), shacl_graph=load(cfg["shapes"]),
+                                 ont_graph=load(*cfg["ontology"][:1]), inference="none", allow_warnings=False)
+    (REPORTS / f"shacl{sfx}-clean.txt").write_text(text, encoding="utf-8")
     results_a.append(("A3a", "SHACL: the 50 companies conform to all shapes", conforms,
-                      "0 violations" if conforms else "see reports/shacl-clean.txt"))
+                      "0 violations" if conforms else f"see reports/shacl{sfx}-clean.txt"))
 
     # Track A3: SHACL on the planted violations (teaching aid) must fail exactly 3 times.
-    _, rg, text = validate(load(INST, ICB, DEMO), shacl_graph=load(SHAPES), ont_graph=load(ONT),
-                           inference="none")
-    (REPORTS / "shacl-violations-demo.txt").write_text(text, encoding="utf-8")
+    _, rg, text = validate(load(cfg["instances"], *data_extra, cfg["demo"]), shacl_graph=load(cfg["shapes"]),
+                           ont_graph=load(*cfg["ontology"][:1]), inference="none")
+    (REPORTS / f"shacl{sfx}-violations-demo.txt").write_text(text, encoding="utf-8")
     SH = "http://www.w3.org/ns/shacl#"
     # Top-level results only (sh:result of the report); nested sh:detail results are not counted.
     top = list(rg.objects(None, URIRef(SH + "result")))
@@ -92,15 +127,15 @@ def main() -> int:
 
     # Track A5b: mapping completeness against the CSV (outside SPARQL).
     rows = list(csv.DictReader(open(ROOT / "data" / "EURO_STOXX_50_Constituents_CSV2.csv", encoding="utf-8-sig")))
-    from map_csv import COLUMN_MAP, industry_of  # noqa: E402
+    COLUMN_MAP = importlib.import_module(cfg["mapper"]).COLUMN_MAP
+    from map_csv import industry_of  # noqa: E402
     cols_ok = set(rows[0]) == set(COLUMN_MAP)
     results_a.append(("A5b", "Every CSV column is either mapped or intentionally dropped", cols_ok,
                       f"{len(COLUMN_MAP)} columns accounted for"))
-    GW ="https://graphwise.ai/ontology/estx50/"
     mismatch = []
     for r in rows:
         co = next(base.subjects(URIRef("http://www.w3.org/2000/01/rdf-schema#label"), Literal(r["Company"])))
-        sub = base.value(co, URIRef(GW + "icbSubsector"))
+        sub = base.value(co, URIRef(cfg["classified_by"]))
         if industry_of(icb, sub) != URIRef(r["ICB concept IRI"]):
             mismatch.append(r["Company"])
     results_a.append(("A5c", "Every subsector rolls up (skos:broader+) to the industry stated in CSV2", not mismatch,
@@ -108,10 +143,10 @@ def main() -> int:
 
     # Track B.
     key = {}
-    for r in csv.DictReader(open(ROOT / "queries" / "answer-key.csv", encoding="utf-8")):
+    for r in csv.DictReader(open(cfg["answer_key"], encoding="utf-8")):
         key.setdefault(r["query"], []).append((r["key"], r["value"]))
     results_b = []
-    for (qid, question), q in sections(ROOT / "queries" / "business-queries.rq", "query"):
+    for (qid, question), q in sections(cfg["queries"], "query"):
         res = base.query(q)
         got = [(fmt(row[0]), "|".join(fmt(v) for v in row[1:])) for row in res]
         exp = key.get(qid, [])
@@ -121,10 +156,11 @@ def main() -> int:
     # Report.
     a_pass = sum(r[2] for r in results_a)
     b_pass = sum(r[2] for r in results_b)
+    script = "scripts/run_tests.py" + (f" --variant {variant}" if variant != "default" else "")
     lines = [
-        "# Test report: EURO STOXX 50 ontology",
+        f"# Test report: {cfg['title']}",
         "",
-        f"Generated by `scripts/run_tests.py` on {date.today().isoformat()}.",
+        f"Generated by `{script}` on {date.today().isoformat()}.",
         "",
         f"**Track A (robustness): {a_pass}/{len(results_a)} passed. "
         f"Track B (business): {b_pass}/{len(results_b)} passed.**",
@@ -153,7 +189,7 @@ def main() -> int:
         "`✓` = the row is present (no value to compare).",
         "",
     ]
-    (REPORTS / "test-report.md").write_text("\n".join(lines), encoding="utf-8")
+    (REPORTS / f"test-report{sfx}.md").write_text("\n".join(lines), encoding="utf-8")
 
     for tid, desc, ok, detail in sorted(results_a):
         print(f"{'PASS' if ok else 'FAIL'}  {tid}  {desc}  [{detail}]")
@@ -167,4 +203,8 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    sys.exit(main())
+    args = sys.argv[1:]
+    variant = args[1] if args[:1] == ["--variant"] and len(args) == 2 else "default"
+    if args and variant == "default":
+        sys.exit(f"Usage: python scripts/run_tests.py [--variant {'|'.join(v for v in VARIANTS if v != 'default')}]")
+    sys.exit(main(variant))

@@ -1,0 +1,85 @@
+@prefix gwf:     <https://graphwise.ai/ontology/estx50-fibo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix fibo-be-le-cb:    <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/> .
+@prefix fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/> .
+@prefix fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/> .
+@prefix cmns-loc:         <https://www.omg.org/spec/Commons/Locations/> .
+@prefix cmns-org:         <https://www.omg.org/spec/Commons/Organizations/> .
+@prefix lcc-cr:           <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/> .
+
+# =============================================================================
+# EURO STOXX 50 Constituents Ontology, FIBO variant
+# Uses FIBO, OMG Commons and LCC terms directly; mints only what FIBO lacks.
+# The plan and every term choice are in fibo-feasibility-study.md.
+# =============================================================================
+
+<https://graphwise.ai/ontology/estx50-fibo> a owl:Ontology ;
+    dcterms:title "EURO STOXX 50 Constituents Ontology (FIBO variant)"@en ;
+    dcterms:description "The EURO STOXX 50 constituents modelled with FIBO: each constituent is a FIBO publicly held company, the index is a FIBO equity index, countries are LCC countries, ICB subsectors are FIBO ICB classifiers, and FY2024 revenue is a FIBO monetary amount with its currency. This file holds only the five terms FIBO does not provide."@en ;
+    dcterms:creator "Peio Popov" ;
+    dcterms:publisher "Graphwise" ;
+    dcterms:created "2026-10-28"^^xsd:date ;
+    dcterms:modified "2026-10-28"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionIRI <https://graphwise.ai/ontology/estx50-fibo/1.0.0> ;
+    owl:versionInfo "1.0.0" ;
+    vann:preferredNamespacePrefix "gwf" ;
+    vann:preferredNamespaceUri "https://graphwise.ai/ontology/estx50-fibo/" ;
+    rdfs:seeAlso <https://graphwise.ai/ontology/estx50> ;
+    rdfs:comment "FIBO is referenced, not imported: the full FIBO adds about 132,000 triples to a 50-company dataset. Labels, definitions and parents of the FIBO terms used here are in fibo-extract.ttl, copied from FIBO 2026Q2 (QuickFIBOProd). ICB concepts are typed as FIBO ICB classifiers in icb-fibo-alignment.ttl. Instance data asserts the FIBO types directly, so no reasoner is needed to see them."@en ;
+    rdfs:comment "Under OWL's open world, FIBO's expectations the source cannot meet (legal name, incorporation date and jurisdiction, legal address, issued capital of a publicly held company) make the data incomplete, not inconsistent. The SHACL shapes do not enforce them."@en .
+
+# -----------------------------------------------------------------------------
+# Classes
+# -----------------------------------------------------------------------------
+
+gwf:Revenue a owl:Class ;
+    rdfs:label "revenue (billions)"@en ;
+    skos:definition "Revenue an organization reports for a fiscal year, as a monetary amount with exactly one amount, one currency and one reporting period. The amount (fibo-fnd-acc-cur:hasAmount) is in billions of the currency (fibo-fnd-acc-cur:hasCurrency): 34.2 with the currency Euro means EUR 34.2 billion."@en ;
+    skos:scopeNote "FIBO reads fibo-fnd-acc-cur:hasAmount in the currency's units. The billions scale is a property of this class only: never read a gwf:Revenue amount as units, and never put a billions figure on a plain fibo-fnd-acc-cur:MonetaryAmount."@en ;
+    rdfs:subClassOf fibo-fnd-acc-cur:MonetaryAmount ;
+    rdfs:comment "Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums per currency, as reported."@en ;
+    rdfs:comment "Minted because FIBO has no corporate-revenue term. fibo-fnd-oac-own:Income was rejected: it means revenue received (cash), while reported revenue is recognised."@en .
+
+# -----------------------------------------------------------------------------
+# Object properties
+# -----------------------------------------------------------------------------
+
+gwf:hasRevenue a owl:ObjectProperty ;
+    rdfs:label "has revenue"@en ;
+    skos:definition "Links an organization to a revenue figure it reports for a reporting period. The figure is in billions (see gwf:Revenue)."@en ;
+    rdfs:comment "No FIBO property links an organization to its revenue. Not functional: one revenue node per reporting period; the shapes require exactly one (FY2024)."@en ;
+    rdfs:domain cmns-org:LegalEntity ;
+    rdfs:range gwf:Revenue .
+
+gwf:indexAssignedCountry a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "index-assigned country"@en ;
+    skos:definition "Links a company to the country the index provider assigns it to."@en ;
+    skos:scopeNote "This is the index-assigned country, not legal domicile (cmns-org:isDomiciledIn) or headquarters. For example, Stellantis N.V. is legally domiciled in the Netherlands but is assigned to Italy."@en ;
+    rdfs:subPropertyOf cmns-loc:hasCountry ;
+    rdfs:domain fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:range lcc-cr:Country .
+
+gwf:isConstituentOf a owl:ObjectProperty ;
+    rdfs:label "is constituent of"@en ;
+    skos:definition "Links a company to an equity index whose basket includes a listed share the company issued (snapshot; no membership history)."@en ;
+    skos:scopeNote "A shortcut for FIBO's path: index fibo-fbc-dae-dbt:isBasedOn a fibo-ind-mkt-bas:BasketOfEquities, which cmns-col:hasMember a fibo-sec-sec-bsk:SecuritiesBasketConstituent, which cmns-col:comprises a fibo-sec-eq-eq:ListedShare, which fibo-fnd-rel-rel:isIssuedBy a fibo-sec-eq-eq:ShareIssuer role that cmns-rlcmp:isPlayedBy the company. The source has no share data, so only the shortcut is stated."@en ;
+    rdfs:comment "Deliberately not a subproperty of cmns-col:isMemberOf (in FIBO an equity index is a measure, not a collection) or cmns-col:isConstituentOf (meant for parts that are not discrete elements)."@en ;
+    owl:inverseOf gwf:hasConstituent ;
+    rdfs:domain fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:range fibo-ind-mkt-bas:EquityIndex .
+
+gwf:hasConstituent a owl:ObjectProperty ;
+    rdfs:label "has constituent"@en ;
+    skos:definition "Links an equity index to a company that is one of its constituents. Inverse of gwf:isConstituentOf."@en ;
+    rdfs:domain fibo-ind-mkt-bas:EquityIndex ;
+    rdfs:range fibo-be-le-cb:PubliclyHeldCompany .
+
+# Reused FIBO, Commons and LCC terms are used directly in the data and are
+# deliberately NOT redeclared here; their labels and definitions are in
+# fibo-extract.ttl.

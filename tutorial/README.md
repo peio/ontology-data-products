@@ -71,6 +71,54 @@ Reused classes are asserted directly on the instances (`a gw:Company, schema:Cor
 
 Never load `violations-demo.ttl` into a production repository.
 
+## FIBO variant
+
+A second, standalone ontology models the same data with FIBO, OMG Commons and LCC terms used directly. It sits next to 2.0.0, which is unchanged. The plan, every term choice and the terms that were rejected are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md); the decisions are in the [decision log](decision-log.md#fibo-variant).
+
+| Concept | 2.0.0 | FIBO variant |
+| --- | --- | --- |
+| Company | `gw:Company` ⊑ `schema:Corporation` | `fibo-be-le-cb:PubliclyHeldCompany` |
+| Index | `gw:StockIndex` ⊑ `fibo-ind-mkt-bas:EquityIndex` | `fibo-ind-mkt-bas:EquityIndex`, named with `fibo-ind-mkt-bas:hasIndexName` |
+| Country | Wikidata IRI via `gw:country` | LCC country (`lcc-3166-1:Germany`) via `gwf:indexAssignedCountry` ⊑ `cmns-loc:hasCountry` |
+| ICB subsector | `gw:icbSubsector` | `cmns-cls:isClassifiedBy`; ICB concepts are also FIBO ICB classifiers |
+| Revenue | `gw:revenueFY2024` + `gw:reportingCurrency` | a `gwf:Revenue` ⊑ `fibo-fnd-acc-cur:MonetaryAmount` node: `fibo-fnd-acc-cur:hasAmount` (**in billions**), `fibo-fnd-acc-cur:hasCurrency` (`fibo-fnd-acc-4217:Euro`), `fibo-fnd-arr-doc:hasReportingPeriod` |
+| Name, website | `schema:name`, `schema:url` | `cmns-dsg:hasTextualName`, `cmns-org:hasWebsite` |
+| Index membership | `gw:isConstituentOf` | `gwf:isConstituentOf` (local: FIBO only links an index to shares in a basket, which the source does not have) |
+
+Only five terms are minted (`gwf:Revenue`, `gwf:hasRevenue`, `gwf:indexAssignedCountry`, `gwf:isConstituentOf`, `gwf:hasConstituent`). FIBO is referenced, not imported: `ontology/fibo-extract.ttl` carries the labels, definitions and parents of the 28 FIBO terms used and their ancestors, plus the 14 country, currency and scheme individuals, copied from FIBO 2026Q2.
+
+| Path | What it is |
+| --- | --- |
+| `ontology/estx50-fibo-ontology.ttl` | The FIBO-variant ontology: 5 minted terms, metadata |
+| `ontology/fibo-extract.ttl` | Generated FIBO extract (MIT, EDM Council / OMG) — do not edit by hand |
+| `ontology/icb-fibo-alignment.ttl` | Generated: types the 249 ICB concepts as FIBO ICB classifiers — do not edit by hand |
+| `data/estx50-fibo-instances.ttl` | Generated instance data — do not edit by hand |
+| `data/violations-demo-fibo.ttl` | The three broken demo companies, in the FIBO model |
+| `shapes/shapes-fibo.ttl` | SHACL shapes for the FIBO variant |
+| `queries/robustness-tests-fibo.rq`, `queries/business-queries-fibo.rq` | Track A and Track B for the FIBO variant |
+| `queries/answer-key-fibo.csv` | Track B expected results (as `answer-key.csv`, with LCC country names) |
+| `reports/test-report-fibo.md` | Test report for the FIBO variant |
+| `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py` | CSV → FIBO RDF; ICB alignment and FIBO extract |
+
+Run it (after the main pipeline):
+
+```bash
+python scripts/map_csv_fibo.py          # CSV -> data/estx50-fibo-instances.ttl
+python scripts/build_fibo_files.py      # -> ontology/icb-fibo-alignment.ttl, ontology/fibo-extract.ttl
+python scripts/run_tests.py --variant fibo  # -> reports/test-report-fibo.md
+python -m pylode ontology/estx50-fibo-ontology.ttl -o docs/estx50-fibo-ontology.html
+```
+
+`build_fibo_files.py` needs `ontologies/QuickFIBOProd.ttl` (FIBO 2026Q2) and fails if any FIBO term used in the ontology, data or shapes is not in it. The other steps do not need it. Expected: Track A 26/26, Track B 6/6.
+
+To load it into GraphDB, use an OWL2-RL repository and import `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl`, `ontology/icb-skos.ttl`, `ontology/icb-fibo-alignment.ttl` and `data/estx50-fibo-instances.ttl`; the shapes are `shapes/shapes-fibo.ttl`. You can load `ontologies/QuickFIBOProd.ttl` instead of the extract, at the cost of about 132,000 extra triples. The two variants use different namespaces, so both can share a repository.
+
+Caveats specific to the FIBO variant:
+
+- **Billions.** FIBO reads `fibo-fnd-acc-cur:hasAmount` in currency units; here it is in billions, and this is stated only on `gwf:Revenue`. Never copy a `gwf:Revenue` amount onto a plain FIBO monetary amount.
+- **Incomplete, not inconsistent.** FIBO expects a legal name, an incorporation date and jurisdiction, a legal address and issued capital for a publicly held company. The source has none of them, and the shapes do not require them.
+- **Country names.** LCC's `rdfs:label` is in the local language ("Deutschland"@de); query the English name with `lcc-cr:hasEnglishShortName`. For the Netherlands it is "Netherlands (the)".
+
 ## Scope
 
 - **In:** company, website, index-assigned country, ICB subsector (rolling up to industry), FY2024 revenue and its reporting currency, dataset provenance.
@@ -88,5 +136,7 @@ Never load `violations-demo.ttl` into a production repository.
 | `gwi:` | `https://graphwise.ai/instance/` |
 | `icb:` | `https://graphwise.ai/taxonomy/icb/` |
 | `wd:` | `http://www.wikidata.org/entity/` |
+| `gwf:` | `https://graphwise.ai/ontology/estx50-fibo/` (FIBO variant) |
+| `gwfi:` | `https://graphwise.ai/instance/estx50-fibo/` (FIBO variant) |
 
-Ontology IRI `https://graphwise.ai/ontology/estx50`, version 2.0.0, licensed CC BY 4.0. Author: Peio Popov, Graphwise.
+Ontology IRI `https://graphwise.ai/ontology/estx50`, version 2.0.0, licensed CC BY 4.0. FIBO variant: `https://graphwise.ai/ontology/estx50-fibo`, version 1.0.0, CC BY 4.0. Author: Peio Popov, Graphwise.

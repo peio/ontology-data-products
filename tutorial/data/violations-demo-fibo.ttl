@@ -1,0 +1,67 @@
+# FIBO variant teaching aid: three deliberately broken companies.
+# Validate this file TOGETHER with estx50-fibo-instances.ttl, icb-skos.ttl,
+# icb-fibo-alignment.ttl and fibo-extract.ttl; SHACL (shapes/shapes-fibo.ttl)
+# must report exactly three violations, one per company below.
+# Never load this file into the production repository.
+
+@prefix gwf:    <https://graphwise.ai/ontology/estx50-fibo/> .
+@prefix gwfi:   <https://graphwise.ai/instance/estx50-fibo/> .
+@prefix icb:    <https://graphwise.ai/taxonomy/icb/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix fibo-be-le-cb:     <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/> .
+@prefix fibo-fnd-acc-cur:  <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/> .
+@prefix fibo-fnd-acc-4217: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/ISO4217-CurrencyCodes/> .
+@prefix fibo-fnd-arr-doc:  <https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/> .
+@prefix cmns-cls:          <https://www.omg.org/spec/Commons/Classifiers/> .
+@prefix cmns-dsg:          <https://www.omg.org/spec/Commons/Designators/> .
+@prefix cmns-org:          <https://www.omg.org/spec/Commons/Organizations/> .
+@prefix lcc-3166-1:        <https://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/> .
+
+# Violation 1: missing country.
+gwfi:demo-no-country a fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:label "Demo: missing country" ;
+    cmns-dsg:hasTextualName "Demo Missing Country SE"^^xsd:string ;
+    cmns-org:hasWebsite "https://example.org/no-country"^^xsd:anyURI ;
+    cmns-cls:isClassifiedBy icb:30101010 ;
+    gwf:hasRevenue gwfi:demo-no-country-revenue ;
+    gwf:isConstituentOf gwfi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwfi:distribution-csv2 .
+
+gwfi:demo-no-country-revenue a gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+    fibo-fnd-acc-cur:hasAmount 10.0 ;
+    fibo-fnd-acc-cur:hasCurrency fibo-fnd-acc-4217:Euro ;
+    fibo-fnd-arr-doc:hasReportingPeriod gwfi:period-fy2024 .
+
+# Violation 2: negative revenue (reported at the company, through gwf:hasRevenue).
+gwfi:demo-negative-revenue a fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:label "Demo: negative revenue" ;
+    cmns-dsg:hasTextualName "Demo Negative Revenue AG"^^xsd:string ;
+    cmns-org:hasWebsite "https://example.org/negative-revenue"^^xsd:anyURI ;
+    gwf:indexAssignedCountry lcc-3166-1:Germany ;
+    cmns-cls:isClassifiedBy icb:10101015 ;
+    gwf:hasRevenue gwfi:demo-negative-revenue-revenue ;
+    gwf:isConstituentOf gwfi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwfi:distribution-csv2 .
+
+gwfi:demo-negative-revenue-revenue a gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+    fibo-fnd-acc-cur:hasAmount -4.2 ;
+    fibo-fnd-acc-cur:hasCurrency fibo-fnd-acc-4217:Euro ;
+    fibo-fnd-arr-doc:hasReportingPeriod gwfi:period-fy2024 .
+
+# Violation 3: classified at the industry level (icb:30 Financials), not a subsector.
+gwfi:demo-industry-level a fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:label "Demo: industry-level classification" ;
+    cmns-dsg:hasTextualName "Demo Industry Level SA"^^xsd:string ;
+    cmns-org:hasWebsite "https://example.org/industry-level"^^xsd:anyURI ;
+    gwf:indexAssignedCountry lcc-3166-1:France ;
+    cmns-cls:isClassifiedBy icb:30 ;
+    gwf:hasRevenue gwfi:demo-industry-level-revenue ;
+    gwf:isConstituentOf gwfi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwfi:distribution-csv2 .
+
+gwfi:demo-industry-level-revenue a gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+    fibo-fnd-acc-cur:hasAmount 7.5 ;
+    fibo-fnd-acc-cur:hasCurrency fibo-fnd-acc-4217:Euro ;
+    fibo-fnd-arr-doc:hasReportingPeriod gwfi:period-fy2024 .

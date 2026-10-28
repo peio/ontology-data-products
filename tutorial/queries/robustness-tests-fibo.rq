@@ -1,0 +1,200 @@
+# Track A, FIBO variant: robustness tests.
+# Each test is an ASK query that returns true when the check PASSES.
+# Header format: "# @test <id> | <graph> | <description>"
+#   graph = ontology  : estx50-fibo-ontology.ttl only
+#   graph = base      : ontology + FIBO extract + ICB taxonomy + ICB alignment + instances
+#   graph = reasoned  : base + OWL RL closure (owlrl)
+#   graph = icb       : ICB taxonomy + ICB alignment
+# A3 (SHACL) is run by scripts/run_tests.py with shapes/shapes-fibo.ttl.
+
+PREFIX gwf:     <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX gwfi:    <https://graphwise.ai/instance/estx50-fibo/>
+PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcat:    <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX fibo-be-le-cb:    <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+PREFIX fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/>
+PREFIX fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/>
+PREFIX fibo-sec-sec-cls: <https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/SecuritiesClassification/>
+PREFIX cmns-cls:         <https://www.omg.org/spec/Commons/Classifiers/>
+PREFIX cmns-dsg:         <https://www.omg.org/spec/Commons/Designators/>
+PREFIX cmns-loc:         <https://www.omg.org/spec/Commons/Locations/>
+PREFIX cmns-org:         <https://www.omg.org/spec/Commons/Organizations/>
+
+# @test A1a | ontology | Every minted class and property has an rdfs:label and a skos:definition
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty }
+    ?term a ?kind .
+    FILTER(STRSTARTS(STR(?term), "https://graphwise.ai/ontology/estx50-fibo/"))
+    FILTER(NOT EXISTS { ?term rdfs:label ?l } || NOT EXISTS { ?term skos:definition ?d })
+  }
+}
+
+# @test A1b | ontology | Every minted property declares a domain and a range, and neither is owl:Thing
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:ObjectProperty owl:DatatypeProperty }
+    ?p a ?kind .
+    FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/estx50-fibo/"))
+    FILTER(NOT EXISTS { ?p rdfs:domain ?d } || NOT EXISTS { ?p rdfs:range ?r }
+           || EXISTS { ?p rdfs:domain owl:Thing } || EXISTS { ?p rdfs:range owl:Thing })
+  }
+}
+
+# @test A1c | base | The class hierarchy, including the FIBO extract, has no cycles
+ASK { FILTER NOT EXISTS { ?c rdfs:subClassOf+ ?c } }
+
+# @test A1d | ontology | Every minted class is justified: it is the domain or range of at least one minted property
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50-fibo/"))
+    FILTER NOT EXISTS {
+      ?p rdfs:domain|rdfs:range ?c .
+      FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/estx50-fibo/"))
+    }
+  }
+}
+
+# @test A1e | ontology | Reuse first: every minted class specialises a FIBO class
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50-fibo/"))
+    FILTER NOT EXISTS {
+      ?c rdfs:subClassOf ?super .
+      FILTER(STRSTARTS(STR(?super), "https://spec.edmcouncil.org/fibo/"))
+    }
+  }
+}
+
+# @test A1f | base | Reuse is visible without a reasoner: every instance of a minted class also carries its FIBO superclass, and companies, the index and countries carry FIBO/LCC types directly
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class ; rdfs:subClassOf ?super .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50-fibo/"))
+    FILTER(STRSTARTS(STR(?super), "https://spec.edmcouncil.org/fibo/"))
+    ?x a ?c .
+    FILTER NOT EXISTS { ?x a ?super }
+  }
+  # and the check is not vacuous
+  ?rev a gwf:Revenue, fibo-fnd-acc-cur:MonetaryAmount .
+  ?co a fibo-be-le-cb:PubliclyHeldCompany .
+  ?idx a fibo-ind-mkt-bas:EquityIndex .
+  ?co gwf:indexAssignedCountry ?ctry . ?ctry a <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/Country> .
+}
+
+# @test A1g | ontology | The ontology redeclares no terms it does not own (no typing of FIBO or other external terms)
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
+    ?t a ?kind .
+    FILTER(isIRI(?t) && !STRSTARTS(STR(?t), "https://graphwise.ai/ontology/estx50-fibo/"))
+  }
+}
+
+# @test A1h | base | The FIBO extract is complete: every FIBO, Commons and LCC term used anywhere is declared in it with a label
+ASK {
+  FILTER NOT EXISTS {
+    { ?s ?t ?o } UNION { ?s ?p ?t . FILTER(?p NOT IN (rdfs:isDefinedBy, dcterms:source)) }
+    # Module IRIs (objects of rdfs:isDefinedBy and dcterms:source) are ontologies, not terms.
+    FILTER(isIRI(?t) && (STRSTARTS(STR(?t), "https://spec.edmcouncil.org/fibo/") || STRSTARTS(STR(?t), "https://www.omg.org/spec/")))
+    FILTER NOT EXISTS { ?t a ?kind ; rdfs:label ?l }
+  }
+}
+
+# @test A1i | base | Revenue currencies are FIBO currencies (not currency codes) and assigned countries are LCC countries
+ASK {
+  FILTER NOT EXISTS { ?rev fibo-fnd-acc-cur:hasCurrency ?c . FILTER NOT EXISTS { ?c a fibo-fnd-acc-cur:Currency } }
+  FILTER NOT EXISTS { ?co gwf:indexAssignedCountry ?c . FILTER NOT EXISTS { ?c a <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/Country> } }
+}
+
+# @test A2a | reasoned | Companies are inferred as FIBO legal entities and organizations through the extract's hierarchy
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c a fibo-be-le-cb:PubliclyHeldCompany , cmns-org:LegalEntity , cmns-org:Organization } }
+  FILTER(?n = 50)
+}
+
+# @test A2b | reasoned | hasConstituent is materialised from isConstituentOf for all 50 companies
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { gwfi:index-euro-stoxx-50 gwf:hasConstituent ?c } }
+  FILTER(?n = 50)
+  FILTER NOT EXISTS { ?c gwf:isConstituentOf ?i . FILTER NOT EXISTS { ?i gwf:hasConstituent ?c } }
+}
+
+# @test A2c | reasoned | Functional properties cause no unintended identity (no owl:sameAs between distinct companies, countries or currencies)
+ASK {
+  FILTER NOT EXISTS {
+    ?a owl:sameAs ?b . FILTER(?a != ?b)
+    ?a a ?k . ?b a ?k .
+    VALUES ?k { fibo-be-le-cb:PubliclyHeldCompany fibo-fnd-acc-cur:Currency <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/Country> }
+  }
+}
+
+# @test A2d | reasoned | The index-assigned country is also a FIBO cmns-loc:hasCountry link, for every company
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c gwf:indexAssignedCountry ?x ; cmns-loc:hasCountry ?x } }
+  FILTER(?n = 50)
+}
+
+# @test A4a | icb | ICB hierarchy is acyclic
+ASK { FILTER NOT EXISTS { ?c skos:broader+ ?c } }
+
+# @test A4b | icb | Every ICB concept has at most one parent
+ASK { FILTER NOT EXISTS { ?c skos:broader ?p1 , ?p2 . FILTER(?p1 != ?p2) } }
+
+# @test A4c | icb | Every ICB concept is in icb:scheme
+ASK { FILTER NOT EXISTS { ?c a skos:Concept . FILTER NOT EXISTS { ?c skos:inScheme icb:scheme } } }
+
+# @test A4d | icb | skos:broader and skos:narrower are symmetric
+ASK {
+  FILTER NOT EXISTS { ?a skos:broader ?b . FILTER NOT EXISTS { ?b skos:narrower ?a } }
+  FILTER NOT EXISTS { ?a skos:narrower ?b . FILTER NOT EXISTS { ?b skos:broader ?a } }
+}
+
+# @test A4e | icb | Every ICB concept is a FIBO ICB classifier defined in FIBO's ICB scheme, and nothing else is
+ASK {
+  FILTER NOT EXISTS {
+    ?c a skos:Concept .
+    FILTER NOT EXISTS { ?c a fibo-sec-sec-cls:IndustryClassificationBenchmarkClassifier ;
+                           cmns-dsg:isDefinedIn fibo-sec-sec-cls:IndustryClassificationBenchmarkScheme }
+  }
+  FILTER NOT EXISTS { ?x a fibo-sec-sec-cls:IndustryClassificationBenchmarkClassifier . FILTER NOT EXISTS { ?x a skos:Concept } }
+}
+
+# @test A5a | base | Exactly 50 companies were mapped, each with exactly one revenue figure
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) (COUNT(DISTINCT ?r) AS ?m) WHERE { ?c a fibo-be-le-cb:PubliclyHeldCompany ; gwf:hasRevenue ?r } }
+  FILTER(?n = 50 && ?m = 50)
+}
+
+# @test A6a | base | Every company and every revenue figure traces back to a source distribution of a dataset
+ASK {
+  FILTER NOT EXISTS {
+    { ?c a fibo-be-le-cb:PubliclyHeldCompany } UNION { ?c a gwf:Revenue }
+    FILTER NOT EXISTS { ?c prov:wasDerivedFrom ?d . ?d a dcat:Distribution . ?ds dcat:distribution ?d }
+  }
+}
+
+# @test A6b | base | The ontology, the ICB taxonomy and its FIBO alignment are versioned, and the extract names its FIBO source
+ASK {
+  <https://graphwise.ai/ontology/estx50-fibo> owl:versionIRI ?v1 .
+  icb:scheme owl:versionIRI ?v2 .
+  <https://graphwise.ai/taxonomy/icb/fibo-alignment> owl:versionIRI ?v3 .
+  <https://graphwise.ai/ontology/estx50-fibo/fibo-extract> dcterms:source <https://spec.edmcouncil.org/fibo/ontology/master/2026Q2/QuickFIBOProd/> .
+}
+
+# @test A6c | base | The revenue comparability caveat and the billions scale are attached to the class and the dataset
+ASK {
+  gwf:Revenue rdfs:comment ?c ; skos:definition ?def .
+  FILTER(CONTAINS(LCASE(STR(?c)), "not comparable"))
+  FILTER(CONTAINS(LCASE(STR(?def)), "billions"))
+  ?ds a dcat:Dataset ; dcterms:description ?d .
+  FILTER(CONTAINS(LCASE(STR(?d)), "not comparable") && CONTAINS(LCASE(STR(?d)), "billions"))
+}

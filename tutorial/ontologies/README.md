@@ -16,8 +16,11 @@ They are **not imported**: the tutorial references reused terms directly and ali
 | prov | http://www.w3.org/ns/prov# | prov-o.ttl | PROV-O core, W3C Recommendation 2013-04-30 | https://www.w3.org/ns/prov-o.ttl |
 | prov | http://www.w3.org/ns/prov# | prov.ttl | Full PROV namespace (PROV-O + extensions: dictionary, links, AQ, DC mapping) | https://www.w3.org/ns/prov.ttl |
 | schema | https://schema.org/ | schemaorg-current-https.ttl | Schema.org V30.1 (released 2026-09-16), https IRIs | https://schema.org/version/latest/schemaorg-current-https.ttl |
+| fibo-*, cmns-*, lcc-* | https://spec.edmcouncil.org/fibo/ontology/, https://www.omg.org/spec/Commons/, https://www.omg.org/spec/LCC/ | QuickFIBOProd.ttl | FIBO production 2026Q2 (`owl:versionIRI <https://spec.edmcouncil.org/fibo/ontology/master/2026Q2/QuickFIBOProd/>`, modified 2026-07-07): all FIBO production modules with OMG Commons and LCC in one file, 132,594 triples. MIT licence, EDM Council / OMG | https://spec.edmcouncil.org/fibo/ |
 
 Added to the repository on 2026-10-28.
+
+**FIBO** is used by the FIBO variant only, and is not loaded by default: `scripts/build_fibo_files.py` copies the terms the variant uses into `../ontology/fibo-extract.ttl` (about 480 triples) and fails if a term is missing from this file. Load the extract, not this file, unless you need the whole of FIBO.
 
 ## Which files to load
 
@@ -30,7 +33,7 @@ The tutorial also uses terms from:
 
 | Vocabulary | Terms used | Why not bundled |
 |---|---|---|
-| FIBO (`fibo-ind-mkt-bas:`) | `EquityIndex`, the superclass of `gw:StockIndex` | Checked against the FIBO source on GitHub. FIBO's modules import much of the rest of FIBO, which is out of proportion for one class. |
+| FIBO (`fibo-ind-mkt-bas:`) in 2.0.0 | `EquityIndex`, the superclass of `gw:StockIndex` | Now also in `QuickFIBOProd.ttl` (above). 2.0.0 does not load it: one class does not justify the whole of FIBO. |
 | VANN (`vann:`) | `preferredNamespacePrefix`, `preferredNamespaceUri` | Ontology header annotations only. |
 | Wikidata (`wd:`) | Country IRIs, e.g. `wd:Q183` for Germany | Used as data (instance identifiers), not as a vocabulary. |
 

@@ -347,3 +347,32 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 - **GraphDB deployment is documented in the README, not executed.** Load order: ontology, ICB, instances, then shapes as a SHACL graph.
 
 **Produced:** `README.md`, `docs/estx50-ontology.html`, this log.
+
+---
+
+## FIBO variant
+
+**Goal:** a second, standalone ontology for the same data that reuses as much of FIBO as possible. Feasibility, term choices and rejected terms are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md).
+
+**Decisions**
+
+- **Every FIBO term was checked twice** before use: in the AI Ontologist FIBO term index (definition, parents, inherited restrictions, domain, range) and in `ontologies/QuickFIBOProd.ttl` (FIBO 2026Q2). `build_fibo_files.py` repeats the second check on every build.
+- **Flat company-to-index link (D1).** `gwf:isConstituentOf` is local, with no FIBO super-property.
+  - Why: in FIBO an equity index is a measure based on a basket of equities, whose members are listed shares, not companies. The source has no share data.
+  - Rejected: the full path (index → basket → constituent → share → issuer role → company), because every share node would be invented. Also rejected: `cmns-col:isMemberOf` (an index is not a collection in FIBO) and `cmns-col:isConstituentOf` (meant for parts that are not discrete elements).
+- **Standalone file, 2.0.0 untouched (D2).** Namespace `gwf:` `https://graphwise.ai/ontology/estx50-fibo/`, instances `gwfi:`, version 1.0.0.
+  - Rejected: a thin alignment file over 2.0.0, which cannot align a plain revenue number with FIBO's amount-plus-currency node.
+- **Revenue is a FIBO monetary amount, in billions (D3).** `gwf:Revenue` ⊑ `fibo-fnd-acc-cur:MonetaryAmount`, with exactly one amount, one currency and one reporting period.
+  - Why: FIBO has no corporate-revenue term, and a monetary amount makes mixing currencies impossible by construction.
+  - Rejected: `fibo-fnd-oac-own:Income` ("revenue received", i.e. cash).
+  - Caveat: FIBO reads amounts in currency units; the billions scale is stated on `gwf:Revenue` and tested (A6c).
+- **LCC countries (D4).** `lcc-3166-1:` individuals via `gwf:indexAssignedCountry` ⊑ `cmns-loc:hasCountry`.
+  - Rejected: `cmns-org:isDomiciledIn` (legal domicile is a different fact; see Stellantis).
+- **Short names (D5, default).** `cmns-dsg:hasTextualName`; `fibo-fnd-rel-rel:hasLegalName` waits for real legal names.
+- **ICB stays SKOS, typed as FIBO.** A generated alignment file types all 249 ICB concepts as `fibo-sec-sec-cls:IndustryClassificationBenchmarkClassifier` defined in FIBO's `IndustryClassificationBenchmarkScheme`; roll-ups still use `skos:broader`, since FIBO has no classifier hierarchy property.
+- **Reference, don't import.** A generated extract (about 480 triples) replaces `owl:imports` of FIBO (about 132,600 triples).
+- **The shapes do not enforce FIBO's own cardinalities** (legal name, incorporation, legal address, issued capital) that the source cannot meet: the data is incomplete under the open world, not inconsistent.
+
+**Tests:** Track A 26/26 (new: A1h extract completeness, A1i currencies and countries are individuals of the right kind, A2a companies inferred as FIBO legal entities, A2d `cmns-loc:hasCountry` inferred, A4e ICB alignment), Track B 6/6 against `answer-key-fibo.csv`, which differs from `answer-key.csv` only in the Netherlands' LCC name, "Netherlands (the)".
+
+**Produced:** `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl`, `ontology/icb-fibo-alignment.ttl`, `data/estx50-fibo-instances.ttl`, `data/violations-demo-fibo.ttl`, `shapes/shapes-fibo.ttl`, `queries/*-fibo.*`, `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py`, `reports/test-report-fibo.md`, `docs/estx50-fibo-ontology.html`.

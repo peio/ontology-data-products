@@ -1,0 +1,30 @@
+Validation Report
+Conforms: False
+Results (3):
+Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: [ sh:class lcc-cr:Country ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:message Literal("A company needs exactly one index-assigned country, an LCC country (lcc-cr:Country).") ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path gwf:indexAssignedCountry ]
+	Focus Node: gwfi:demo-no-country
+	Result Path: gwf:indexAssignedCountry
+	Message: A company needs exactly one index-assigned country, an LCC country (lcc-cr:Country).
+Constraint Violation in NodeConstraintComponent (http://www.w3.org/ns/shacl#NodeConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: [ sh:maxCount Literal("1", datatype=xsd:integer) ; sh:message Literal("A company needs exactly one FY2024 revenue: a gwf:Revenue with one amount of 0 or more, one FIBO currency and one reporting period.") ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:node gwfsh:RevenueShape ; sh:path gwf:hasRevenue ]
+	Focus Node: gwfi:demo-negative-revenue
+	Value Node: gwfi:demo-negative-revenue-revenue
+	Result Path: gwf:hasRevenue
+	Message: A company needs exactly one FY2024 revenue: a gwf:Revenue with one amount of 0 or more, one FIBO currency and one reporting period.
+	Details:
+		Constraint Violation in MinInclusiveConstraintComponent (http://www.w3.org/ns/shacl#MinInclusiveConstraintComponent):
+			Severity: sh:Violation
+			Source Shape: [ sh:datatype xsd:decimal ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:minInclusive Literal("0", datatype=xsd:integer) ; sh:path fibo-fnd-acc-cur:hasAmount ]
+			Focus Node: gwfi:demo-negative-revenue-revenue
+			Value Node: Literal("-4.2", datatype=xsd:decimal)
+			Result Path: fibo-fnd-acc-cur:hasAmount
+			Message: Value is not >= Literal("0", datatype=xsd:integer)
+Constraint Violation in QualifiedValueShapeConstraintComponent (http://www.w3.org/ns/shacl#QualifiedMinCountConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: [ sh:message Literal("A company needs exactly one ICB classification that is an 8-digit subsector in icb:scheme, typed as a FIBO ICB classifier.") ; sh:path cmns-cls:isClassifiedBy ; sh:qualifiedMaxCount Literal("1", datatype=xsd:integer) ; sh:qualifiedMinCount Literal("1", datatype=xsd:integer) ; sh:qualifiedValueShape gwfsh:IcbSubsectorShape ]
+	Focus Node: gwfi:demo-industry-level
+	Result Path: cmns-cls:isClassifiedBy
+	Message: A company needs exactly one ICB classification that is an 8-digit subsector in icb:scheme, typed as a FIBO ICB classifier.

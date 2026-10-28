@@ -1,0 +1,95 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix gwf:     <https://graphwise.ai/ontology/estx50-fibo/> .
+@prefix gwfsh:   <https://graphwise.ai/shapes/estx50-fibo/> .
+@prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fibo-be-le-cb:    <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/> .
+@prefix fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/> .
+@prefix fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/> .
+@prefix fibo-fnd-arr-doc: <https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/> .
+@prefix fibo-sec-sec-cls: <https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/SecuritiesClassification/> .
+@prefix cmns-cls:         <https://www.omg.org/spec/Commons/Classifiers/> .
+@prefix cmns-dsg:         <https://www.omg.org/spec/Commons/Designators/> .
+@prefix cmns-dt:          <https://www.omg.org/spec/Commons/DatesAndTimes/> .
+@prefix cmns-org:         <https://www.omg.org/spec/Commons/Organizations/> .
+@prefix lcc-cr:           <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/> .
+
+# Track A3, FIBO variant: data conformance. Validate against the instances
+# together with icb-skos.ttl, icb-fibo-alignment.ttl and fibo-extract.ttl
+# (the extract supplies the types of the LCC countries and FIBO currencies).
+#
+# These shapes check what the source data provides. They deliberately do NOT
+# enforce FIBO's own cardinalities that the source cannot meet (legal name,
+# incorporation date and jurisdiction, legal address, issued capital).
+
+gwfsh:CompanyShape a sh:NodeShape ;
+    sh:targetClass fibo-be-le-cb:PubliclyHeldCompany ;
+    rdfs:label "Company shape"@en ;
+    sh:property [
+        sh:path cmns-dsg:hasTextualName ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A company needs exactly one name (xsd:string)." ] ;
+    sh:property [
+        sh:path cmns-org:hasWebsite ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:anyURI ;
+        sh:message "A company needs exactly one website, as an xsd:anyURI literal." ] ;
+    sh:property [
+        sh:path gwf:indexAssignedCountry ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class lcc-cr:Country ;
+        sh:message "A company needs exactly one index-assigned country, an LCC country (lcc-cr:Country)." ] ;
+    sh:property [
+        sh:path cmns-cls:isClassifiedBy ;
+        sh:qualifiedValueShape gwfsh:IcbSubsectorShape ;
+        sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ;
+        sh:message "A company needs exactly one ICB classification that is an 8-digit subsector in icb:scheme, typed as a FIBO ICB classifier." ] ;
+    sh:property [
+        sh:path gwf:hasRevenue ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:node gwfsh:RevenueShape ;
+        sh:message "A company needs exactly one FY2024 revenue: a gwf:Revenue with one amount of 0 or more, one FIBO currency and one reporting period." ] ;
+    sh:property [
+        sh:path gwf:isConstituentOf ;
+        sh:minCount 1 ;
+        sh:class fibo-ind-mkt-bas:EquityIndex ;
+        sh:message "A company must be a constituent of a FIBO equity index." ] ;
+    sh:property [
+        sh:path prov:wasDerivedFrom ;
+        sh:minCount 1 ;
+        sh:class dcat:Distribution ;
+        sh:message "A company must trace back to a source dcat:Distribution." ] .
+
+# Reached through gwf:hasRevenue only (no target), so a broken revenue figure is
+# reported once, at its company.
+gwfsh:RevenueShape a sh:NodeShape ;
+    rdfs:label "Revenue shape"@en ;
+    sh:class gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+    sh:property [
+        sh:path fibo-fnd-acc-cur:hasAmount ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ] ;
+    sh:property [
+        sh:path fibo-fnd-acc-cur:hasCurrency ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class fibo-fnd-acc-cur:Currency ] ;
+    sh:property [
+        sh:path fibo-fnd-arr-doc:hasReportingPeriod ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class cmns-dt:ExplicitDatePeriod ] .
+
+gwfsh:IcbSubsectorShape a sh:NodeShape ;
+    rdfs:label "ICB subsector shape"@en ;
+    sh:class skos:Concept , fibo-sec-sec-cls:IndustryClassificationBenchmarkClassifier ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue icb:scheme ] ;
+    sh:property [
+        sh:path [ sh:inversePath skos:member ] ;
+        sh:hasValue icb:subsectors ] .

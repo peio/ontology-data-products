@@ -1,7 +1,8 @@
 """Step 1/7: compute the Track B answer key directly from the source CSVs.
 
 The key is computed WITHOUT the RDF graph, so Track B tests the graph against an
-independent calculation. Writes queries/answer-key.csv.
+independent calculation. Writes queries/answer-key.csv, and queries/answer-key-fibo.csv
+for the FIBO variant (the same answers, with countries named as in LCC).
 """
 import csv
 from collections import defaultdict
@@ -52,3 +53,24 @@ with open(out, "w", newline="", encoding="utf-8") as f:
     w.writerow(["query", "key", "value"])
     w.writerows(key)
 print(f"Wrote {out.relative_to(ROOT)}: {len(key)} expected rows")
+
+# FIBO variant: country keys use the LCC English short name (lcc-cr:hasEnglishShortName),
+# which differs from the CSV name only for the Netherlands.
+LCC_NAMES = {"Netherlands": "Netherlands (the)"}
+
+
+def lcc_key(qid: str, k: str) -> str:
+    if qid == "B3":
+        country, _, rest = k.partition(" (")
+        return f"{LCC_NAMES.get(country, country)} ({rest}"
+    if qid == "B4":
+        return LCC_NAMES.get(k, k)
+    return k
+
+
+out_fibo = ROOT / "queries" / "answer-key-fibo.csv"
+with open(out_fibo, "w", newline="", encoding="utf-8") as f:
+    w = csv.writer(f)
+    w.writerow(["query", "key", "value"])
+    w.writerows((qid, lcc_key(qid, k), v) for qid, k, v in key)
+print(f"Wrote {out_fibo.relative_to(ROOT)}: {len(key)} expected rows")
