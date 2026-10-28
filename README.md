@@ -17,11 +17,13 @@ graph.
 
 | # | Part | Material |
 |---|------|----------|
-| 1 | Current state — the data product catalog of a leading European data company | [docs/01-current-state.md](docs/01-current-state.md) |
-| 2 | State of the art — what leading data providers do (S&P Global, Bloomberg) | [docs/02-state-of-the-art.md](docs/02-state-of-the-art.md) |
-| 3 | ROI drivers — return-on-investment hypothesis and value drivers | [docs/03-roi-drivers.md](docs/03-roi-drivers.md) |
+| 1 | Current state — the data product catalog of a leading European data company | |
+| 2 | State of the art — what leading data providers do (S&P Global, Bloomberg) | [literature/](literature/README.md#links) |
+| 3 | ROI drivers — return-on-investment hypothesis and value drivers | [literature/](literature/README.md#slide-decks) |
 | 4 | Tutorial — a tested ontology for the EURO STOXX 50 constituents | [tutorial/](tutorial/README.md) |
-| 5 | Target state — what already works, measurable outcomes | [docs/05-target-state.md](docs/05-target-state.md) |
+| 5 | Target state — what already works, measurable outcomes | |
+
+The talk structure is in [docs/talk-outline.md](docs/talk-outline.md).
 
 ## The tutorial
 
@@ -40,11 +42,11 @@ for sources and licences.
 
 This repository is also a Claude Code plugin marketplace. It ships the
 **graphwise-ontology** plugin, which contains the
-[graphwise-ontology-engineer](skills/graphwise-ontology-engineer/SKILL.md) skill:
+[graphwise-ontology-engineer](plugins/graphwise-ontology/skills/graphwise-ontology-engineer/SKILL.md) skill:
 it designs OWL/RDFS/SKOS ontologies as Turtle files, reusing standard vocabularies
 (DCAT, Dublin Core, PROV-O, Schema.org, SKOS, FOAF, FIBO) and testing them with
 SHACL shapes and SPARQL competency-question queries. See
-[SEQUENCE.md](skills/graphwise-ontology-engineer/SEQUENCE.md) for the steps it follows.
+[SEQUENCE.md](plugins/graphwise-ontology/skills/graphwise-ontology-engineer/SEQUENCE.md) for the steps it follows.
 
 Install it from inside Claude Code:
 
@@ -62,12 +64,11 @@ To pick up a newer version later, run `/plugin marketplace update ontology-data-
 ## Repository layout
 
 ```text
-docs/            Talk material: case studies, ROI drivers, target state
-tutorial/        EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
-slides/          Presentation slides
-Literature/      Methodology papers and slide decks
-skills/          Claude skills shipped by the plugin
-.claude-plugin/  Plugin and marketplace manifests
+docs/                        Talk outline
+tutorial/                    EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
+literature/                  Methodology papers, slide decks and links
+plugins/graphwise-ontology/  The installable Claude Code plugin (manifest and skills)
+.claude-plugin/              Marketplace manifest
 ```
 
 ## Prerequisites

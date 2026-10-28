@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "graphwise-ontology",
-      "source": "./",
+      "source": "./plugins/graphwise-ontology",
       "description": "Ontology engineering skill for designing OWL/RDFS/SKOS ontologies as Turtle files with the Graphwise methodology.",
       "version": "1.0.0"
     }

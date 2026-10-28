@@ -1,3 +1,0 @@
-# Slides
-
-Workshop presentation slides.
