@@ -1,0 +1,51 @@
+﻿Company,Website,Country,ICB Industry,ICB code,ICB concept IRI,"Revenue FY2024 (bn, approx.)",Reporting currency,Country currency
+ASML Holding,https://www.asml.com,Netherlands,Technology,10,https://graphwise.ai/taxonomy/icb/10,28.3,EUR,EUR
+SAP,https://www.sap.com,Germany,Technology,10,https://graphwise.ai/taxonomy/icb/10,34.2,EUR,EUR
+TotalEnergies,https://www.totalenergies.com,France,Energy,60,https://graphwise.ai/taxonomy/icb/60,195.6,USD,EUR
+Siemens,https://www.siemens.com,Germany,Industrials,50,https://graphwise.ai/taxonomy/icb/50,75.9,EUR,EUR
+Banco Santander,https://www.santander.com,Spain,Financials,30,https://graphwise.ai/taxonomy/icb/30,62.2,EUR,EUR
+Allianz,https://www.allianz.com,Germany,Financials,30,https://graphwise.ai/taxonomy/icb/30,179.8,EUR,EUR
+Iberdrola,https://www.iberdrola.com,Spain,Utilities,65,https://graphwise.ai/taxonomy/icb/65,44.7,EUR,EUR
+Schneider Electric,https://www.se.com,France,Industrials,50,https://graphwise.ai/taxonomy/icb/50,38.2,EUR,EUR
+BBVA,https://www.bbva.com,Spain,Financials,30,https://graphwise.ai/taxonomy/icb/30,35.5,EUR,EUR
+Airbus,https://www.airbus.com,France,Industrials,50,https://graphwise.ai/taxonomy/icb/50,69.2,EUR,EUR
+LVMH,https://www.lvmh.com,France,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,84.7,EUR,EUR
+Sanofi,https://www.sanofi.com,France,Health Care,20,https://graphwise.ai/taxonomy/icb/20,41.1,EUR,EUR
+L'Oréal,https://www.loreal.com,France,Consumer Staples,45,https://graphwise.ai/taxonomy/icb/45,43.5,EUR,EUR
+Air Liquide,https://www.airliquide.com,France,Basic Materials,55,https://graphwise.ai/taxonomy/icb/55,27.1,EUR,EUR
+Hermès International,https://www.hermes.com,France,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,15.2,EUR,EUR
+Deutsche Telekom,https://www.telekom.com,Germany,Telecommunications,15,https://graphwise.ai/taxonomy/icb/15,115.8,EUR,EUR
+Vinci,https://www.vinci.com,France,Industrials,50,https://graphwise.ai/taxonomy/icb/50,71.6,EUR,EUR
+BNP Paribas,https://group.bnpparibas,France,Financials,30,https://graphwise.ai/taxonomy/icb/30,48.8,EUR,EUR
+Mercedes-Benz Group,https://group.mercedes-benz.com,Germany,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,145.6,EUR,EUR
+Safran,https://www.safran-group.com,France,Industrials,50,https://graphwise.ai/taxonomy/icb/50,27.3,EUR,EUR
+EssilorLuxottica,https://www.essilorluxottica.com,France,Health Care,20,https://graphwise.ai/taxonomy/icb/20,26.5,EUR,EUR
+AXA,https://www.axa.com,France,Financials,30,https://graphwise.ai/taxonomy/icb/30,110.0,EUR,EUR
+Bayer,https://www.bayer.com,Germany,Health Care,20,https://graphwise.ai/taxonomy/icb/20,46.6,EUR,EUR
+Infineon Technologies,https://www.infineon.com,Germany,Technology,10,https://graphwise.ai/taxonomy/icb/10,15.0,EUR,EUR
+Prosus,https://www.prosus.com,Netherlands,Technology,10,https://graphwise.ai/taxonomy/icb/10,6.2,USD,EUR
+Anheuser-Busch InBev,https://www.ab-inbev.com,Belgium,Consumer Staples,45,https://graphwise.ai/taxonomy/icb/45,59.8,USD,EUR
+Enel,https://www.enel.com,Italy,Utilities,65,https://graphwise.ai/taxonomy/icb/65,73.0,EUR,EUR
+Munich Re,https://www.munichre.com,Germany,Financials,30,https://graphwise.ai/taxonomy/icb/30,60.8,EUR,EUR
+ING Group,https://www.ing.com,Netherlands,Financials,30,https://graphwise.ai/taxonomy/icb/30,22.6,EUR,EUR
+Adyen,https://www.adyen.com,Netherlands,Industrials,50,https://graphwise.ai/taxonomy/icb/50,2.0,EUR,EUR
+DHL Group,https://group.dhl.com,Germany,Industrials,50,https://graphwise.ai/taxonomy/icb/50,84.2,EUR,EUR
+BASF,https://www.basf.com,Germany,Basic Materials,55,https://graphwise.ai/taxonomy/icb/55,65.3,EUR,EUR
+Pernod Ricard,https://www.pernod-ricard.com,France,Consumer Staples,45,https://graphwise.ai/taxonomy/icb/45,11.6,EUR,EUR
+Intesa Sanpaolo,https://group.intesasanpaolo.com,Italy,Financials,30,https://graphwise.ai/taxonomy/icb/30,27.0,EUR,EUR
+Inditex,https://www.inditex.com,Spain,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,38.6,EUR,EUR
+Kering,https://www.kering.com,France,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,17.2,EUR,EUR
+UniCredit,https://www.unicreditgroup.eu,Italy,Financials,30,https://graphwise.ai/taxonomy/icb/30,24.2,EUR,EUR
+Stellantis,https://www.stellantis.com,Italy,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,156.9,EUR,EUR
+CRH,https://www.crh.com,Ireland,Industrials,50,https://graphwise.ai/taxonomy/icb/50,35.6,USD,EUR
+Nordea Bank,https://www.nordea.com,Finland,Financials,30,https://graphwise.ai/taxonomy/icb/30,12.0,EUR,EUR
+BMW,https://www.bmwgroup.com,Germany,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,142.4,EUR,EUR
+Danone,https://www.danone.com,France,Consumer Staples,45,https://graphwise.ai/taxonomy/icb/45,27.4,EUR,EUR
+Flutter Entertainment,https://www.flutter.com,Ireland,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,14.0,USD,EUR
+Deutsche Börse,https://www.deutsche-boerse.com,Germany,Financials,30,https://graphwise.ai/taxonomy/icb/30,5.8,EUR,EUR
+Eni,https://www.eni.com,Italy,Energy,60,https://graphwise.ai/taxonomy/icb/60,88.8,EUR,EUR
+Ahold Delhaize,https://www.aholddelhaize.com,Netherlands,Consumer Staples,45,https://graphwise.ai/taxonomy/icb/45,89.4,EUR,EUR
+Adidas,https://www.adidas-group.com,Germany,Consumer Discretionary,40,https://graphwise.ai/taxonomy/icb/40,23.7,EUR,EUR
+Engie,https://www.engie.com,France,Utilities,65,https://graphwise.ai/taxonomy/icb/65,73.8,EUR,EUR
+Nokia,https://www.nokia.com,Finland,Telecommunications,15,https://graphwise.ai/taxonomy/icb/15,19.2,EUR,EUR
+Vonovia,https://www.vonovia.com,Germany,Real Estate,35,https://graphwise.ai/taxonomy/icb/35,5.1,EUR,EUR

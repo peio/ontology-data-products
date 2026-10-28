@@ -21,3 +21,6 @@ node_modules/
 
 # Local tool state
 .claude/settings.local.json
+
+# Local working instructions
+/EURO STOXX 50 Ontology Tutorial Plan.md

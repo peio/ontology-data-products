@@ -1,0 +1,1654 @@
+@prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
+@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# Industry Classification Benchmark (ICB) as a SKOS concept scheme.
+# Source: first sheet ("New ICB Codes and Description") of icb-codes-description.xlsx.
+# Hierarchy is derived from the code structure: each level appends two digits to its parent
+#   Industry (2) > Supersector (4) > Sector (6) > Subsector (8 digits).
+# Concept IRIs = namespace + ICB code; codes are also kept as skos:notation.
+
+icb:scheme a skos:ConceptScheme , owl:Ontology ;
+    skos:prefLabel "Industry Classification Benchmark (ICB)"@en ;
+    dcterms:title "Industry Classification Benchmark (ICB)"@en ;
+    dcterms:description "SKOS rendering of the four-level ICB taxonomy: 11 industries, 20 supersectors, 45 sectors and 173 subsectors."@en ;
+    dcterms:source "icb-codes-description.xlsx, sheet 'New ICB Codes and Description'" ;
+    dcterms:rightsHolder "FTSE International Limited (FTSE Russell)" ;
+    rdfs:comment "ICB codes and names are the intellectual property of FTSE Russell; this file only re-expresses them in SKOS. Licence terms of the source data apply."@en ;
+    dcterms:created "2026-10-28"^^xsd:date ;
+    owl:versionIRI <https://graphwise.ai/taxonomy/icb/1.0.0> ;
+    owl:versionInfo "1.0.0" ;
+    skos:hasTopConcept icb:10 , icb:15 , icb:20 , icb:30 , icb:35 , icb:40 , icb:45 , icb:50 , icb:55 , icb:60 , icb:65 .
+
+# ---- Level collections -------------------------------------------------------
+
+icb:industries a skos:Collection ;
+    skos:prefLabel "ICB Industries"@en ;
+    skos:definition "Level 1 of ICB: the broadest grouping (2-digit codes)."@en ;
+    skos:member icb:10, icb:15, icb:20, icb:30, icb:35, icb:40, icb:45, icb:50 ,
+        icb:55, icb:60, icb:65 .
+
+icb:supersectors a skos:Collection ;
+    skos:prefLabel "ICB Supersectors"@en ;
+    skos:definition "Level 2 of ICB (4-digit codes)."@en ;
+    skos:member icb:1010, icb:1510, icb:2010, icb:3010, icb:3020, icb:3030, icb:3510, icb:4010 ,
+        icb:4020, icb:4030, icb:4040, icb:4050, icb:4510, icb:4520, icb:5010, icb:5020 ,
+        icb:5510, icb:5520, icb:6010, icb:6510 .
+
+icb:sectors a skos:Collection ;
+    skos:prefLabel "ICB Sectors"@en ;
+    skos:definition "Level 3 of ICB (6-digit codes)."@en ;
+    skos:member icb:101010, icb:101020, icb:151010, icb:151020, icb:201010, icb:201020, icb:201030, icb:301010 ,
+        icb:302010, icb:302020, icb:302030, icb:302040, icb:302050, icb:303010, icb:303020, icb:351010 ,
+        icb:351020, icb:401010, icb:402010, icb:402020, icb:402030, icb:402040, icb:403010, icb:404010 ,
+        icb:405010, icb:451010, icb:451020, icb:451030, icb:452010, icb:501010, icb:502010, icb:502020 ,
+        icb:502030, icb:502040, icb:502050, icb:502060, icb:551010, icb:551020, icb:551030, icb:552010 ,
+        icb:601010, icb:601020, icb:651010, icb:651020, icb:651030 .
+
+icb:subsectors a skos:Collection ;
+    skos:prefLabel "ICB Subsectors"@en ;
+    skos:definition "Level 4 of ICB, the most granular level (8-digit codes)."@en ;
+    skos:member icb:10101010, icb:10101015, icb:10101020, icb:10102010, icb:10102015, icb:10102020, icb:10102030, icb:10102035 ,
+        icb:15101010, icb:15102010, icb:15102015, icb:20101010, icb:20101020, icb:20101025, icb:20101030, icb:20102010 ,
+        icb:20102015, icb:20102020, icb:20103010, icb:20103015, icb:20103020, icb:30101010, icb:30201020, icb:30201025 ,
+        icb:30201030, icb:30202000, icb:30202010, icb:30202015, icb:30203000, icb:30203010, icb:30203020, icb:30204000 ,
+        icb:30205000, icb:30301010, icb:30302010, icb:30302015, icb:30302020, icb:30302025, icb:35101010, icb:35101015 ,
+        icb:35102000, icb:35102010, icb:35102015, icb:35102020, icb:35102025, icb:35102030, icb:35102040, icb:35102045 ,
+        icb:35102050, icb:35102060, icb:35102070, icb:40101010, icb:40101015, icb:40101020, icb:40101025, icb:40201010 ,
+        icb:40201020, icb:40201030, icb:40201040, icb:40201050, icb:40201060, icb:40201070, icb:40202010, icb:40202015 ,
+        icb:40202020, icb:40202025, icb:40203010, icb:40203040, icb:40203045, icb:40203050, icb:40203055, icb:40203060 ,
+        icb:40204020, icb:40204025, icb:40204030, icb:40204035, icb:40301010, icb:40301020, icb:40301030, icb:40301035 ,
+        icb:40401010, icb:40401020, icb:40401025, icb:40401030, icb:40501010, icb:40501015, icb:40501020, icb:40501025 ,
+        icb:40501030, icb:40501040, icb:45101010, icb:45101015, icb:45101020, icb:45102010, icb:45102020, icb:45102030 ,
+        icb:45102035, icb:45103010, icb:45201010, icb:45201015, icb:45201020, icb:45201030, icb:45201040, icb:50101010 ,
+        icb:50101015, icb:50101020, icb:50101025, icb:50101030, icb:50101035, icb:50201010, icb:50201020, icb:50202010 ,
+        icb:50202020, icb:50202025, icb:50202030, icb:50202040, icb:50203000, icb:50203010, icb:50203015, icb:50203020 ,
+        icb:50203030, icb:50204000, icb:50204010, icb:50204020, icb:50204030, icb:50204040, icb:50204050, icb:50205010 ,
+        icb:50205015, icb:50205020, icb:50205025, icb:50205030, icb:50205040, icb:50206010, icb:50206015, icb:50206020 ,
+        icb:50206025, icb:50206030, icb:50206040, icb:50206050, icb:50206060, icb:55101000, icb:55101010, icb:55101015 ,
+        icb:55101020, icb:55102000, icb:55102010, icb:55102015, icb:55102035, icb:55102040, icb:55102050, icb:55103020 ,
+        icb:55103025, icb:55103030, icb:55201000, icb:55201010, icb:55201015, icb:55201020, icb:60101000, icb:60101010 ,
+        icb:60101015, icb:60101020, icb:60101030, icb:60101035, icb:60101040, icb:60102010, icb:60102020, icb:65101010 ,
+        icb:65101015, icb:65102000, icb:65102020, icb:65102030, icb:65103035 .
+
+
+# ---- Industrys ------------------------------------------------------------
+icb:10 a skos:Concept ;
+    skos:prefLabel "Technology"@en ;
+    skos:notation "10" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:1010 .
+
+icb:15 a skos:Concept ;
+    skos:prefLabel "Telecommunications"@en ;
+    skos:notation "15" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:1510 .
+
+icb:20 a skos:Concept ;
+    skos:prefLabel "Health Care"@en ;
+    skos:notation "20" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:2010 .
+
+icb:30 a skos:Concept ;
+    skos:prefLabel "Financials"@en ;
+    skos:notation "30" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:3010 , icb:3020 , icb:3030 .
+
+icb:35 a skos:Concept ;
+    skos:prefLabel "Real Estate"@en ;
+    skos:notation "35" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:3510 .
+
+icb:40 a skos:Concept ;
+    skos:prefLabel "Consumer Discretionary"@en ;
+    skos:notation "40" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:4010 , icb:4020 , icb:4030 , icb:4040 , icb:4050 .
+
+icb:45 a skos:Concept ;
+    skos:prefLabel "Consumer Staples"@en ;
+    skos:notation "45" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:4510 , icb:4520 .
+
+icb:50 a skos:Concept ;
+    skos:prefLabel "Industrials"@en ;
+    skos:notation "50" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:5010 , icb:5020 .
+
+icb:55 a skos:Concept ;
+    skos:prefLabel "Basic Materials"@en ;
+    skos:notation "55" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:5510 , icb:5520 .
+
+icb:60 a skos:Concept ;
+    skos:prefLabel "Energy"@en ;
+    skos:notation "60" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:6010 .
+
+icb:65 a skos:Concept ;
+    skos:prefLabel "Utilities"@en ;
+    skos:notation "65" ;
+    skos:inScheme icb:scheme ;
+    skos:topConceptOf icb:scheme ;
+    skos:narrower icb:6510 .
+
+
+# ---- Supersectors ------------------------------------------------------------
+icb:1010 a skos:Concept ;
+    skos:prefLabel "Technology"@en ;
+    skos:notation "1010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:10 ;
+    skos:narrower icb:101010 , icb:101020 .
+
+icb:1510 a skos:Concept ;
+    skos:prefLabel "Telecommunications"@en ;
+    skos:notation "1510" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:15 ;
+    skos:narrower icb:151010 , icb:151020 .
+
+icb:2010 a skos:Concept ;
+    skos:prefLabel "Health Care"@en ;
+    skos:notation "2010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:20 ;
+    skos:narrower icb:201010 , icb:201020 , icb:201030 .
+
+icb:3010 a skos:Concept ;
+    skos:prefLabel "Banks"@en ;
+    skos:notation "3010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:30 ;
+    skos:narrower icb:301010 .
+
+icb:3020 a skos:Concept ;
+    skos:prefLabel "Financial Services"@en ;
+    skos:notation "3020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:30 ;
+    skos:narrower icb:302010 , icb:302020 , icb:302030 , icb:302040 , icb:302050 .
+
+icb:3030 a skos:Concept ;
+    skos:prefLabel "Insurance"@en ;
+    skos:notation "3030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:30 ;
+    skos:narrower icb:303010 , icb:303020 .
+
+icb:3510 a skos:Concept ;
+    skos:prefLabel "Real Estate"@en ;
+    skos:notation "3510" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:35 ;
+    skos:narrower icb:351010 , icb:351020 .
+
+icb:4010 a skos:Concept ;
+    skos:prefLabel "Automobiles and Parts"@en ;
+    skos:notation "4010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:40 ;
+    skos:narrower icb:401010 .
+
+icb:4020 a skos:Concept ;
+    skos:prefLabel "Consumer Products and Services"@en ;
+    skos:notation "4020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:40 ;
+    skos:narrower icb:402010 , icb:402020 , icb:402030 , icb:402040 .
+
+icb:4030 a skos:Concept ;
+    skos:prefLabel "Media"@en ;
+    skos:notation "4030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:40 ;
+    skos:narrower icb:403010 .
+
+icb:4040 a skos:Concept ;
+    skos:prefLabel "Retail"@en ;
+    skos:notation "4040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:40 ;
+    skos:narrower icb:404010 .
+
+icb:4050 a skos:Concept ;
+    skos:prefLabel "Travel and Leisure"@en ;
+    skos:notation "4050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:40 ;
+    skos:narrower icb:405010 .
+
+icb:4510 a skos:Concept ;
+    skos:prefLabel "Food, Beverage and Tobacco"@en ;
+    skos:notation "4510" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:45 ;
+    skos:narrower icb:451010 , icb:451020 , icb:451030 .
+
+icb:4520 a skos:Concept ;
+    skos:prefLabel "Personal Care, Drug and Grocery Stores"@en ;
+    skos:notation "4520" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:45 ;
+    skos:narrower icb:452010 .
+
+icb:5010 a skos:Concept ;
+    skos:prefLabel "Construction and Materials"@en ;
+    skos:notation "5010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:50 ;
+    skos:narrower icb:501010 .
+
+icb:5020 a skos:Concept ;
+    skos:prefLabel "Industrial Goods and Services"@en ;
+    skos:notation "5020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:50 ;
+    skos:narrower icb:502010 , icb:502020 , icb:502030 , icb:502040 , icb:502050 , icb:502060 .
+
+icb:5510 a skos:Concept ;
+    skos:prefLabel "Basic Resources"@en ;
+    skos:notation "5510" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:55 ;
+    skos:narrower icb:551010 , icb:551020 , icb:551030 .
+
+icb:5520 a skos:Concept ;
+    skos:prefLabel "Chemicals"@en ;
+    skos:notation "5520" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:55 ;
+    skos:narrower icb:552010 .
+
+icb:6010 a skos:Concept ;
+    skos:prefLabel "Energy"@en ;
+    skos:notation "6010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:60 ;
+    skos:narrower icb:601010 , icb:601020 .
+
+icb:6510 a skos:Concept ;
+    skos:prefLabel "Utilities"@en ;
+    skos:notation "6510" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:65 ;
+    skos:narrower icb:651010 , icb:651020 , icb:651030 .
+
+
+# ---- Sectors ------------------------------------------------------------
+icb:101010 a skos:Concept ;
+    skos:prefLabel "Software and Computer Services"@en ;
+    skos:notation "101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:1010 ;
+    skos:narrower icb:10101010 , icb:10101015 , icb:10101020 .
+
+icb:101020 a skos:Concept ;
+    skos:prefLabel "Technology Hardware and Equipment"@en ;
+    skos:notation "101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:1010 ;
+    skos:narrower icb:10102010 , icb:10102015 , icb:10102020 , icb:10102030 , icb:10102035 .
+
+icb:151010 a skos:Concept ;
+    skos:prefLabel "Telecommunications Equipment"@en ;
+    skos:notation "151010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:1510 ;
+    skos:narrower icb:15101010 .
+
+icb:151020 a skos:Concept ;
+    skos:prefLabel "Telecommunications Service Providers"@en ;
+    skos:notation "151020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:1510 ;
+    skos:narrower icb:15102010 , icb:15102015 .
+
+icb:201010 a skos:Concept ;
+    skos:prefLabel "Health Care Providers"@en ;
+    skos:notation "201010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:2010 ;
+    skos:narrower icb:20101010 , icb:20101020 , icb:20101025 , icb:20101030 .
+
+icb:201020 a skos:Concept ;
+    skos:prefLabel "Medical Equipment and Services"@en ;
+    skos:notation "201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:2010 ;
+    skos:narrower icb:20102010 , icb:20102015 , icb:20102020 .
+
+icb:201030 a skos:Concept ;
+    skos:prefLabel "Pharmaceuticals and Biotechnology"@en ;
+    skos:notation "201030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:2010 ;
+    skos:narrower icb:20103010 , icb:20103015 , icb:20103020 .
+
+icb:301010 a skos:Concept ;
+    skos:prefLabel "Banks"@en ;
+    skos:notation "301010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3010 ;
+    skos:narrower icb:30101010 .
+
+icb:302010 a skos:Concept ;
+    skos:prefLabel "Finance and Credit Services"@en ;
+    skos:notation "302010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3020 ;
+    skos:narrower icb:30201020 , icb:30201025 , icb:30201030 .
+
+icb:302020 a skos:Concept ;
+    skos:prefLabel "Investment Banking and Brokerage Services"@en ;
+    skos:notation "302020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3020 ;
+    skos:narrower icb:30202000 , icb:30202010 , icb:30202015 .
+
+icb:302030 a skos:Concept ;
+    skos:prefLabel "Mortgage Real Estate Investment Trusts"@en ;
+    skos:notation "302030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3020 ;
+    skos:narrower icb:30203000 , icb:30203010 , icb:30203020 .
+
+icb:302040 a skos:Concept ;
+    skos:prefLabel "Closed End Investments"@en ;
+    skos:notation "302040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3020 ;
+    skos:narrower icb:30204000 .
+
+icb:302050 a skos:Concept ;
+    skos:prefLabel "Open End and Miscellaneous Investment Vehicles"@en ;
+    skos:notation "302050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3020 ;
+    skos:narrower icb:30205000 .
+
+icb:303010 a skos:Concept ;
+    skos:prefLabel "Life Insurance"@en ;
+    skos:notation "303010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3030 ;
+    skos:narrower icb:30301010 .
+
+icb:303020 a skos:Concept ;
+    skos:prefLabel "Non-life Insurance"@en ;
+    skos:notation "303020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3030 ;
+    skos:narrower icb:30302010 , icb:30302015 , icb:30302020 , icb:30302025 .
+
+icb:351010 a skos:Concept ;
+    skos:prefLabel "Real Estate Investment and Services"@en ;
+    skos:notation "351010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3510 ;
+    skos:narrower icb:35101010 , icb:35101015 .
+
+icb:351020 a skos:Concept ;
+    skos:prefLabel "Real Estate Investment Trusts"@en ;
+    skos:notation "351020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:3510 ;
+    skos:narrower icb:35102000 , icb:35102010 , icb:35102015 , icb:35102020 , icb:35102025 , icb:35102030 , icb:35102040 , icb:35102045 , icb:35102050 , icb:35102060 , icb:35102070 .
+
+icb:401010 a skos:Concept ;
+    skos:prefLabel "Automobiles and Parts"@en ;
+    skos:notation "401010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4010 ;
+    skos:narrower icb:40101010 , icb:40101015 , icb:40101020 , icb:40101025 .
+
+icb:402010 a skos:Concept ;
+    skos:prefLabel "Consumer Services"@en ;
+    skos:notation "402010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4020 ;
+    skos:narrower icb:40201010 , icb:40201020 , icb:40201030 , icb:40201040 , icb:40201050 , icb:40201060 , icb:40201070 .
+
+icb:402020 a skos:Concept ;
+    skos:prefLabel "Household Goods and Home Construction"@en ;
+    skos:notation "402020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4020 ;
+    skos:narrower icb:40202010 , icb:40202015 , icb:40202020 , icb:40202025 .
+
+icb:402030 a skos:Concept ;
+    skos:prefLabel "Leisure Goods"@en ;
+    skos:notation "402030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4020 ;
+    skos:narrower icb:40203010 , icb:40203040 , icb:40203045 , icb:40203050 , icb:40203055 , icb:40203060 .
+
+icb:402040 a skos:Concept ;
+    skos:prefLabel "Personal Goods"@en ;
+    skos:notation "402040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4020 ;
+    skos:narrower icb:40204020 , icb:40204025 , icb:40204030 , icb:40204035 .
+
+icb:403010 a skos:Concept ;
+    skos:prefLabel "Media"@en ;
+    skos:notation "403010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4030 ;
+    skos:narrower icb:40301010 , icb:40301020 , icb:40301030 , icb:40301035 .
+
+icb:404010 a skos:Concept ;
+    skos:prefLabel "Retailers"@en ;
+    skos:notation "404010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4040 ;
+    skos:narrower icb:40401010 , icb:40401020 , icb:40401025 , icb:40401030 .
+
+icb:405010 a skos:Concept ;
+    skos:prefLabel "Travel and Leisure"@en ;
+    skos:notation "405010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4050 ;
+    skos:narrower icb:40501010 , icb:40501015 , icb:40501020 , icb:40501025 , icb:40501030 , icb:40501040 .
+
+icb:451010 a skos:Concept ;
+    skos:prefLabel "Beverages"@en ;
+    skos:notation "451010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4510 ;
+    skos:narrower icb:45101010 , icb:45101015 , icb:45101020 .
+
+icb:451020 a skos:Concept ;
+    skos:prefLabel "Food Producers"@en ;
+    skos:notation "451020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4510 ;
+    skos:narrower icb:45102010 , icb:45102020 , icb:45102030 , icb:45102035 .
+
+icb:451030 a skos:Concept ;
+    skos:prefLabel "Tobacco"@en ;
+    skos:notation "451030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4510 ;
+    skos:narrower icb:45103010 .
+
+icb:452010 a skos:Concept ;
+    skos:prefLabel "Personal Care, Drug and Grocery Stores"@en ;
+    skos:notation "452010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:4520 ;
+    skos:narrower icb:45201010 , icb:45201015 , icb:45201020 , icb:45201030 , icb:45201040 .
+
+icb:501010 a skos:Concept ;
+    skos:prefLabel "Construction and Materials"@en ;
+    skos:notation "501010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5010 ;
+    skos:narrower icb:50101010 , icb:50101015 , icb:50101020 , icb:50101025 , icb:50101030 , icb:50101035 .
+
+icb:502010 a skos:Concept ;
+    skos:prefLabel "Aerospace and Defense"@en ;
+    skos:notation "502010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50201010 , icb:50201020 .
+
+icb:502020 a skos:Concept ;
+    skos:prefLabel "Electronic and Electrical Equipment"@en ;
+    skos:notation "502020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50202010 , icb:50202020 , icb:50202025 , icb:50202030 , icb:50202040 .
+
+icb:502030 a skos:Concept ;
+    skos:prefLabel "General Industrials"@en ;
+    skos:notation "502030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50203000 , icb:50203010 , icb:50203015 , icb:50203020 , icb:50203030 .
+
+icb:502040 a skos:Concept ;
+    skos:prefLabel "Industrial Engineering"@en ;
+    skos:notation "502040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50204000 , icb:50204010 , icb:50204020 , icb:50204030 , icb:50204040 , icb:50204050 .
+
+icb:502050 a skos:Concept ;
+    skos:prefLabel "Industrial Support Services"@en ;
+    skos:notation "502050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50205010 , icb:50205015 , icb:50205020 , icb:50205025 , icb:50205030 , icb:50205040 .
+
+icb:502060 a skos:Concept ;
+    skos:prefLabel "Industrial Transportation"@en ;
+    skos:notation "502060" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5020 ;
+    skos:narrower icb:50206010 , icb:50206015 , icb:50206020 , icb:50206025 , icb:50206030 , icb:50206040 , icb:50206050 , icb:50206060 .
+
+icb:551010 a skos:Concept ;
+    skos:prefLabel "Industrial Materials"@en ;
+    skos:notation "551010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5510 ;
+    skos:narrower icb:55101000 , icb:55101010 , icb:55101015 , icb:55101020 .
+
+icb:551020 a skos:Concept ;
+    skos:prefLabel "Industrial Metals and Mining"@en ;
+    skos:notation "551020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5510 ;
+    skos:narrower icb:55102000 , icb:55102010 , icb:55102015 , icb:55102035 , icb:55102040 , icb:55102050 .
+
+icb:551030 a skos:Concept ;
+    skos:prefLabel "Precious Metals and Mining"@en ;
+    skos:notation "551030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5510 ;
+    skos:narrower icb:55103020 , icb:55103025 , icb:55103030 .
+
+icb:552010 a skos:Concept ;
+    skos:prefLabel "Chemicals"@en ;
+    skos:notation "552010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:5520 ;
+    skos:narrower icb:55201000 , icb:55201010 , icb:55201015 , icb:55201020 .
+
+icb:601010 a skos:Concept ;
+    skos:prefLabel "Oil Gas and Coal"@en ;
+    skos:notation "601010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:6010 ;
+    skos:narrower icb:60101000 , icb:60101010 , icb:60101015 , icb:60101020 , icb:60101030 , icb:60101035 , icb:60101040 .
+
+icb:601020 a skos:Concept ;
+    skos:prefLabel "Alternative Energy"@en ;
+    skos:notation "601020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:6010 ;
+    skos:narrower icb:60102010 , icb:60102020 .
+
+icb:651010 a skos:Concept ;
+    skos:prefLabel "Electricity"@en ;
+    skos:notation "651010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:6510 ;
+    skos:narrower icb:65101010 , icb:65101015 .
+
+icb:651020 a skos:Concept ;
+    skos:prefLabel "Gas, Water and Multi-utilities"@en ;
+    skos:notation "651020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:6510 ;
+    skos:narrower icb:65102000 , icb:65102020 , icb:65102030 .
+
+icb:651030 a skos:Concept ;
+    skos:prefLabel "Waste and Disposal Services"@en ;
+    skos:notation "651030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:6510 ;
+    skos:narrower icb:65103035 .
+
+
+# ---- Subsectors ------------------------------------------------------------
+icb:10101010 a skos:Concept ;
+    skos:prefLabel "Computer Services"@en ;
+    skos:notation "10101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101010 .
+
+icb:10101015 a skos:Concept ;
+    skos:prefLabel "Software"@en ;
+    skos:notation "10101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101010 .
+
+icb:10101020 a skos:Concept ;
+    skos:prefLabel "Consumer Digital Services"@en ;
+    skos:notation "10101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101010 .
+
+icb:10102010 a skos:Concept ;
+    skos:prefLabel "Semiconductors"@en ;
+    skos:notation "10102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101020 .
+
+icb:10102015 a skos:Concept ;
+    skos:prefLabel "Electronic Components"@en ;
+    skos:notation "10102015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101020 .
+
+icb:10102020 a skos:Concept ;
+    skos:prefLabel "Production Technology Equipment"@en ;
+    skos:notation "10102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101020 .
+
+icb:10102030 a skos:Concept ;
+    skos:prefLabel "Computer Hardware"@en ;
+    skos:notation "10102030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101020 .
+
+icb:10102035 a skos:Concept ;
+    skos:prefLabel "Electronic Office Equipment"@en ;
+    skos:notation "10102035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:101020 .
+
+icb:15101010 a skos:Concept ;
+    skos:prefLabel "Telecommunications Equipment"@en ;
+    skos:notation "15101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:151010 .
+
+icb:15102010 a skos:Concept ;
+    skos:prefLabel "Cable Television Services"@en ;
+    skos:notation "15102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:151020 .
+
+icb:15102015 a skos:Concept ;
+    skos:prefLabel "Telecommunications Services"@en ;
+    skos:notation "15102015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:151020 .
+
+icb:20101010 a skos:Concept ;
+    skos:prefLabel "Health Care Facilities"@en ;
+    skos:notation "20101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201010 .
+
+icb:20101020 a skos:Concept ;
+    skos:prefLabel "Health Care Management Services"@en ;
+    skos:notation "20101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201010 .
+
+icb:20101025 a skos:Concept ;
+    skos:prefLabel "Health Care Services"@en ;
+    skos:notation "20101025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201010 .
+
+icb:20101030 a skos:Concept ;
+    skos:prefLabel "Health Care: Misc."@en ;
+    skos:notation "20101030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201010 .
+
+icb:20102010 a skos:Concept ;
+    skos:prefLabel "Medical Equipment"@en ;
+    skos:notation "20102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201020 .
+
+icb:20102015 a skos:Concept ;
+    skos:prefLabel "Medical Supplies"@en ;
+    skos:notation "20102015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201020 .
+
+icb:20102020 a skos:Concept ;
+    skos:prefLabel "Medical Services"@en ;
+    skos:notation "20102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201020 .
+
+icb:20103010 a skos:Concept ;
+    skos:prefLabel "Biotechnology"@en ;
+    skos:notation "20103010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201030 .
+
+icb:20103015 a skos:Concept ;
+    skos:prefLabel "Pharmaceuticals"@en ;
+    skos:notation "20103015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201030 .
+
+icb:20103020 a skos:Concept ;
+    skos:prefLabel "Cannabis Producers"@en ;
+    skos:notation "20103020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:201030 .
+
+icb:30101010 a skos:Concept ;
+    skos:prefLabel "Banks"@en ;
+    skos:notation "30101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:301010 .
+
+icb:30201020 a skos:Concept ;
+    skos:prefLabel "Consumer Lending"@en ;
+    skos:notation "30201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302010 .
+
+icb:30201025 a skos:Concept ;
+    skos:prefLabel "Mortgage Finance"@en ;
+    skos:notation "30201025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302010 .
+
+icb:30201030 a skos:Concept ;
+    skos:prefLabel "Financial Data Providers"@en ;
+    skos:notation "30201030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302010 .
+
+icb:30202000 a skos:Concept ;
+    skos:prefLabel "Diversified Financial Services"@en ;
+    skos:notation "30202000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302020 .
+
+icb:30202010 a skos:Concept ;
+    skos:prefLabel "Asset Managers and Custodians"@en ;
+    skos:notation "30202010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302020 .
+
+icb:30202015 a skos:Concept ;
+    skos:prefLabel "Investment Services"@en ;
+    skos:notation "30202015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302020 .
+
+icb:30203000 a skos:Concept ;
+    skos:prefLabel "Mortgage REITs: Diversified"@en ;
+    skos:notation "30203000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302030 .
+
+icb:30203010 a skos:Concept ;
+    skos:prefLabel "Mortgage REITs: Commercial"@en ;
+    skos:notation "30203010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302030 .
+
+icb:30203020 a skos:Concept ;
+    skos:prefLabel "Mortgage REITs: Residential"@en ;
+    skos:notation "30203020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302030 .
+
+icb:30204000 a skos:Concept ;
+    skos:prefLabel "Closed End Investments"@en ;
+    skos:notation "30204000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302040 .
+
+icb:30205000 a skos:Concept ;
+    skos:prefLabel "Open End and Miscellaneous Investment Vehicles"@en ;
+    skos:notation "30205000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:302050 .
+
+icb:30301010 a skos:Concept ;
+    skos:prefLabel "Life Insurance"@en ;
+    skos:notation "30301010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:303010 .
+
+icb:30302010 a skos:Concept ;
+    skos:prefLabel "Full Line Insurance"@en ;
+    skos:notation "30302010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:303020 .
+
+icb:30302015 a skos:Concept ;
+    skos:prefLabel "Insurance Brokers"@en ;
+    skos:notation "30302015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:303020 .
+
+icb:30302020 a skos:Concept ;
+    skos:prefLabel "Reinsurance"@en ;
+    skos:notation "30302020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:303020 .
+
+icb:30302025 a skos:Concept ;
+    skos:prefLabel "Property and Casualty Insurance"@en ;
+    skos:notation "30302025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:303020 .
+
+icb:35101010 a skos:Concept ;
+    skos:prefLabel "Real Estate Holding and Development"@en ;
+    skos:notation "35101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351010 .
+
+icb:35101015 a skos:Concept ;
+    skos:prefLabel "Real Estate Services"@en ;
+    skos:notation "35101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351010 .
+
+icb:35102000 a skos:Concept ;
+    skos:prefLabel "Diversified REITs"@en ;
+    skos:notation "35102000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102010 a skos:Concept ;
+    skos:prefLabel "Health Care REITs"@en ;
+    skos:notation "35102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102015 a skos:Concept ;
+    skos:prefLabel "Hotel and Lodging REITs"@en ;
+    skos:notation "35102015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102020 a skos:Concept ;
+    skos:prefLabel "Industrial REITs"@en ;
+    skos:notation "35102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102025 a skos:Concept ;
+    skos:prefLabel "Infrastructure REITs"@en ;
+    skos:notation "35102025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102030 a skos:Concept ;
+    skos:prefLabel "Office REITs"@en ;
+    skos:notation "35102030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102040 a skos:Concept ;
+    skos:prefLabel "Residential REITs"@en ;
+    skos:notation "35102040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102045 a skos:Concept ;
+    skos:prefLabel "Retail REITs"@en ;
+    skos:notation "35102045" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102050 a skos:Concept ;
+    skos:prefLabel "Storage REITs"@en ;
+    skos:notation "35102050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102060 a skos:Concept ;
+    skos:prefLabel "Timber REITs"@en ;
+    skos:notation "35102060" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:35102070 a skos:Concept ;
+    skos:prefLabel "Other Specialty REITs"@en ;
+    skos:notation "35102070" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:351020 .
+
+icb:40101010 a skos:Concept ;
+    skos:prefLabel "Auto Services"@en ;
+    skos:notation "40101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:401010 .
+
+icb:40101015 a skos:Concept ;
+    skos:prefLabel "Tires"@en ;
+    skos:notation "40101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:401010 .
+
+icb:40101020 a skos:Concept ;
+    skos:prefLabel "Automobiles"@en ;
+    skos:notation "40101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:401010 .
+
+icb:40101025 a skos:Concept ;
+    skos:prefLabel "Auto Parts"@en ;
+    skos:notation "40101025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:401010 .
+
+icb:40201010 a skos:Concept ;
+    skos:prefLabel "Education Services"@en ;
+    skos:notation "40201010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201020 a skos:Concept ;
+    skos:prefLabel "Funeral Parlors and Cemetery"@en ;
+    skos:notation "40201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201030 a skos:Concept ;
+    skos:prefLabel "Printing and Copying Services"@en ;
+    skos:notation "40201030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201040 a skos:Concept ;
+    skos:prefLabel "Rental and Leasing Services: Consumer"@en ;
+    skos:notation "40201040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201050 a skos:Concept ;
+    skos:prefLabel "Storage Facilities"@en ;
+    skos:notation "40201050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201060 a skos:Concept ;
+    skos:prefLabel "Vending and Catering Service"@en ;
+    skos:notation "40201060" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40201070 a skos:Concept ;
+    skos:prefLabel "Consumer Services: Misc."@en ;
+    skos:notation "40201070" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402010 .
+
+icb:40202010 a skos:Concept ;
+    skos:prefLabel "Home Construction"@en ;
+    skos:notation "40202010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402020 .
+
+icb:40202015 a skos:Concept ;
+    skos:prefLabel "Household Furnishings"@en ;
+    skos:notation "40202015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402020 .
+
+icb:40202020 a skos:Concept ;
+    skos:prefLabel "Household Appliance"@en ;
+    skos:notation "40202020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402020 .
+
+icb:40202025 a skos:Concept ;
+    skos:prefLabel "Household Equipment and Products"@en ;
+    skos:notation "40202025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402020 .
+
+icb:40203010 a skos:Concept ;
+    skos:prefLabel "Consumer Electronics"@en ;
+    skos:notation "40203010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40203040 a skos:Concept ;
+    skos:prefLabel "Electronic Entertainment"@en ;
+    skos:notation "40203040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40203045 a skos:Concept ;
+    skos:prefLabel "Toys"@en ;
+    skos:notation "40203045" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40203050 a skos:Concept ;
+    skos:prefLabel "Recreational Products"@en ;
+    skos:notation "40203050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40203055 a skos:Concept ;
+    skos:prefLabel "Recreational Vehicles and Boats"@en ;
+    skos:notation "40203055" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40203060 a skos:Concept ;
+    skos:prefLabel "Photography"@en ;
+    skos:notation "40203060" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402030 .
+
+icb:40204020 a skos:Concept ;
+    skos:prefLabel "Clothing and Accessories"@en ;
+    skos:notation "40204020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402040 .
+
+icb:40204025 a skos:Concept ;
+    skos:prefLabel "Footwear"@en ;
+    skos:notation "40204025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402040 .
+
+icb:40204030 a skos:Concept ;
+    skos:prefLabel "Luxury Items"@en ;
+    skos:notation "40204030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402040 .
+
+icb:40204035 a skos:Concept ;
+    skos:prefLabel "Cosmetics"@en ;
+    skos:notation "40204035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:402040 .
+
+icb:40301010 a skos:Concept ;
+    skos:prefLabel "Entertainment"@en ;
+    skos:notation "40301010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:403010 .
+
+icb:40301020 a skos:Concept ;
+    skos:prefLabel "Media Agencies"@en ;
+    skos:notation "40301020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:403010 .
+
+icb:40301030 a skos:Concept ;
+    skos:prefLabel "Publishing"@en ;
+    skos:notation "40301030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:403010 .
+
+icb:40301035 a skos:Concept ;
+    skos:prefLabel "Radio and TV Broadcasters"@en ;
+    skos:notation "40301035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:403010 .
+
+icb:40401010 a skos:Concept ;
+    skos:prefLabel "Diversified Retailers"@en ;
+    skos:notation "40401010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:404010 .
+
+icb:40401020 a skos:Concept ;
+    skos:prefLabel "Apparel Retailers"@en ;
+    skos:notation "40401020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:404010 .
+
+icb:40401025 a skos:Concept ;
+    skos:prefLabel "Home Improvement Retailers"@en ;
+    skos:notation "40401025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:404010 .
+
+icb:40401030 a skos:Concept ;
+    skos:prefLabel "Specialty Retailers"@en ;
+    skos:notation "40401030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:404010 .
+
+icb:40501010 a skos:Concept ;
+    skos:prefLabel "Airlines"@en ;
+    skos:notation "40501010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:40501015 a skos:Concept ;
+    skos:prefLabel "Travel and Tourism"@en ;
+    skos:notation "40501015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:40501020 a skos:Concept ;
+    skos:prefLabel "Casinos and Gambling"@en ;
+    skos:notation "40501020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:40501025 a skos:Concept ;
+    skos:prefLabel "Hotels and Motels"@en ;
+    skos:notation "40501025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:40501030 a skos:Concept ;
+    skos:prefLabel "Recreational Services"@en ;
+    skos:notation "40501030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:40501040 a skos:Concept ;
+    skos:prefLabel "Restaurants and Bars"@en ;
+    skos:notation "40501040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:405010 .
+
+icb:45101010 a skos:Concept ;
+    skos:prefLabel "Brewers"@en ;
+    skos:notation "45101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451010 .
+
+icb:45101015 a skos:Concept ;
+    skos:prefLabel "Distillers and Vintners"@en ;
+    skos:notation "45101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451010 .
+
+icb:45101020 a skos:Concept ;
+    skos:prefLabel "Soft Drinks"@en ;
+    skos:notation "45101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451010 .
+
+icb:45102010 a skos:Concept ;
+    skos:prefLabel "Farming, Fishing, Ranching and Plantations"@en ;
+    skos:notation "45102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451020 .
+
+icb:45102020 a skos:Concept ;
+    skos:prefLabel "Food Products"@en ;
+    skos:notation "45102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451020 .
+
+icb:45102030 a skos:Concept ;
+    skos:prefLabel "Fruit and Grain Processing"@en ;
+    skos:notation "45102030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451020 .
+
+icb:45102035 a skos:Concept ;
+    skos:prefLabel "Sugar"@en ;
+    skos:notation "45102035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451020 .
+
+icb:45103010 a skos:Concept ;
+    skos:prefLabel "Tobacco"@en ;
+    skos:notation "45103010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:451030 .
+
+icb:45201010 a skos:Concept ;
+    skos:prefLabel "Food Retailers and Wholesalers"@en ;
+    skos:notation "45201010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:452010 .
+
+icb:45201015 a skos:Concept ;
+    skos:prefLabel "Drug Retailers"@en ;
+    skos:notation "45201015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:452010 .
+
+icb:45201020 a skos:Concept ;
+    skos:prefLabel "Personal Products"@en ;
+    skos:notation "45201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:452010 .
+
+icb:45201030 a skos:Concept ;
+    skos:prefLabel "Non-durable Household Products"@en ;
+    skos:notation "45201030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:452010 .
+
+icb:45201040 a skos:Concept ;
+    skos:prefLabel "Miscellaneous Consumer Staple Goods"@en ;
+    skos:notation "45201040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:452010 .
+
+icb:50101010 a skos:Concept ;
+    skos:prefLabel "Construction"@en ;
+    skos:notation "50101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50101015 a skos:Concept ;
+    skos:prefLabel "Engineering and Contracting Services"@en ;
+    skos:notation "50101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50101020 a skos:Concept ;
+    skos:prefLabel "Building, Roofing/Wallboard and Plumbing"@en ;
+    skos:notation "50101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50101025 a skos:Concept ;
+    skos:prefLabel "Building: Climate Control"@en ;
+    skos:notation "50101025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50101030 a skos:Concept ;
+    skos:prefLabel "Cement"@en ;
+    skos:notation "50101030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50101035 a skos:Concept ;
+    skos:prefLabel "Building Materials: Other"@en ;
+    skos:notation "50101035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:501010 .
+
+icb:50201010 a skos:Concept ;
+    skos:prefLabel "Aerospace"@en ;
+    skos:notation "50201010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502010 .
+
+icb:50201020 a skos:Concept ;
+    skos:prefLabel "Defense"@en ;
+    skos:notation "50201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502010 .
+
+icb:50202010 a skos:Concept ;
+    skos:prefLabel "Electrical Components"@en ;
+    skos:notation "50202010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502020 .
+
+icb:50202020 a skos:Concept ;
+    skos:prefLabel "Electronic Equipment: Control and Filter"@en ;
+    skos:notation "50202020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502020 .
+
+icb:50202025 a skos:Concept ;
+    skos:prefLabel "Electronic Equipment: Gauges and Meters"@en ;
+    skos:notation "50202025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502020 .
+
+icb:50202030 a skos:Concept ;
+    skos:prefLabel "Electronic Equipment: Pollution Control"@en ;
+    skos:notation "50202030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502020 .
+
+icb:50202040 a skos:Concept ;
+    skos:prefLabel "Electronic Equipment: Other"@en ;
+    skos:notation "50202040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502020 .
+
+icb:50203000 a skos:Concept ;
+    skos:prefLabel "Diversified Industrials"@en ;
+    skos:notation "50203000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502030 .
+
+icb:50203010 a skos:Concept ;
+    skos:prefLabel "Paints and Coatings"@en ;
+    skos:notation "50203010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502030 .
+
+icb:50203015 a skos:Concept ;
+    skos:prefLabel "Plastics"@en ;
+    skos:notation "50203015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502030 .
+
+icb:50203020 a skos:Concept ;
+    skos:prefLabel "Glass"@en ;
+    skos:notation "50203020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502030 .
+
+icb:50203030 a skos:Concept ;
+    skos:prefLabel "Containers and Packaging"@en ;
+    skos:notation "50203030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502030 .
+
+icb:50204000 a skos:Concept ;
+    skos:prefLabel "Machinery: Industrial"@en ;
+    skos:notation "50204000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50204010 a skos:Concept ;
+    skos:prefLabel "Machinery: Agricultural"@en ;
+    skos:notation "50204010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50204020 a skos:Concept ;
+    skos:prefLabel "Machinery: Construction and Handling"@en ;
+    skos:notation "50204020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50204030 a skos:Concept ;
+    skos:prefLabel "Machinery: Engines"@en ;
+    skos:notation "50204030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50204040 a skos:Concept ;
+    skos:prefLabel "Machinery: Tools"@en ;
+    skos:notation "50204040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50204050 a skos:Concept ;
+    skos:prefLabel "Machinery: Specialty"@en ;
+    skos:notation "50204050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502040 .
+
+icb:50205010 a skos:Concept ;
+    skos:prefLabel "Industrial Suppliers"@en ;
+    skos:notation "50205010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50205015 a skos:Concept ;
+    skos:prefLabel "Transaction Processing Services"@en ;
+    skos:notation "50205015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50205020 a skos:Concept ;
+    skos:prefLabel "Professional Business Support Services"@en ;
+    skos:notation "50205020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50205025 a skos:Concept ;
+    skos:prefLabel "Business Training and Employment Agencies"@en ;
+    skos:notation "50205025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50205030 a skos:Concept ;
+    skos:prefLabel "Forms and Bulk Printing Services"@en ;
+    skos:notation "50205030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50205040 a skos:Concept ;
+    skos:prefLabel "Security Services"@en ;
+    skos:notation "50205040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502050 .
+
+icb:50206010 a skos:Concept ;
+    skos:prefLabel "Trucking"@en ;
+    skos:notation "50206010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206015 a skos:Concept ;
+    skos:prefLabel "Commercial Vehicles and Parts"@en ;
+    skos:notation "50206015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206020 a skos:Concept ;
+    skos:prefLabel "Railroads"@en ;
+    skos:notation "50206020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206025 a skos:Concept ;
+    skos:prefLabel "Railroad Equipment"@en ;
+    skos:notation "50206025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206030 a skos:Concept ;
+    skos:prefLabel "Marine Transportation"@en ;
+    skos:notation "50206030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206040 a skos:Concept ;
+    skos:prefLabel "Delivery Services"@en ;
+    skos:notation "50206040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206050 a skos:Concept ;
+    skos:prefLabel "Commercial Vehicle-Equipment Leasing"@en ;
+    skos:notation "50206050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:50206060 a skos:Concept ;
+    skos:prefLabel "Transportation Services"@en ;
+    skos:notation "50206060" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:502060 .
+
+icb:55101000 a skos:Concept ;
+    skos:prefLabel "Diversified Materials"@en ;
+    skos:notation "55101000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551010 .
+
+icb:55101010 a skos:Concept ;
+    skos:prefLabel "Forestry"@en ;
+    skos:notation "55101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551010 .
+
+icb:55101015 a skos:Concept ;
+    skos:prefLabel "Paper"@en ;
+    skos:notation "55101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551010 .
+
+icb:55101020 a skos:Concept ;
+    skos:prefLabel "Textile Products"@en ;
+    skos:notation "55101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551010 .
+
+icb:55102000 a skos:Concept ;
+    skos:prefLabel "General Mining"@en ;
+    skos:notation "55102000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55102010 a skos:Concept ;
+    skos:prefLabel "Iron and Steel"@en ;
+    skos:notation "55102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55102015 a skos:Concept ;
+    skos:prefLabel "Metal Fabricating"@en ;
+    skos:notation "55102015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55102035 a skos:Concept ;
+    skos:prefLabel "Aluminum"@en ;
+    skos:notation "55102035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55102040 a skos:Concept ;
+    skos:prefLabel "Copper"@en ;
+    skos:notation "55102040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55102050 a skos:Concept ;
+    skos:prefLabel "Nonferrous Metals"@en ;
+    skos:notation "55102050" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551020 .
+
+icb:55103020 a skos:Concept ;
+    skos:prefLabel "Diamonds and Gemstones"@en ;
+    skos:notation "55103020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551030 .
+
+icb:55103025 a skos:Concept ;
+    skos:prefLabel "Gold Mining"@en ;
+    skos:notation "55103025" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551030 .
+
+icb:55103030 a skos:Concept ;
+    skos:prefLabel "Platinum and Precious Metals"@en ;
+    skos:notation "55103030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:551030 .
+
+icb:55201000 a skos:Concept ;
+    skos:prefLabel "Chemicals: Diversified"@en ;
+    skos:notation "55201000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:552010 .
+
+icb:55201010 a skos:Concept ;
+    skos:prefLabel "Chemicals and Synthetic Fibers"@en ;
+    skos:notation "55201010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:552010 .
+
+icb:55201015 a skos:Concept ;
+    skos:prefLabel "Fertilizers"@en ;
+    skos:notation "55201015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:552010 .
+
+icb:55201020 a skos:Concept ;
+    skos:prefLabel "Specialty Chemicals"@en ;
+    skos:notation "55201020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:552010 .
+
+icb:60101000 a skos:Concept ;
+    skos:prefLabel "Integrated Oil and Gas"@en ;
+    skos:notation "60101000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101010 a skos:Concept ;
+    skos:prefLabel "Oil: Crude Producers"@en ;
+    skos:notation "60101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101015 a skos:Concept ;
+    skos:prefLabel "Offshore Drilling and Other Services"@en ;
+    skos:notation "60101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101020 a skos:Concept ;
+    skos:prefLabel "Oil Refining and Marketing"@en ;
+    skos:notation "60101020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101030 a skos:Concept ;
+    skos:prefLabel "Oil Equipment and Services"@en ;
+    skos:notation "60101030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101035 a skos:Concept ;
+    skos:prefLabel "Pipelines"@en ;
+    skos:notation "60101035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60101040 a skos:Concept ;
+    skos:prefLabel "Coal"@en ;
+    skos:notation "60101040" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601010 .
+
+icb:60102010 a skos:Concept ;
+    skos:prefLabel "Alternative Fuels"@en ;
+    skos:notation "60102010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601020 .
+
+icb:60102020 a skos:Concept ;
+    skos:prefLabel "Renewable Energy Equipment"@en ;
+    skos:notation "60102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:601020 .
+
+icb:65101010 a skos:Concept ;
+    skos:prefLabel "Alternative Electricity"@en ;
+    skos:notation "65101010" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651010 .
+
+icb:65101015 a skos:Concept ;
+    skos:prefLabel "Conventional Electricity"@en ;
+    skos:notation "65101015" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651010 .
+
+icb:65102000 a skos:Concept ;
+    skos:prefLabel "Multi-Utilities"@en ;
+    skos:notation "65102000" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651020 .
+
+icb:65102020 a skos:Concept ;
+    skos:prefLabel "Gas Distribution"@en ;
+    skos:notation "65102020" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651020 .
+
+icb:65102030 a skos:Concept ;
+    skos:prefLabel "Water"@en ;
+    skos:notation "65102030" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651020 .
+
+icb:65103035 a skos:Concept ;
+    skos:prefLabel "Waste and Disposal Services"@en ;
+    skos:notation "65103035" ;
+    skos:inScheme icb:scheme ;
+    skos:broader icb:651030 .
