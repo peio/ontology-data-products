@@ -3,7 +3,7 @@
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/> .
-@prefix gw: <https://graphwise.ai/ontology/> .
+@prefix gw: <https://graphwise.ai/ontology/estx50/> .
 @prefix gwi: <https://graphwise.ai/instance/> .
 @prefix icb: <https://graphwise.ai/taxonomy/icb/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -21,8 +21,9 @@ gwi:company-adidas a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:40204025 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 23.7 ;
-    schema:legalName "Adidas"^^xsd:string ;
+    schema:name "Adidas"^^xsd:string ;
     schema:url <https://www.adidas-group.com> .
 
 gwi:company-adyen a gw:Company,
@@ -33,8 +34,9 @@ gwi:company-adyen a gw:Company,
     gw:country wd:Q55 ;
     gw:icbSubsector icb:50205015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 2.0 ;
-    schema:legalName "Adyen"^^xsd:string ;
+    schema:name "Adyen"^^xsd:string ;
     schema:url <https://www.adyen.com> .
 
 gwi:company-ahold-delhaize a gw:Company,
@@ -45,8 +47,9 @@ gwi:company-ahold-delhaize a gw:Company,
     gw:country wd:Q55 ;
     gw:icbSubsector icb:45201010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 89.4 ;
-    schema:legalName "Ahold Delhaize"^^xsd:string ;
+    schema:name "Ahold Delhaize"^^xsd:string ;
     schema:url <https://www.aholddelhaize.com> .
 
 gwi:company-air-liquide a gw:Company,
@@ -57,8 +60,9 @@ gwi:company-air-liquide a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:55201020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 27.1 ;
-    schema:legalName "Air Liquide"^^xsd:string ;
+    schema:name "Air Liquide"^^xsd:string ;
     schema:url <https://www.airliquide.com> .
 
 gwi:company-airbus a gw:Company,
@@ -69,8 +73,9 @@ gwi:company-airbus a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:50201010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 69.2 ;
-    schema:legalName "Airbus"^^xsd:string ;
+    schema:name "Airbus"^^xsd:string ;
     schema:url <https://www.airbus.com> .
 
 gwi:company-allianz a gw:Company,
@@ -81,8 +86,9 @@ gwi:company-allianz a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:30302010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 179.8 ;
-    schema:legalName "Allianz"^^xsd:string ;
+    schema:name "Allianz"^^xsd:string ;
     schema:url <https://www.allianz.com> .
 
 gwi:company-anheuser-busch-inbev a gw:Company,
@@ -93,8 +99,9 @@ gwi:company-anheuser-busch-inbev a gw:Company,
     gw:country wd:Q31 ;
     gw:icbSubsector icb:45101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "USD"^^xsd:string ;
     gw:revenueFY2024 59.8 ;
-    schema:legalName "Anheuser-Busch InBev"^^xsd:string ;
+    schema:name "Anheuser-Busch InBev"^^xsd:string ;
     schema:url <https://www.ab-inbev.com> .
 
 gwi:company-asml-holding a gw:Company,
@@ -105,8 +112,9 @@ gwi:company-asml-holding a gw:Company,
     gw:country wd:Q55 ;
     gw:icbSubsector icb:10102020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 28.3 ;
-    schema:legalName "ASML Holding"^^xsd:string ;
+    schema:name "ASML Holding"^^xsd:string ;
     schema:url <https://www.asml.com> .
 
 gwi:company-axa a gw:Company,
@@ -117,8 +125,9 @@ gwi:company-axa a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:30302010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 110.0 ;
-    schema:legalName "AXA"^^xsd:string ;
+    schema:name "AXA"^^xsd:string ;
     schema:url <https://www.axa.com> .
 
 gwi:company-banco-santander a gw:Company,
@@ -129,8 +138,9 @@ gwi:company-banco-santander a gw:Company,
     gw:country wd:Q29 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 62.2 ;
-    schema:legalName "Banco Santander"^^xsd:string ;
+    schema:name "Banco Santander"^^xsd:string ;
     schema:url <https://www.santander.com> .
 
 gwi:company-basf a gw:Company,
@@ -141,8 +151,9 @@ gwi:company-basf a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:55201000 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 65.3 ;
-    schema:legalName "BASF"^^xsd:string ;
+    schema:name "BASF"^^xsd:string ;
     schema:url <https://www.basf.com> .
 
 gwi:company-bayer a gw:Company,
@@ -153,8 +164,9 @@ gwi:company-bayer a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:20103015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 46.6 ;
-    schema:legalName "Bayer"^^xsd:string ;
+    schema:name "Bayer"^^xsd:string ;
     schema:url <https://www.bayer.com> .
 
 gwi:company-bbva a gw:Company,
@@ -165,8 +177,9 @@ gwi:company-bbva a gw:Company,
     gw:country wd:Q29 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 35.5 ;
-    schema:legalName "BBVA"^^xsd:string ;
+    schema:name "BBVA"^^xsd:string ;
     schema:url <https://www.bbva.com> .
 
 gwi:company-bmw a gw:Company,
@@ -177,8 +190,9 @@ gwi:company-bmw a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:40101020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 142.4 ;
-    schema:legalName "BMW"^^xsd:string ;
+    schema:name "BMW"^^xsd:string ;
     schema:url <https://www.bmwgroup.com> .
 
 gwi:company-bnp-paribas a gw:Company,
@@ -189,8 +203,9 @@ gwi:company-bnp-paribas a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 48.8 ;
-    schema:legalName "BNP Paribas"^^xsd:string ;
+    schema:name "BNP Paribas"^^xsd:string ;
     schema:url <https://group.bnpparibas> .
 
 gwi:company-crh a gw:Company,
@@ -201,8 +216,9 @@ gwi:company-crh a gw:Company,
     gw:country wd:Q27 ;
     gw:icbSubsector icb:50101035 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "USD"^^xsd:string ;
     gw:revenueFY2024 35.6 ;
-    schema:legalName "CRH"^^xsd:string ;
+    schema:name "CRH"^^xsd:string ;
     schema:url <https://www.crh.com> .
 
 gwi:company-danone a gw:Company,
@@ -213,8 +229,9 @@ gwi:company-danone a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:45102020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 27.4 ;
-    schema:legalName "Danone"^^xsd:string ;
+    schema:name "Danone"^^xsd:string ;
     schema:url <https://www.danone.com> .
 
 gwi:company-deutsche-borse a gw:Company,
@@ -225,8 +242,9 @@ gwi:company-deutsche-borse a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:30202015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 5.8 ;
-    schema:legalName "Deutsche Börse"^^xsd:string ;
+    schema:name "Deutsche Börse"^^xsd:string ;
     schema:url <https://www.deutsche-boerse.com> .
 
 gwi:company-deutsche-telekom a gw:Company,
@@ -237,8 +255,9 @@ gwi:company-deutsche-telekom a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:15102015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 115.8 ;
-    schema:legalName "Deutsche Telekom"^^xsd:string ;
+    schema:name "Deutsche Telekom"^^xsd:string ;
     schema:url <https://www.telekom.com> .
 
 gwi:company-dhl-group a gw:Company,
@@ -249,8 +268,9 @@ gwi:company-dhl-group a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:50206040 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 84.2 ;
-    schema:legalName "DHL Group"^^xsd:string ;
+    schema:name "DHL Group"^^xsd:string ;
     schema:url <https://group.dhl.com> .
 
 gwi:company-enel a gw:Company,
@@ -261,8 +281,9 @@ gwi:company-enel a gw:Company,
     gw:country wd:Q38 ;
     gw:icbSubsector icb:65101015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 73.0 ;
-    schema:legalName "Enel"^^xsd:string ;
+    schema:name "Enel"^^xsd:string ;
     schema:url <https://www.enel.com> .
 
 gwi:company-engie a gw:Company,
@@ -273,8 +294,9 @@ gwi:company-engie a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:65102000 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 73.8 ;
-    schema:legalName "Engie"^^xsd:string ;
+    schema:name "Engie"^^xsd:string ;
     schema:url <https://www.engie.com> .
 
 gwi:company-eni a gw:Company,
@@ -285,8 +307,9 @@ gwi:company-eni a gw:Company,
     gw:country wd:Q38 ;
     gw:icbSubsector icb:60101000 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 88.8 ;
-    schema:legalName "Eni"^^xsd:string ;
+    schema:name "Eni"^^xsd:string ;
     schema:url <https://www.eni.com> .
 
 gwi:company-essilorluxottica a gw:Company,
@@ -297,8 +320,9 @@ gwi:company-essilorluxottica a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:20102015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 26.5 ;
-    schema:legalName "EssilorLuxottica"^^xsd:string ;
+    schema:name "EssilorLuxottica"^^xsd:string ;
     schema:url <https://www.essilorluxottica.com> .
 
 gwi:company-flutter-entertainment a gw:Company,
@@ -309,8 +333,9 @@ gwi:company-flutter-entertainment a gw:Company,
     gw:country wd:Q27 ;
     gw:icbSubsector icb:40501020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "USD"^^xsd:string ;
     gw:revenueFY2024 14.0 ;
-    schema:legalName "Flutter Entertainment"^^xsd:string ;
+    schema:name "Flutter Entertainment"^^xsd:string ;
     schema:url <https://www.flutter.com> .
 
 gwi:company-hermes-international a gw:Company,
@@ -321,8 +346,9 @@ gwi:company-hermes-international a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:40204030 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 15.2 ;
-    schema:legalName "Hermès International"^^xsd:string ;
+    schema:name "Hermès International"^^xsd:string ;
     schema:url <https://www.hermes.com> .
 
 gwi:company-iberdrola a gw:Company,
@@ -333,8 +359,9 @@ gwi:company-iberdrola a gw:Company,
     gw:country wd:Q29 ;
     gw:icbSubsector icb:65101015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 44.7 ;
-    schema:legalName "Iberdrola"^^xsd:string ;
+    schema:name "Iberdrola"^^xsd:string ;
     schema:url <https://www.iberdrola.com> .
 
 gwi:company-inditex a gw:Company,
@@ -345,8 +372,9 @@ gwi:company-inditex a gw:Company,
     gw:country wd:Q29 ;
     gw:icbSubsector icb:40401020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 38.6 ;
-    schema:legalName "Inditex"^^xsd:string ;
+    schema:name "Inditex"^^xsd:string ;
     schema:url <https://www.inditex.com> .
 
 gwi:company-infineon-technologies a gw:Company,
@@ -357,8 +385,9 @@ gwi:company-infineon-technologies a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:10102010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 15.0 ;
-    schema:legalName "Infineon Technologies"^^xsd:string ;
+    schema:name "Infineon Technologies"^^xsd:string ;
     schema:url <https://www.infineon.com> .
 
 gwi:company-ing-group a gw:Company,
@@ -369,8 +398,9 @@ gwi:company-ing-group a gw:Company,
     gw:country wd:Q55 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 22.6 ;
-    schema:legalName "ING Group"^^xsd:string ;
+    schema:name "ING Group"^^xsd:string ;
     schema:url <https://www.ing.com> .
 
 gwi:company-intesa-sanpaolo a gw:Company,
@@ -381,8 +411,9 @@ gwi:company-intesa-sanpaolo a gw:Company,
     gw:country wd:Q38 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 27.0 ;
-    schema:legalName "Intesa Sanpaolo"^^xsd:string ;
+    schema:name "Intesa Sanpaolo"^^xsd:string ;
     schema:url <https://group.intesasanpaolo.com> .
 
 gwi:company-kering a gw:Company,
@@ -393,8 +424,9 @@ gwi:company-kering a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:40204030 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 17.2 ;
-    schema:legalName "Kering"^^xsd:string ;
+    schema:name "Kering"^^xsd:string ;
     schema:url <https://www.kering.com> .
 
 gwi:company-loreal a gw:Company,
@@ -405,8 +437,9 @@ gwi:company-loreal a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:45201020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 43.5 ;
-    schema:legalName "L'Oréal"^^xsd:string ;
+    schema:name "L'Oréal"^^xsd:string ;
     schema:url <https://www.loreal.com> .
 
 gwi:company-lvmh a gw:Company,
@@ -417,8 +450,9 @@ gwi:company-lvmh a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:40204030 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 84.7 ;
-    schema:legalName "LVMH"^^xsd:string ;
+    schema:name "LVMH"^^xsd:string ;
     schema:url <https://www.lvmh.com> .
 
 gwi:company-mercedes-benz-group a gw:Company,
@@ -429,8 +463,9 @@ gwi:company-mercedes-benz-group a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:40101020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 145.6 ;
-    schema:legalName "Mercedes-Benz Group"^^xsd:string ;
+    schema:name "Mercedes-Benz Group"^^xsd:string ;
     schema:url <https://group.mercedes-benz.com> .
 
 gwi:company-munich-re a gw:Company,
@@ -441,8 +476,9 @@ gwi:company-munich-re a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:30302020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 60.8 ;
-    schema:legalName "Munich Re"^^xsd:string ;
+    schema:name "Munich Re"^^xsd:string ;
     schema:url <https://www.munichre.com> .
 
 gwi:company-nokia a gw:Company,
@@ -453,8 +489,9 @@ gwi:company-nokia a gw:Company,
     gw:country wd:Q33 ;
     gw:icbSubsector icb:15101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 19.2 ;
-    schema:legalName "Nokia"^^xsd:string ;
+    schema:name "Nokia"^^xsd:string ;
     schema:url <https://www.nokia.com> .
 
 gwi:company-nordea-bank a gw:Company,
@@ -465,8 +502,9 @@ gwi:company-nordea-bank a gw:Company,
     gw:country wd:Q33 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 12.0 ;
-    schema:legalName "Nordea Bank"^^xsd:string ;
+    schema:name "Nordea Bank"^^xsd:string ;
     schema:url <https://www.nordea.com> .
 
 gwi:company-pernod-ricard a gw:Company,
@@ -477,8 +515,9 @@ gwi:company-pernod-ricard a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:45101015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 11.6 ;
-    schema:legalName "Pernod Ricard"^^xsd:string ;
+    schema:name "Pernod Ricard"^^xsd:string ;
     schema:url <https://www.pernod-ricard.com> .
 
 gwi:company-prosus a gw:Company,
@@ -489,8 +528,9 @@ gwi:company-prosus a gw:Company,
     gw:country wd:Q55 ;
     gw:icbSubsector icb:10101020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "USD"^^xsd:string ;
     gw:revenueFY2024 6.2 ;
-    schema:legalName "Prosus"^^xsd:string ;
+    schema:name "Prosus"^^xsd:string ;
     schema:url <https://www.prosus.com> .
 
 gwi:company-safran a gw:Company,
@@ -501,8 +541,9 @@ gwi:company-safran a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:50201010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 27.3 ;
-    schema:legalName "Safran"^^xsd:string ;
+    schema:name "Safran"^^xsd:string ;
     schema:url <https://www.safran-group.com> .
 
 gwi:company-sanofi a gw:Company,
@@ -513,8 +554,9 @@ gwi:company-sanofi a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:20103015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 41.1 ;
-    schema:legalName "Sanofi"^^xsd:string ;
+    schema:name "Sanofi"^^xsd:string ;
     schema:url <https://www.sanofi.com> .
 
 gwi:company-sap a gw:Company,
@@ -525,8 +567,9 @@ gwi:company-sap a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:10101015 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 34.2 ;
-    schema:legalName "SAP"^^xsd:string ;
+    schema:name "SAP"^^xsd:string ;
     schema:url <https://www.sap.com> .
 
 gwi:company-schneider-electric a gw:Company,
@@ -537,8 +580,9 @@ gwi:company-schneider-electric a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:50202010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 38.2 ;
-    schema:legalName "Schneider Electric"^^xsd:string ;
+    schema:name "Schneider Electric"^^xsd:string ;
     schema:url <https://www.se.com> .
 
 gwi:company-siemens a gw:Company,
@@ -549,8 +593,9 @@ gwi:company-siemens a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:50203000 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 75.9 ;
-    schema:legalName "Siemens"^^xsd:string ;
+    schema:name "Siemens"^^xsd:string ;
     schema:url <https://www.siemens.com> .
 
 gwi:company-stellantis a gw:Company,
@@ -561,8 +606,9 @@ gwi:company-stellantis a gw:Company,
     gw:country wd:Q38 ;
     gw:icbSubsector icb:40101020 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 156.9 ;
-    schema:legalName "Stellantis"^^xsd:string ;
+    schema:name "Stellantis"^^xsd:string ;
     schema:url <https://www.stellantis.com> .
 
 gwi:company-totalenergies a gw:Company,
@@ -573,8 +619,9 @@ gwi:company-totalenergies a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:60101000 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "USD"^^xsd:string ;
     gw:revenueFY2024 195.6 ;
-    schema:legalName "TotalEnergies"^^xsd:string ;
+    schema:name "TotalEnergies"^^xsd:string ;
     schema:url <https://www.totalenergies.com> .
 
 gwi:company-unicredit a gw:Company,
@@ -585,8 +632,9 @@ gwi:company-unicredit a gw:Company,
     gw:country wd:Q38 ;
     gw:icbSubsector icb:30101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 24.2 ;
-    schema:legalName "UniCredit"^^xsd:string ;
+    schema:name "UniCredit"^^xsd:string ;
     schema:url <https://www.unicreditgroup.eu> .
 
 gwi:company-vinci a gw:Company,
@@ -597,8 +645,9 @@ gwi:company-vinci a gw:Company,
     gw:country wd:Q142 ;
     gw:icbSubsector icb:50101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 71.6 ;
-    schema:legalName "Vinci"^^xsd:string ;
+    schema:name "Vinci"^^xsd:string ;
     schema:url <https://www.vinci.com> .
 
 gwi:company-vonovia a gw:Company,
@@ -609,12 +658,13 @@ gwi:company-vonovia a gw:Company,
     gw:country wd:Q183 ;
     gw:icbSubsector icb:35101010 ;
     gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    gw:reportingCurrency "EUR"^^xsd:string ;
     gw:revenueFY2024 5.1 ;
-    schema:legalName "Vonovia"^^xsd:string ;
+    schema:name "Vonovia"^^xsd:string ;
     schema:url <https://www.vonovia.com> .
 
 gwi:dataset-estx50 a dcat:Dataset ;
-    dcterms:description "Snapshot of the 50 EURO STOXX 50 constituents with country, ICB subsector and FY2024 revenue. Remark on the numbers: revenue figures are approximate, in each company's reporting currency (not converted), and not comparable across sectors. ICB subsector assignments are provisional, derived from the taxonomy labels, and must be verified against FTSE Russell's classification."@en ;
+    dcterms:description "Snapshot of the 50 EURO STOXX 50 constituents with country, ICB subsector and FY2024 revenue. Remark on the numbers: revenue figures are approximate, in each company's reporting currency (recorded, not converted; do not sum across currencies), and not comparable across sectors. ICB subsector assignments are provisional, derived from the taxonomy labels, and must be verified against FTSE Russell's classification."@en ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     dcterms:title "EURO STOXX 50 constituents, FY2024"@en ;
     dcat:distribution gwi:distribution-csv2,

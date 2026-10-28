@@ -4,7 +4,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 - **Author:** Peio Popov · Graphwise
 - **Built:** 2026-10-28
-- **Version:** ontology 1.0.0
+- **Version:** ontology 2.0.0 (Revision 2, Step 8)
 
 ---
 
@@ -12,9 +12,10 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 - **Result:** a small OWL ontology plus SKOS taxonomy describing the 50 EURO STOXX 50 constituents.
 - **Tests:** Track A (robustness) 22/22 passed; Track B (business questions) 6/6 passed.
-- **Size:** 2,430 triples (ontology + ICB taxonomy + instances); 3,915 after OWL RL reasoning.
+- **Size:** 2,491 triples (ontology + ICB taxonomy + instances); 3,993 after OWL RL reasoning.
 - **Revision 1 (Step 8):** reuse made visible without a reasoner. Instances now carry the schema.org and FIBO types directly, and the ontology no longer redeclares schema.org terms.
-- **Core model:** 3 minted classes, 5 minted properties, 2 reused properties, 1 reused taxonomy (ICB, 249 concepts).
+- **Revision 2 (Step 8):** revenue totals no longer mix currencies, names use `schema:name`, class definitions no longer mention the index, and minted terms moved to their own namespace.
+- **Core model:** 3 minted classes, 6 minted properties, 2 reused properties, 1 reused taxonomy (ICB, 249 concepts).
 - **Biggest caveat:** ICB subsector assignments are provisional. They were chosen from the taxonomy labels, not taken from FTSE Russell.
 
 ---
@@ -25,7 +26,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Decisions**
 
-- **Namespaces.** `gw:` `https://graphwise.ai/ontology/`, `gwi:` `https://graphwise.ai/instance/`, `icb:` `https://graphwise.ai/taxonomy/icb/`.
+- **Namespaces.** `gw:` `https://graphwise.ai/ontology/estx50/` (`https://graphwise.ai/ontology/` until Revision 2), `gwi:` `https://graphwise.ai/instance/`, `icb:` `https://graphwise.ai/taxonomy/icb/`.
   - Why: follows the Graphwise prompt template; `icb:` matches the supplied taxonomy file.
 - **Tooling: Python with rdflib, pySHACL, owlrl and pyLODE; GraphDB loading is documented, not executed.**
   - Why: everything runs locally in about two seconds, with no server needed during a workshop.
@@ -44,7 +45,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 - **Domain:** the 50 constituents of the EURO STOXX 50, with country, ICB classification and FY2024 revenue.
 - **Out of scope, by agreement:**
-  - reporting currency vs country currency (the two currency columns are dropped)
+  - country currency (dropped; implied by the country). Reporting currency was out of scope too until Revision 2, which maps it.
   - index membership over time (snapshot only)
   - FX normalization
   - revenue comparability modeling (it is a remark on the numbers, not part of the data)
@@ -60,13 +61,13 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 | # | Question |
 | --- | --- |
 | B1 | Which constituents are banks? |
-| B2 | Revenue by ICB industry, rolled up from subsectors |
-| B3 | Revenue by country |
+| B2 | Revenue by ICB industry and reporting currency, rolled up from subsectors |
+| B3 | Revenue by country and reporting currency |
 | B4 | Which countries' constituents span the most industries? |
-| B5 | Largest constituent by revenue, with the comparability caveat |
+| B5 | Largest constituent by revenue in each reporting currency, with the comparability caveat |
 | B6 | Where does a figure come from, and is it approximate? |
 
-**Produced:** scope statement (README), `queries/answer-key.csv` (37 expected rows).
+**Produced:** scope statement (README), `queries/answer-key.csv` (45 expected rows).
 
 ---
 
@@ -80,7 +81,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 | --- | --- | --- |
 | Industry classification | ICB SKOS taxonomy (`icb-skos.ttl`, 249 concepts) | Official structure; IRIs built from ICB codes are stable |
 | Company | `schema:Corporation` (superclass) | Widely used; no import needed |
-| Name, website | `schema:legalName`, `schema:url` | Direct fit |
+| Name, website | `schema:name`, `schema:url` | Direct fit (`schema:legalName` until Revision 2) |
 | Country | `schema:Country` (superclass); Wikidata IRIs for the instances | Globally resolvable identifiers |
 | Index | `fibo-ind-mkt-bas:EquityIndex` (superclass) | FIBO's equity index class, checked against the FIBO source on GitHub |
 | Provenance | DCAT (`Dataset`, `Distribution`), PROV-O (`wasDerivedFrom`), Dublin Core | W3C standards for dataset metadata |
@@ -93,7 +94,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   | Mechanism | Terms | Visible in the plain data? |
   | --- | --- | --- |
   | Alignment: local class `rdfs:subClassOf` reused class | `schema:Corporation`, `schema:Country`, `fibo-ind-mkt-bas:EquityIndex` | Yes, through dual typing (Revision 1); before that, only after reasoning |
-  | Direct use, no local wrapper | `schema:legalName`, `schema:url`, DCAT, PROV-O, Dublin Core, SKOS | Yes |
+  | Direct use, no local wrapper | `schema:name`, `schema:url`, DCAT, PROV-O, Dublin Core, SKOS | Yes |
   | Reuse as data | ICB concepts, Wikidata country IRIs | Yes |
 
 - **Do not redeclare terms we do not own** (Revision 1). The ontology types and labels only `gw:` terms; reused classes and properties are referenced, never declared.
@@ -111,8 +112,8 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Decisions**
 
-- Every CSV column is listed with its fate: four are mapped, three ICB columns are cross-checked and then derived rather than stored, and two are dropped (see Step 7).
-- Reporting currency and country currency were enumerated, then excluded by scope.
+- Every CSV column is listed with its fate: five are mapped, three ICB columns are cross-checked and then derived rather than stored, and one is dropped (see Step 7).
+- Country currency was enumerated, then excluded by scope. Reporting currency was excluded at first and mapped in Revision 2.
   - Why keep them in the list: so the exclusion is explicit and testable (A5b).
 
 **Produced:** the term list above; the column map in `scripts/map_csv.py`.
@@ -162,11 +163,12 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 | Property | Kind | Domain → Range | Notes |
 | --- | --- | --- | --- |
-| `schema:legalName` | data, reused | Company → `xsd:string` | Also copied to `rdfs:label` for display |
+| `schema:name` | data, reused | Company → `xsd:string` | The common name from the CSV; also copied to `rdfs:label` for display |
 | `schema:url` | reused | Company → IRI | Website as an IRI, not a string |
 | `gw:country` | object, functional | Company → Country | Index-assigned country (see below) |
 | `gw:icbSubsector` | object, functional | Company → `skos:Concept` | Always an 8-digit subsector |
 | `gw:revenueFY2024` | data, functional | Company → `xsd:decimal` | Billions, as reported |
+| `gw:reportingCurrency` | data, functional | Company → `xsd:string` | ISO 4217 code (Revision 2) |
 | `gw:isConstituentOf` / `gw:hasConstituent` | object, inverse pair | Company ↔ StockIndex | Methodology §5.1 example |
 
 - **One country property, meaning the index-assigned country.**
@@ -175,9 +177,10 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 - **Link to the 8-digit subsector; derive the higher levels.**
   - Why: one link supports every level through `skos:broader+`. This makes "which are banks?" (B1) and the industry roll-up (B2) real queries.
   - Rejected: storing industry, sector and supersector as well, which is redundant and can contradict itself.
-- **Revenue is a plain decimal; comparability is a remark, not data.**
-  - The caveat is an `rdfs:comment` on the property and part of the dataset's `dcterms:description`.
-  - Rejected: an observation pattern with currency and fiscal period, which is out of scope.
+- **Revenue is a plain decimal with its reporting currency next to it; comparability is a remark, not data.**
+  - The currency is a separate property (Revision 2), so totals can be grouped by it.
+  - The sector caveat is an `rdfs:comment` on the property and part of the dataset's `dcterms:description`.
+  - Rejected: an observation pattern (`schema:MonetaryAmount` with a fiscal period), which is out of scope for one figure per company.
 - **Every minted term has `rdfs:label` and `skos:definition`.**
 
 **Produced:** properties in `ontology/estx50-ontology.ttl`.
@@ -198,7 +201,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - the `isConstituentOf` / `hasConstituent` inverse pair
   - Why: these let a reasoner infer new facts or detect contradictions.
 - **SHACL** (`shapes/shapes.ttl`), for each company:
-  - exactly one name, website, country, subsector and revenue
+  - exactly one name, website, country, subsector, revenue and reporting currency (three capital letters)
   - revenue of 0 or more
   - at least one index
   - at least one source distribution
@@ -240,9 +243,9 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - Index: `gwi:index-euro-stoxx-50`.
   - Countries: Wikidata (`wd:Q183` Germany, etc.) with the ISO 3166 alpha-2 code as `skos:notation`.
 - **Columns:**
-  - Mapped: Company, Website, Country, Revenue.
+  - Mapped: Company, Website, Country, Revenue, Reporting currency (Revision 2).
   - Cross-checked, then not stored: the three ICB industry columns, since they are derived.
-  - Dropped: the two currency columns (out of scope).
+  - Dropped: Country currency (out of scope). Reporting currency was also dropped until Revision 2.
 - **Two source distributions** (the constituents CSV and the subsector assignments). Every company links to both with `prov:wasDerivedFrom`.
 - **Planted violations live in a separate file** (`data/violations-demo.ttl`) so the clean data stays clean:
   1. missing country
@@ -251,17 +254,17 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Results**
 
-- 50 rows → 50 companies; 600 instance triples (541 before Revision 1 added 59 type triples).
+- 50 rows → 50 companies; 650 instance triples (541 originally, 600 after Revision 1, 650 after Revision 2).
 - **Track A: 22/22 passed.** The planted-violation file produces exactly 3 top-level SHACL violations, one per demo company.
-- **Track B: 6/6 passed**, against the CSV-derived answer key:
+- **Track B: 6/6 passed**, against the CSV-derived answer key (results as of Revision 2):
 
   | # | Result |
   | --- | --- |
   | B1 | 7 banks: Banco Santander, BBVA, BNP Paribas, ING Group, Intesa Sanpaolo, Nordea Bank, UniCredit |
-  | B2 | Consumer Discretionary 638.3 (9 companies), Financials 588.7 (11) … Real Estate 5.1 (1) |
-  | B3 | Germany 1,000.2 (14), France 928.8 (17), Italy 369.9 (5) … |
+  | B2 | 16 industry-currency groups: Consumer Discretionary EUR 624.3 (8 companies), Financials EUR 588.7 (11) … Energy USD 195.6 (1) … Real Estate EUR 5.1 (1) |
+  | B3 | Germany EUR 1,000.2 (14), France EUR 733.2 (16), Italy EUR 369.9 (5), France USD 195.6 (1) … |
   | B4 | France and Germany span 8 industries each; Belgium 1 |
-  | B5 | TotalEnergies, 195.6, returned with the comparability caveat attached |
+  | B5 | EUR: Allianz 179.8; USD: TotalEnergies 195.6; both with the comparability caveat attached |
   | B6 | ASML traces to both distributions, both flagged approximate |
 
 **Produced:** `scripts/map_csv.py`, `data/estx50-instances.ttl`, `data/violations-demo.ttl`, `scripts/run_tests.py`, `reports/test-report.md`, `reports/shacl-*.txt`.
@@ -306,7 +309,21 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - Both tests were confirmed to fail on the pre-revision state before the fix was applied.
 - **Result.** Track A 22/22 (was 20/20); Track B unchanged at 6/6.
 
+**Revision 2: currency, names, definitions, namespace** (after a review of 1.0.0)
+
+| Finding | Fix |
+| --- | --- |
+| B2, B3 and B5 summed and ranked EUR and USD figures together. 5 of 50 companies report in USD, including TotalEnergies, the 1.0.0 answer to "largest constituent". Because the currency column was dropped, the data could not show this. | New `gw:reportingCurrency` (ISO 4217 code, functional, required by SHACL). B2 and B3 group by currency; B5 ranks within each currency. TotalEnergies (195.6 USD) and Allianz (179.8 EUR) are close enough that a cross-currency ranking depends on the exchange rate. |
+| `schema:legalName` held common names ("Adidas", "Stellantis"), not legal names (adidas AG, Stellantis N.V.) | Use `schema:name`. Real legal names can be added later as `schema:legalName` from a registry such as GLEIF. |
+| The `gw:Company` definition said "a constituent of the EURO STOXX 50", which builds in the membership that Step 4 keeps out of the class model. `gw:StockIndex` and `gw:Country` had the same problem. | General definitions. Index membership stays in `gw:isConstituentOf`, and "index-assigned" stays on `gw:country`. |
+| Terms lived in the shared `https://graphwise.ai/ontology/` namespace, so `gw:Company` or `gw:country` would clash with any other Graphwise ontology | Terms moved to `https://graphwise.ai/ontology/estx50/`. The prefix stays `gw:`. Instance IRIs (`gwi:`) are unchanged. |
+
+- Term IRIs changed, so the version goes to 2.0.0 (`owl:priorVersion` 1.0.0).
+- Result: Track A 22/22, Track B 6/6. Instance triples 600 → 650, ontology triples 64 → 75.
+
 **Deferred candidates**
+
+- `gw:revenueFY2024` puts the year in the property name. A second year would need an observation pattern (`schema:MonetaryAmount` or similar, with a fiscal period), which would also carry the currency.
 
 - `skos:altLabel` and definitions for ICB concepts: the taxonomy has none, and no competency question needs them yet.
 - Verify the provisional subsector codes against FTSE Russell. Only `data/icb-subsector-assignments.csv` changes; re-run the pipeline.
@@ -323,7 +340,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 **Decisions**
 
 - **Ontology metadata:**
-  - `owl:versionIRI` `https://graphwise.ai/ontology/estx50/1.0.0`
+  - `owl:versionIRI` `https://graphwise.ai/ontology/estx50/2.0.0`, `owl:priorVersion` 1.0.0
   - creator Peio Popov, publisher Graphwise, license CC BY 4.0
   - `vann:preferredNamespacePrefix` `gw`
 - **HTML documentation** generated with pyLODE: `docs/estx50-ontology.html`.

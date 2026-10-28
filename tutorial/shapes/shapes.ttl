@@ -1,5 +1,5 @@
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
-@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix gw:      <https://graphwise.ai/ontology/estx50/> .
 @prefix gwsh:    <https://graphwise.ai/shapes/estx50/> .
 @prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
 @prefix schema:  <https://schema.org/> .
@@ -15,10 +15,10 @@ gwsh:CompanyShape a sh:NodeShape ;
     sh:targetClass gw:Company ;
     rdfs:label "Company shape"@en ;
     sh:property [
-        sh:path schema:legalName ;
+        sh:path schema:name ;
         sh:minCount 1 ; sh:maxCount 1 ;
         sh:datatype xsd:string ;
-        sh:message "A company needs exactly one legal name (xsd:string)." ] ;
+        sh:message "A company needs exactly one name (xsd:string)." ] ;
     sh:property [
         sh:path schema:url ;
         sh:minCount 1 ; sh:maxCount 1 ;
@@ -40,6 +40,12 @@ gwsh:CompanyShape a sh:NodeShape ;
         sh:datatype xsd:decimal ;
         sh:minInclusive 0 ;
         sh:message "A company needs exactly one FY2024 revenue: an xsd:decimal of 0 or more." ] ;
+    sh:property [
+        sh:path gw:reportingCurrency ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[A-Z]{3}$" ;
+        sh:message "A company needs exactly one reporting currency: a three-letter ISO 4217 code." ] ;
     sh:property [
         sh:path gw:isConstituentOf ;
         sh:minCount 1 ;

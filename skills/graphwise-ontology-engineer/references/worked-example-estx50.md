@@ -5,7 +5,7 @@ companies, their country, ICB industry classification and FY2024 revenue. Use it
 as a precedent when a modelling decision is not obvious. Each pattern below names
 the general rule first, then what the example did and what it rejected.
 
-Result: 3 minted classes, 5 minted properties, 1 reused SKOS taxonomy (ICB, 249
+Result: 3 minted classes, 6 minted properties, 1 reused SKOS taxonomy (ICB, 249
 concepts), 50 companies; 22/22 robustness tests and 6/6 business questions pass.
 Full sources, scripts and decision log:
 https://github.com/peio/ontology-data-products/tree/main/tutorial
@@ -19,8 +19,13 @@ https://github.com/peio/ontology-data-products/tree/main/tutorial
 - **Compute the answer key from the source data, not from the graph.** A key derived
   from the graph only tests the graph against itself. The example computes it from
   the CSVs with a separate script.
-- **Make exclusions explicit.** Currency columns were enumerated, then excluded by
-  scope; a test checks every source column is either mapped or intentionally dropped.
+- **Make exclusions explicit.** Every source column is listed with its fate; a test
+  checks each is either mapped or intentionally dropped.
+- **Don't drop a column the numbers depend on.** Version 1.0.0 dropped the reporting
+  currency as out of scope, then summed and ranked EUR and USD revenue together.
+  Keeping the unit next to the number (`gw:reportingCurrency`) cost 50 triples and let
+  the queries group by it. Leaving out FX conversion is a scope decision; hiding the
+  unit is not.
 
 ## Step 2: Reuse
 
@@ -34,12 +39,20 @@ https://github.com/peio/ontology-data-products/tree/main/tutorial
   with the ISO 3166 code as `skos:notation`, rather than minted IRIs.
 - **Verify every reused term against its source** before using it.
 - **Never redeclare terms you do not own.** The ontology types and labels only its
-  own terms; `schema:legalName` and `schema:url` are used, not declared. An early
+  own terms; `schema:name` and `schema:url` are used, not declared. An early
   draft declared `schema:url a owl:ObjectProperty`, which was both a claim about
   schema.org and wrong (schema.org's range is the `URL` datatype).
+- **Match the reused term's meaning to the data.** The CSV gives common names
+  ("Stellantis"), not legal names (Stellantis N.V.), so they are `schema:name`,
+  not `schema:legalName`.
+- **Give minted terms their own namespace** (`https://graphwise.ai/ontology/estx50/`),
+  not one shared across ontologies, where `gw:Company` would clash with the next model.
 
 ## Step 4: Classes
 
+- **Keep the class definition free of relations you model separately.** A first draft
+  defined `gw:Company` as "a constituent of the EURO STOXX 50", which put back the
+  membership the model states with `gw:isConstituentOf`.
 - **Mint a local subclass of the reused class** (`gw:Company` ⊑ `schema:Corporation`)
   so local disjointness and SHACL targets assert nothing about the external vocabulary.
 - **Type instances with both the local and the reused class**
@@ -68,8 +81,9 @@ https://github.com/peio/ontology-data-products/tree/main/tutorial
   competency question needs.
 - **A caveat about the numbers is a remark, not data.** Revenue is a plain
   `xsd:decimal`; "approximate, not FX-converted, not comparable across sectors" is an
-  `rdfs:comment` on the property and in the dataset description. Rejected: an
-  observation pattern with currency and fiscal period, which was out of scope.
+  `rdfs:comment` on the property and in the dataset description. The currency is a
+  separate property, so totals can be grouped by it. Rejected: an observation pattern
+  with a fiscal period, which was out of scope for one figure per company.
 - **Websites are IRIs** (`schema:url`), not strings.
 
 ## Step 6: Facets — OWL vs. SHACL

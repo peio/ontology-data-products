@@ -6,25 +6,32 @@ B1,ING Group,
 B1,Intesa Sanpaolo,
 B1,Nordea Bank,
 B1,UniCredit,
-B2,Consumer Discretionary,638.3|9
-B2,Financials,588.7|11
-B2,Industrials,404.0|8
-B2,Energy,284.4|2
-B2,Consumer Staples,231.7|5
-B2,Utilities,191.5|3
-B2,Telecommunications,135.0|2
-B2,Health Care,114.2|3
-B2,Basic Materials,92.4|2
-B2,Technology,83.7|4
-B2,Real Estate,5.1|1
-B3,Germany,1000.2|14
-B3,France,928.8|17
-B3,Italy,369.9|5
-B3,Spain,181.0|4
-B3,Netherlands,148.5|5
-B3,Belgium,59.8|1
-B3,Ireland,49.6|2
-B3,Finland,31.2|2
+B2,Consumer Discretionary (EUR),624.3|8
+B2,Financials (EUR),588.7|11
+B2,Industrials (EUR),368.4|7
+B2,Energy (USD),195.6|1
+B2,Utilities (EUR),191.5|3
+B2,Consumer Staples (EUR),171.9|4
+B2,Telecommunications (EUR),135.0|2
+B2,Health Care (EUR),114.2|3
+B2,Basic Materials (EUR),92.4|2
+B2,Energy (EUR),88.8|1
+B2,Technology (EUR),77.5|3
+B2,Consumer Staples (USD),59.8|1
+B2,Industrials (USD),35.6|1
+B2,Consumer Discretionary (USD),14.0|1
+B2,Technology (USD),6.2|1
+B2,Real Estate (EUR),5.1|1
+B3,Germany (EUR),1000.2|14
+B3,France (EUR),733.2|16
+B3,Italy (EUR),369.9|5
+B3,France (USD),195.6|1
+B3,Spain (EUR),181.0|4
+B3,Netherlands (EUR),142.3|4
+B3,Belgium (USD),59.8|1
+B3,Ireland (USD),49.6|2
+B3,Finland (EUR),31.2|2
+B3,Netherlands (USD),6.2|1
 B4,France,8
 B4,Germany,8
 B4,Italy,4
@@ -33,6 +40,7 @@ B4,Spain,3
 B4,Finland,2
 B4,Ireland,2
 B4,Belgium,1
-B5,TotalEnergies,195.6|true
+B5,Allianz,179.8|EUR|true
+B5,TotalEnergies,195.6|USD|true
 B6,EURO STOXX 50 constituents CSV (CSV2),true
 B6,Provisional ICB subsector assignments,true

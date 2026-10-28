@@ -13,17 +13,17 @@ Design decisions for every step are in [`decision-log.md`](decision-log.md). The
 | [2. Reuse existing ontologies](decision-log.md#step-2-reuse-existing-ontologies) | Reuse ICB, schema.org, FIBO, DCAT, PROV-O, Dublin Core; align, don't import | Reuse table in the decision log, `ontology/icb-skos.ttl` |
 | [3. Enumerate terms](decision-log.md#step-3-enumerate-terms) | List the vocabulary and the fate of every CSV column | Term list in the decision log, column map in `scripts/map_csv.py` |
 | [4. Classes and hierarchy](decision-log.md#step-4-classes-and-hierarchy) | Three classes, each a subclass of a reused class; industry stays SKOS | Classes in `ontology/estx50-ontology.ttl` |
-| [5. Properties](decision-log.md#step-5-properties) | Country, ICB subsector, revenue, index membership | Properties in `ontology/estx50-ontology.ttl` |
+| [5. Properties](decision-log.md#step-5-properties) | Country, ICB subsector, revenue and its currency, index membership | Properties in `ontology/estx50-ontology.ttl` |
 | [6. Facets and constraints](decision-log.md#step-6-facets-and-constraints) | OWL for inference, SHACL for validation | Facets in `ontology/estx50-ontology.ttl`, `shapes/shapes.ttl` |
 | [7. Instances and testing](decision-log.md#step-7-instances-and-testing) | Map CSV to RDF, plant violations, run both tracks | `data/estx50-instances.ttl`, `data/violations-demo.ttl`, `queries/*.rq`, `scripts/run_tests.py`, `reports/` |
-| [8. Refine and iterate](decision-log.md#step-8-refine-and-iterate) | Fix what the tests exposed; Revision 1 makes reuse visible without a reasoner | Changelog and Revision 1 in the decision log |
+| [8. Refine and iterate](decision-log.md#step-8-refine-and-iterate) | Fix what the tests exposed; Revision 1 makes reuse visible without a reasoner; Revision 2 stops mixing currencies and fixes names, definitions and the namespace | Changelog and Revision 1 in the decision log |
 | [9. Document and deploy](decision-log.md#step-9-document-and-deploy) | Ontology metadata, HTML docs, GraphDB load | `docs/estx50-ontology.html`, this README |
 
 ## Contents
 
 | Path | What it is |
 | --- | --- |
-| `ontology/estx50-ontology.ttl` | The ontology (TBox): 3 classes, 5 properties, metadata |
+| `ontology/estx50-ontology.ttl` | The ontology (TBox): 3 classes, 6 properties, metadata |
 | `ontology/icb-skos.ttl` | ICB taxonomy as SKOS (249 concepts), reused unchanged |
 | `ontologies/` | Reference copies of the reused standard vocabularies (schema.org, DCAT, Dublin Core, PROV-O, SKOS); not imported, see its [README](ontologies/README.md) |
 | `requirements.txt` | Pinned Python dependencies |
@@ -69,9 +69,9 @@ Never load `violations-demo.ttl` into a production repository.
 
 ## Scope
 
-- **In:** company, website, index-assigned country, ICB subsector (rolling up to industry), FY2024 revenue, dataset provenance.
-- **Out:** reporting vs country currency, index membership over time, FX normalisation.
-- **Remark on the numbers:** revenue is approximate, in each company's reporting currency (not converted), and not comparable across sectors. Sums are as reported.
+- **In:** company, website, index-assigned country, ICB subsector (rolling up to industry), FY2024 revenue and its reporting currency, dataset provenance.
+- **Out:** country currency, index membership over time, FX normalisation.
+- **Remark on the numbers:** revenue is approximate, in each company's reporting currency (not converted), and not comparable across sectors. Sums are per currency, as reported.
 
 ## Caveats
 
@@ -80,9 +80,9 @@ Never load `violations-demo.ttl` into a production repository.
 
 | Prefix | IRI |
 | --- | --- |
-| `gw:` | `https://graphwise.ai/ontology/` |
+| `gw:` | `https://graphwise.ai/ontology/estx50/` |
 | `gwi:` | `https://graphwise.ai/instance/` |
 | `icb:` | `https://graphwise.ai/taxonomy/icb/` |
 | `wd:` | `http://www.wikidata.org/entity/` |
 
-Ontology IRI `https://graphwise.ai/ontology/estx50`, version 1.0.0, licensed CC BY 4.0. Author: Peio Popov, Graphwise.
+Ontology IRI `https://graphwise.ai/ontology/estx50`, version 2.0.0, licensed CC BY 4.0. Author: Peio Popov, Graphwise.

@@ -3,7 +3,7 @@
 # The first projected variable is the row key; the remaining ones are compared
 # with answer-key.csv by scripts/run_tests.py (decimals rounded to 1 place).
 
-PREFIX gw:      <https://graphwise.ai/ontology/>
+PREFIX gw:      <https://graphwise.ai/ontology/estx50/>
 PREFIX gwi:     <https://graphwise.ai/instance/>
 PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
 PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
@@ -20,21 +20,22 @@ SELECT ?company WHERE {
 }
 ORDER BY ?company
 
-# @query B2 | Revenue by ICB industry, rolled up from subsectors via skos:broader+
-SELECT ?industry (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
-  ?c a gw:Company ; gw:revenueFY2024 ?revenue ;
+# @query B2 | Revenue by ICB industry and reporting currency, rolled up from subsectors via skos:broader+
+# Sums are kept per currency: adding EUR and USD figures without FX conversion is meaningless.
+SELECT (CONCAT(?industry, " (", ?currency, ")") AS ?key) (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a gw:Company ; gw:revenueFY2024 ?revenue ; gw:reportingCurrency ?currency ;
      gw:icbSubsector/skos:broader* ?ind .
   ?ind skos:topConceptOf icb:scheme ; skos:prefLabel ?industry .
 }
-GROUP BY ?industry
+GROUP BY ?industry ?currency
 ORDER BY DESC(?totalRevenue)
 
-# @query B3 | Revenue by country
-SELECT ?country (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
-  ?c a gw:Company ; gw:revenueFY2024 ?revenue ; gw:country ?ctry .
+# @query B3 | Revenue by country and reporting currency
+SELECT (CONCAT(?country, " (", ?currency, ")") AS ?key) (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a gw:Company ; gw:revenueFY2024 ?revenue ; gw:reportingCurrency ?currency ; gw:country ?ctry .
   ?ctry rdfs:label ?country .
 }
-GROUP BY ?country
+GROUP BY ?country ?currency
 ORDER BY DESC(?totalRevenue)
 
 # @query B4 | Which countries' constituents span the most industries?
@@ -47,13 +48,16 @@ SELECT ?country (COUNT(DISTINCT ?ind) AS ?industries) WHERE {
 GROUP BY ?country
 ORDER BY DESC(?industries) ?country
 
-# @query B5 | Which is the largest constituent by revenue (returned with the comparability caveat)?
-SELECT ?company ?revenue (BOUND(?caveat) AS ?caveatAttached) WHERE {
-  ?c a gw:Company ; rdfs:label ?company ; gw:revenueFY2024 ?revenue .
+# @query B5 | Which is the largest constituent by revenue in each reporting currency (returned with the comparability caveat)?
+# Ranked within a currency only; across currencies the order would depend on an FX rate.
+SELECT ?company ?revenue ?currency (BOUND(?caveat) AS ?caveatAttached) WHERE {
+  { SELECT ?currency (MAX(?r) AS ?revenue) WHERE {
+      ?x a gw:Company ; gw:revenueFY2024 ?r ; gw:reportingCurrency ?currency .
+    } GROUP BY ?currency }
+  ?c a gw:Company ; rdfs:label ?company ; gw:revenueFY2024 ?revenue ; gw:reportingCurrency ?currency .
   OPTIONAL { gw:revenueFY2024 rdfs:comment ?caveat }
 }
-ORDER BY DESC(?revenue)
-LIMIT 1
+ORDER BY ?currency
 
 # @query B6 | Where do ASML Holding's figures come from, and are they approximate?
 SELECT ?source (CONTAINS(LCASE(STR(?description)), "approximate") AS ?approximate) WHERE {

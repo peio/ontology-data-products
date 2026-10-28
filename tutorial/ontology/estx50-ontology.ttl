@@ -1,4 +1,4 @@
-@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix gw:      <https://graphwise.ai/ontology/estx50/> .
 @prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dcat:    <http://www.w3.org/ns/dcat#> .
@@ -19,15 +19,17 @@
 
 <https://graphwise.ai/ontology/estx50> a owl:Ontology ;
     dcterms:title "EURO STOXX 50 Constituents Ontology"@en ;
-    dcterms:description "A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O."@en ;
+    dcterms:description "A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue with its reporting currency. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O."@en ;
     dcterms:creator "Peio Popov" ;
     dcterms:publisher "Graphwise" ;
     dcterms:created "2026-10-28"^^xsd:date ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionIRI <https://graphwise.ai/ontology/estx50/1.0.0> ;
-    owl:versionInfo "1.0.0" ;
+    dcterms:modified "2026-10-28"^^xsd:date ;
+    owl:versionIRI <https://graphwise.ai/ontology/estx50/2.0.0> ;
+    owl:versionInfo "2.0.0" ;
+    owl:priorVersion <https://graphwise.ai/ontology/estx50/1.0.0> ;
     vann:preferredNamespacePrefix "gw" ;
-    vann:preferredNamespaceUri "https://graphwise.ai/ontology/" ;
+    vann:preferredNamespaceUri "https://graphwise.ai/ontology/estx50/" ;
     rdfs:comment "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small; instance data is additionally typed with the reused classes so the alignment does not depend on reasoning."@en .
 
 # -----------------------------------------------------------------------------
@@ -36,18 +38,20 @@
 
 gw:Company a owl:Class ;
     rdfs:label "Company"@en ;
-    skos:definition "A listed company that is a constituent of the EURO STOXX 50 index."@en ;
+    skos:definition "A company whose shares are listed on a stock exchange."@en ;
+    skos:scopeNote "Membership of a particular index is not part of this definition; it is stated with gw:isConstituentOf, so a company stays a gw:Company when the index rebalances."@en ;
     rdfs:subClassOf schema:Corporation ;
     rdfs:comment "Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself. Instances are typed with both gw:Company and schema:Corporation, so the reuse is visible without a reasoner."@en .
 
 gw:Country a owl:Class ;
     rdfs:label "Country"@en ;
-    skos:definition "The country a constituent is assigned to for index purposes. Instances are Wikidata country IRIs."@en ;
+    skos:definition "A sovereign country. Instances are Wikidata country IRIs."@en ;
+    skos:scopeNote "Which country a company is linked to, and on what basis, is stated by the property (gw:country), not by this class."@en ;
     rdfs:subClassOf schema:Country .
 
 gw:StockIndex a owl:Class ;
     rdfs:label "Stock index"@en ;
-    skos:definition "An equity market index whose constituents are listed companies; here, the EURO STOXX 50."@en ;
+    skos:definition "An equity market index whose constituents are listed companies."@en ;
     rdfs:subClassOf fibo-ind-mkt-bas:EquityIndex .
 
 [] a owl:AllDisjointClasses ;
@@ -89,11 +93,18 @@ gw:hasConstituent a owl:ObjectProperty ;
 
 gw:revenueFY2024 a owl:DatatypeProperty , owl:FunctionalProperty ;
     rdfs:label "revenue FY2024"@en ;
-    skos:definition "Company revenue for fiscal year 2024, in billions, in the company's reporting currency, as reported in the source dataset."@en ;
-    rdfs:comment "Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums as reported."@en ;
+    skos:definition "Company revenue for fiscal year 2024, in billions, in the company's reporting currency (gw:reportingCurrency), as reported in the source dataset."@en ;
+    rdfs:comment "Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums per reporting currency, as reported."@en ;
     rdfs:domain gw:Company ;
     rdfs:range xsd:decimal .
 
-# Reused properties (schema:legalName, schema:url) are used directly in the data
+gw:reportingCurrency a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "reporting currency"@en ;
+    skos:definition "The ISO 4217 alphabetic code of the currency the company reports its revenue in, for example EUR or USD."@en ;
+    rdfs:comment "Revenue figures in different currencies must not be summed or ranked together without FX conversion, which is out of scope. Group by this property instead."@en ;
+    rdfs:domain gw:Company ;
+    rdfs:range xsd:string .
+
+# Reused properties (schema:name, schema:url) are used directly in the data
 # and are deliberately NOT redeclared here: this file makes no claims about
 # terms it does not own.

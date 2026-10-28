@@ -19,7 +19,7 @@ CSV_ICB = ROOT / "data" / "icb-subsector-assignments.csv"
 ICB_TTL = ROOT / "ontology" / "icb-skos.ttl"
 OUT = ROOT / "data" / "estx50-instances.ttl"
 
-GW = Namespace("https://graphwise.ai/ontology/")
+GW = Namespace("https://graphwise.ai/ontology/estx50/")
 GWI = Namespace("https://graphwise.ai/instance/")
 ICB = Namespace("https://graphwise.ai/taxonomy/icb/")
 SCHEMA = Namespace("https://schema.org/")
@@ -42,15 +42,15 @@ COUNTRIES = {
 
 # Columns of the main CSV and what happens to each (checked in Track A5).
 COLUMN_MAP = {
-    "Company": "schema:legalName, rdfs:label",
+    "Company": "schema:name, rdfs:label",
     "Website": "schema:url",
     "Country": "gw:country",
     "ICB Industry": "derived via skos:broader+ (cross-checked, not stored)",
     "ICB code": "derived via skos:broader+ (cross-checked, not stored)",
     "ICB concept IRI": "derived via skos:broader+ (cross-checked, not stored)",
     "Revenue FY2024 (bn, approx.)": "gw:revenueFY2024",
-    "Reporting currency": "DROPPED: out of scope",
-    "Country currency": "DROPPED: out of scope",
+    "Reporting currency": "gw:reportingCurrency",
+    "Country currency": "DROPPED: out of scope (implied by the country)",
 }
 
 
@@ -92,7 +92,7 @@ def main() -> int:
     g.add((ds, DCTERMS.description, Literal(
         "Snapshot of the 50 EURO STOXX 50 constituents with country, ICB subsector and FY2024 revenue. "
         "Remark on the numbers: revenue figures are approximate, in each company's reporting currency "
-        "(not converted), and not comparable across sectors. ICB subsector assignments are provisional, "
+        "(recorded, not converted; do not sum across currencies), and not comparable across sectors. ICB subsector assignments are provisional, "
         "derived from the taxonomy labels, and must be verified against FTSE Russell's classification.",
         lang="en")))
     g.add((ds, DCTERMS.license, URIRef("https://creativecommons.org/licenses/by/4.0/")))
@@ -145,11 +145,12 @@ def main() -> int:
         g.add((co, RDF.type, GW.Company))
         g.add((co, RDF.type, SCHEMA.Corporation))
         g.add((co, RDFS.label, Literal(name)))
-        g.add((co, SCHEMA.legalName, Literal(name, datatype=XSD.string)))
+        g.add((co, SCHEMA.name, Literal(name, datatype=XSD.string)))
         g.add((co, SCHEMA.url, URIRef(r["Website"])))
         g.add((co, GW.country, WD[COUNTRIES[r["Country"]][0]]))
         g.add((co, GW.icbSubsector, sub))
         g.add((co, GW.revenueFY2024, Literal(Decimal(r["Revenue FY2024 (bn, approx.)"]), datatype=XSD.decimal)))
+        g.add((co, GW.reportingCurrency, Literal(r["Reporting currency"], datatype=XSD.string)))
         g.add((co, GW.isConstituentOf, idx))
         g.add((co, PROV.wasDerivedFrom, dist_main))
         g.add((co, PROV.wasDerivedFrom, dist_icb))

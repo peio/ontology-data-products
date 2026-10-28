@@ -96,7 +96,7 @@ def main() -> int:
     cols_ok = set(rows[0]) == set(COLUMN_MAP)
     results_a.append(("A5b", "Every CSV column is either mapped or intentionally dropped", cols_ok,
                       f"{len(COLUMN_MAP)} columns accounted for"))
-    GW ="https://graphwise.ai/ontology/"
+    GW ="https://graphwise.ai/ontology/estx50/"
     mismatch = []
     for r in rows:
         co = next(base.subjects(URIRef("http://www.w3.org/2000/01/rdf-schema#label"), Literal(r["Company"])))
@@ -149,7 +149,7 @@ def main() -> int:
             lines.append(f"| {k} | {got_d.get(k, '—') or '✓'} | {exp_d.get(k, '—') or '✓'} |")
         lines.append("")
     lines += [
-        "Value formats: revenue sums in billions as reported, `revenue|companies`; booleans as `true`/`false`; "
+        "Value formats: revenue sums in billions as reported, per reporting currency, `revenue|companies`; booleans as `true`/`false`; "
         "`✓` = the row is present (no value to compare).",
         "",
     ]

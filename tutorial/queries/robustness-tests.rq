@@ -6,7 +6,7 @@
 #   graph = icb       : ICB taxonomy only
 # A3 (SHACL) is run by scripts/run_tests.py with shapes/shapes.ttl.
 
-PREFIX gw:      <https://graphwise.ai/ontology/>
+PREFIX gw:      <https://graphwise.ai/ontology/estx50/>
 PREFIX gwi:     <https://graphwise.ai/instance/>
 PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
 PREFIX owl:     <http://www.w3.org/2002/07/owl#>
@@ -22,7 +22,7 @@ ASK {
   FILTER NOT EXISTS {
     VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty }
     ?term a ?kind .
-    FILTER(STRSTARTS(STR(?term), "https://graphwise.ai/ontology/"))
+    FILTER(STRSTARTS(STR(?term), "https://graphwise.ai/ontology/estx50/"))
     FILTER(NOT EXISTS { ?term rdfs:label ?l } || NOT EXISTS { ?term skos:definition ?d })
   }
 }
@@ -32,7 +32,7 @@ ASK {
   FILTER NOT EXISTS {
     VALUES ?kind { owl:ObjectProperty owl:DatatypeProperty }
     ?p a ?kind .
-    FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/"))
+    FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/estx50/"))
     FILTER(NOT EXISTS { ?p rdfs:domain ?d } || NOT EXISTS { ?p rdfs:range ?r }
            || EXISTS { ?p rdfs:domain owl:Thing } || EXISTS { ?p rdfs:range owl:Thing })
   }
@@ -45,10 +45,10 @@ ASK { FILTER NOT EXISTS { ?c rdfs:subClassOf+ ?c } }
 ASK {
   FILTER NOT EXISTS {
     ?c a owl:Class .
-    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50/"))
     FILTER NOT EXISTS {
       ?p rdfs:domain|rdfs:range ?c .
-      FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/"))
+      FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/estx50/"))
     }
   }
 }
@@ -57,10 +57,10 @@ ASK {
 ASK {
   FILTER NOT EXISTS {
     ?c a owl:Class .
-    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50/"))
     FILTER NOT EXISTS {
       ?c rdfs:subClassOf ?super .
-      FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/"))
+      FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/estx50/"))
     }
   }
 }
@@ -69,8 +69,8 @@ ASK {
 ASK {
   FILTER NOT EXISTS {
     ?c a owl:Class ; rdfs:subClassOf ?super .
-    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
-    FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/"))
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/estx50/"))
+    FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/estx50/"))
     ?x a ?c .
     FILTER NOT EXISTS { ?x a ?super }
   }
@@ -85,7 +85,7 @@ ASK {
   FILTER NOT EXISTS {
     VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
     ?t a ?kind .
-    FILTER(isIRI(?t) && !STRSTARTS(STR(?t), "https://graphwise.ai/ontology/"))
+    FILTER(isIRI(?t) && !STRSTARTS(STR(?t), "https://graphwise.ai/ontology/estx50/"))
   }
 }
 

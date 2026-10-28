@@ -298,10 +298,16 @@ td {
         "@value": "2026-10-28"
       }
     ],
+    "https://schema.org/dateModified": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#date",
+        "@value": "2026-10-28"
+      }
+    ],
     "https://schema.org/description": [
       {
         "@language": "en",
-        "@value": "A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O."
+        "@value": "A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue with its reporting currency. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O."
       },
       {
         "@language": "en",
@@ -368,6 +374,12 @@ td {
           </div>
           <div>
             <dt>
+              <a class="hover_property" href="http://purl.org/dc/terms/modified" title="Date on which the resource was changed. Defined in DCMI Metadata Terms">Date Modified</a>
+            </dt>
+            <dd><p>2026-10-28</p></dd>
+          </div>
+          <div>
+            <dt>
               <a class="hover_property" href="http://purl.org/dc/terms/license" title="A legal document giving official permission to do something with the resource. Defined in DCMI Metadata Terms">License</a>
             </dt>
             <dd>
@@ -379,14 +391,22 @@ td {
               <a class="hover_property" href="http://www.w3.org/2002/07/owl#versionIRI" title="The property that identifies the version IRI of an ontology. Defined in The OWL 2 Schema vocabulary (OWL 2)">Version Iri</a>
             </dt>
             <dd>
-              <a href="#1.0.0">https://graphwise.ai/ontology/estx50/1.0.0</a>
+              <a href="#2.0.0">gw:2.0.0</a>
             </dd>
           </div>
           <div>
             <dt>
               <a class="hover_property" href="http://www.w3.org/2002/07/owl#versionInfo" title="The annotation property that provides version information for an ontology or another OWL construct. Defined in The OWL 2 Schema vocabulary (OWL 2)">Version Info</a>
             </dt>
-            <dd><p>1.0.0</p></dd>
+            <dd><p>2.0.0</p></dd>
+          </div>
+          <div>
+            <dt>
+              <a class="hover_property" href="http://www.w3.org/2002/07/owl#priorVersion" title="The annotation property that indicates the predecessor ontology of a given ontology. Defined in The OWL 2 Schema vocabulary (OWL 2)">Prior Version</a>
+            </dt>
+            <dd>
+              <a href="#1.0.0">gw:1.0.0</a>
+            </dd>
           </div>
           <div>
             <dt>
@@ -399,7 +419,7 @@ td {
               <a class="hover_property" href="http://purl.org/vocab/vann/preferredNamespaceUri" title="None. Defined in None">Preferred Namespace Uri</a>
             </dt>
             <dd>
-              <a href="https://graphwise.ai/ontology/">gw:</a>
+              <a href="https://graphwise.ai/ontology/estx50/">gw:</a>
             </dd>
           </div>
           <div>
@@ -408,7 +428,7 @@ td {
             </dt>
             <dd>
               <ul>
-                <li><p>A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O.</p></li>
+                <li><p>A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue with its reporting currency. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O.</p></li>
                 <li><p>ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small; instance data is additionally typed with the reused classes so the alignment does not depend on reasoning.</p></li>
               </ul>
             </dd>
@@ -425,7 +445,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/Company</code>
+                <code>https://graphwise.ai/ontology/estx50/Company</code>
               </td>
             </tr>
             <tr>
@@ -435,9 +455,15 @@ td {
               <td>
                 <ul>
                   <li><p>Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself. Instances are typed with both gw:Company and schema:Corporation, so the reuse is visible without a reasoner.</p></li>
-                  <li><p>A listed company that is a constituent of the EURO STOXX 50 index.</p></li>
+                  <li><p>A company whose shares are listed on a stock exchange.</p></li>
                 </ul>
               </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#scopeNote" title="A note that helps to clarify the meaning and/or the use of a concept. Defined in SKOS Vocabulary">Scope Note</a>
+              </th>
+              <td><p>Membership of a particular index is not part of this definition; it is stated with gw:isConstituentOf, so a company stays a gw:Company when the index rebalances.</p></td>
             </tr>
             <tr>
               <th>
@@ -477,6 +503,12 @@ td {
                       <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
                     </span>
                   </li>
+                  <li>
+                    <span>
+                      <a href="#reportingCurrency">reporting currency</a>
+                      <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+                    </span>
+                  </li>
                 </ul>
               </td>
             </tr>
@@ -501,14 +533,20 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/Country</code>
+                <code>https://graphwise.ai/ontology/estx50/Country</code>
               </td>
             </tr>
             <tr>
               <th>
                 <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
               </th>
-              <td><p>The country a constituent is assigned to for index purposes. Instances are Wikidata country IRIs.</p></td>
+              <td><p>A sovereign country. Instances are Wikidata country IRIs.</p></td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2004/02/skos/core#scopeNote" title="A note that helps to clarify the meaning and/or the use of a concept. Defined in SKOS Vocabulary">Scope Note</a>
+              </th>
+              <td><p>Which country a company is linked to, and on what basis, is stated by the property (gw:country), not by this class.</p></td>
             </tr>
             <tr>
               <th>
@@ -539,14 +577,14 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/StockIndex</code>
+                <code>https://graphwise.ai/ontology/estx50/StockIndex</code>
               </td>
             </tr>
             <tr>
               <th>
                 <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
               </th>
-              <td><p>An equity market index whose constituents are listed companies; here, the EURO STOXX 50.</p></td>
+              <td><p>An equity market index whose constituents are listed companies.</p></td>
             </tr>
             <tr>
               <th>
@@ -591,7 +629,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/country</code>
+                <code>https://graphwise.ai/ontology/estx50/country</code>
               </td>
             </tr>
             <tr>
@@ -638,7 +676,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/icbSubsector</code>
+                <code>https://graphwise.ai/ontology/estx50/icbSubsector</code>
               </td>
             </tr>
             <tr>
@@ -679,7 +717,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/isConstituentOf</code>
+                <code>https://graphwise.ai/ontology/estx50/isConstituentOf</code>
               </td>
             </tr>
             <tr>
@@ -720,7 +758,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/hasConstituent</code>
+                <code>https://graphwise.ai/ontology/estx50/hasConstituent</code>
               </td>
             </tr>
             <tr>
@@ -764,7 +802,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/revenueFY2024</code>
+                <code>https://graphwise.ai/ontology/estx50/revenueFY2024</code>
               </td>
             </tr>
             <tr>
@@ -773,8 +811,8 @@ td {
               </th>
               <td>
                 <ul>
-                  <li><p>Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums as reported.</p></li>
-                  <li><p>Company revenue for fiscal year 2024, in billions, in the company's reporting currency, as reported in the source dataset.</p></li>
+                  <li><p>Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums per reporting currency, as reported.</p></li>
+                  <li><p>Company revenue for fiscal year 2024, in billions, in the company's reporting currency (gw:reportingCurrency), as reported in the source dataset.</p></li>
                 </ul>
               </td>
             </tr>
@@ -799,6 +837,49 @@ td {
             </tr>
           </table>
         </div>
+        <div class="property entity" id="reportingCurrency">
+          <h3>reporting currency
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+          </h3>
+          <table>
+            <tr>
+              <th>IRI</th>
+              <td>
+                <code>https://graphwise.ai/ontology/estx50/reportingCurrency</code>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+              </th>
+              <td>
+                <ul>
+                  <li><p>Revenue figures in different currencies must not be summed or ranked together without FX conversion, which is out of scope. Group by this property instead.</p></li>
+                  <li><p>The ISO 4217 alphabetic code of the currency the company reports its revenue in, for example EUR or USD.</p></li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+              </th>
+              <td>
+                <span>
+                  <a href="#Company">Company</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+              </th>
+              <td>
+                <a href="http://www.w3.org/2001/XMLSchema#string">xsd:string</a>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
       <div class="section" id="functionalproperties">
         <h2>Functional Properties</h2>
@@ -810,7 +891,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/country</code>
+                <code>https://graphwise.ai/ontology/estx50/country</code>
               </td>
             </tr>
             <tr>
@@ -857,7 +938,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/icbSubsector</code>
+                <code>https://graphwise.ai/ontology/estx50/icbSubsector</code>
               </td>
             </tr>
             <tr>
@@ -898,7 +979,7 @@ td {
             <tr>
               <th>IRI</th>
               <td>
-                <code>https://graphwise.ai/ontology/revenueFY2024</code>
+                <code>https://graphwise.ai/ontology/estx50/revenueFY2024</code>
               </td>
             </tr>
             <tr>
@@ -907,8 +988,8 @@ td {
               </th>
               <td>
                 <ul>
-                  <li><p>Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums as reported.</p></li>
-                  <li><p>Company revenue for fiscal year 2024, in billions, in the company's reporting currency, as reported in the source dataset.</p></li>
+                  <li><p>Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums per reporting currency, as reported.</p></li>
+                  <li><p>Company revenue for fiscal year 2024, in billions, in the company's reporting currency (gw:reportingCurrency), as reported in the source dataset.</p></li>
                 </ul>
               </td>
             </tr>
@@ -933,6 +1014,49 @@ td {
             </tr>
           </table>
         </div>
+        <div class="property entity" id="reportingCurrency">
+          <h3>reporting currency
+            <sup class="sup-fp" title="OWL Functional Property">fp</sup>
+          </h3>
+          <table>
+            <tr>
+              <th>IRI</th>
+              <td>
+                <code>https://graphwise.ai/ontology/estx50/reportingCurrency</code>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+              </th>
+              <td>
+                <ul>
+                  <li><p>Revenue figures in different currencies must not be summed or ranked together without FX conversion, which is out of scope. Group by this property instead.</p></li>
+                  <li><p>The ISO 4217 alphabetic code of the currency the company reports its revenue in, for example EUR or USD.</p></li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+              </th>
+              <td>
+                <span>
+                  <a href="#Company">Company</a>
+                  <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+              </th>
+              <td>
+                <a href="http://www.w3.org/2001/XMLSchema#string">xsd:string</a>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
       <div id="namespaces">
         <h2>Namespaces</h2>
@@ -947,7 +1071,7 @@ td {
           </dd>
           <dt id="gw">gw</dt>
           <dd>
-            <code>https://graphwise.ai/ontology/</code>
+            <code>https://graphwise.ai/ontology/estx50/</code>
           </dd>
           <dt id="owl">owl</dt>
           <dd>
@@ -1077,6 +1201,9 @@ td {
             <li>
               <a href="#revenueFY2024">revenue FY2024</a>
             </li>
+            <li>
+              <a href="#reportingCurrency">reporting currency</a>
+            </li>
           </ul>
         </li>
         <li>
@@ -1092,6 +1219,9 @@ td {
             </li>
             <li>
               <a href="#revenueFY2024">revenue FY2024</a>
+            </li>
+            <li>
+              <a href="#reportingCurrency">reporting currency</a>
             </li>
           </ul>
         </li>
