@@ -73,7 +73,6 @@ Never load `violations-demo.ttl` into a production repository.
 ## Caveats
 
 - **ICB subsector codes are provisional.** They were chosen from the taxonomy labels based on each company's main business, not taken from FTSE Russell. To replace them, edit `data/icb-subsector-assignments.csv` and re-run the three scripts; the mapping refuses any code that does not roll up to the industry stated in CSV2.
-- **Licensing.** ICB codes and names are FTSE Russell's intellectual property; `icb-skos.ttl` only re-expresses them. Check FTSE Russell's terms before publishing that file in a public repository. The fallback is to ship only the subsectors in use plus their parents.
 
 ## Namespaces
 

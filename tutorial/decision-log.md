@@ -286,7 +286,5 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - `vann:preferredNamespacePrefix` `gw`
 - **HTML documentation** generated with pyLODE: `docs/estx50-ontology.html`.
 - **GraphDB deployment is documented in the README, not executed.** Load order: ontology, ICB, instances, then shapes as a SHACL graph.
-- **Licensing:** `icb-skos.ttl` re-expresses FTSE Russell's ICB. Check their terms before publishing it in a public repository.
-  - Fallback: ship only the 50 subsectors in use plus their parents.
 
 **Produced:** `README.md`, `docs/estx50-ontology.html`, this log.

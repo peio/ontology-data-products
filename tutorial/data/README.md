@@ -18,7 +18,6 @@ The ICB taxonomy the data links to is in [`../ontology/icb-skos.ttl`](../ontolog
 | Content | 50 rows, one per index constituent: company, website, country, ICB industry, ICB code, ICB concept IRI, revenue FY2024 (bn, approx.), reporting currency, country currency |
 | Coverage | 8 countries, 11 ICB industries; revenue total 2,769.0 bn as reported |
 | Source | Compiled from public company information |
-| Licence | To be confirmed |
 | Mapping | Company, Website, Country and Revenue are mapped. The three ICB columns are cross-checked against the subsector assignments, then derived rather than stored. The two currency columns are dropped (out of scope). |
 
 Known limitations:
