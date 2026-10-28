@@ -25,6 +25,7 @@ Design decisions for every step are in [`decision-log.md`](decision-log.md). The
 | --- | --- |
 | `ontology/estx50-ontology.ttl` | The ontology (TBox): 3 classes, 5 properties, metadata |
 | `ontology/icb-skos.ttl` | ICB taxonomy as SKOS (249 concepts), reused unchanged |
+| `ontologies/` | Reference copies of the reused standard vocabularies (schema.org, DCAT, Dublin Core, PROV-O, SKOS); not imported, see its [README](ontologies/README.md) |
 | `requirements.txt` | Pinned Python dependencies |
 | `data/README.md` | Source, licence and mapping notes for each data file |
 | `data/EURO_STOXX_50_Constituents_CSV2.csv` | Source data |
