@@ -66,6 +66,9 @@ Follow the nine steps. Steps 4 and 5 are interleaved; steps 7–8 loop until the
 stop criteria hold. Read `references/methodology.md` for the full guidance and
 worked wine examples whenever a modelling decision is not obvious (class vs.
 property value, class vs. instance, sibling level, domain/range generality).
+Read `references/worked-example-estx50.md` for a complete, tested run of all nine
+steps on real data, with each decision stated as a reusable pattern (SKOS vs. class
+hierarchy, membership as a relation, align vs. import, OWL vs. SHACL, two test tracks).
 
 1. **Domain & scope.** Domain, intended use, users and maintainers.
    Write 5–10 competency questions (CQs). Note what is out of scope.

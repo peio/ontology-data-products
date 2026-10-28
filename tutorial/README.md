@@ -2,7 +2,7 @@
 
 A small, tested OWL ontology for the 50 EURO STOXX 50 constituents, built step by step with the Graphwise ontology-engineer methodology. Each company is linked to its country (Wikidata) and to its ICB subsector (SKOS). Industry roll-ups follow `skos:broader`.
 
-Design decisions for every step are in [`decision-log.md`](decision-log.md).
+Design decisions for every step are in [`decision-log.md`](decision-log.md). The [graphwise-ontology-engineer skill](../plugins/graphwise-ontology/skills/graphwise-ontology-engineer/SKILL.md) carries a condensed version of these decisions as reusable patterns in [`worked-example-estx50.md`](../plugins/graphwise-ontology/skills/graphwise-ontology-engineer/references/worked-example-estx50.md).
 
 ## Steps
 
