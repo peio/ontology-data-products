@@ -22,9 +22,6 @@ graph.
 | 3 | ROI drivers — return-on-investment hypothesis and value drivers | [literature/](literature/README.md#slide-decks) |
 | 4 | Tutorial — a tested ontology for the EURO STOXX 50 constituents | [tutorial/](tutorial/README.md) |
 | 5 | Target state — what already works, measurable outcomes | |
-
-The talk structure is in [docs/talk-outline.md](docs/talk-outline.md).
-
 ## The tutorial
 
 The [tutorial](tutorial/README.md) builds a small OWL ontology for the 50 EURO STOXX 50
@@ -64,7 +61,6 @@ To pick up a newer version later, run `/plugin marketplace update ontology-data-
 ## Repository layout
 
 ```text
-docs/                        Talk outline
 tutorial/                    EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
 literature/                  Methodology papers, slide decks and links
 plugins/graphwise-ontology/  The installable Claude Code plugin (manifest and skills)
