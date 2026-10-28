@@ -22,6 +22,7 @@ graph.
 | 3 | ROI drivers — return-on-investment hypothesis and value drivers | [literature/](literature/README.md#slide-decks) |
 | 4 | Tutorial — a tested ontology for the EURO STOXX 50 constituents | [tutorial/](tutorial/README.md) |
 | 5 | Target state — what already works, measurable outcomes | |
+
 ## The tutorial
 
 The [tutorial](tutorial/README.md) builds a small OWL ontology for the 50 EURO STOXX 50
