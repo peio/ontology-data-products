@@ -1,0 +1,102 @@
+@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/> .
+
+# =============================================================================
+# EURO STOXX 50 Constituents Ontology
+# Built with the Graphwise ontology-engineer methodology (Steps 1-9).
+# Design decisions are recorded in decision-log.md.
+# =============================================================================
+
+<https://graphwise.ai/ontology/estx50> a owl:Ontology ;
+    dcterms:title "EURO STOXX 50 Constituents Ontology"@en ;
+    dcterms:description "A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O."@en ;
+    dcterms:creator "Peio Popov" ;
+    dcterms:publisher "Graphwise" ;
+    dcterms:created "2026-10-28"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionIRI <https://graphwise.ai/ontology/estx50/1.0.0> ;
+    owl:versionInfo "1.0.0" ;
+    vann:preferredNamespacePrefix "gw" ;
+    vann:preferredNamespaceUri "https://graphwise.ai/ontology/" ;
+    rdfs:comment "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small."@en .
+
+# -----------------------------------------------------------------------------
+# Classes (Step 4)
+# -----------------------------------------------------------------------------
+
+gw:Company a owl:Class ;
+    rdfs:label "Company"@en ;
+    skos:definition "A listed company that is a constituent of the EURO STOXX 50 index."@en ;
+    rdfs:subClassOf schema:Corporation ;
+    rdfs:comment "Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself."@en .
+
+gw:Country a owl:Class ;
+    rdfs:label "Country"@en ;
+    skos:definition "The country a constituent is assigned to for index purposes. Instances are Wikidata country IRIs."@en ;
+    rdfs:subClassOf schema:Country .
+
+gw:StockIndex a owl:Class ;
+    rdfs:label "Stock index"@en ;
+    skos:definition "An equity market index whose constituents are listed companies; here, the EURO STOXX 50."@en ;
+    rdfs:subClassOf fibo-ind-mkt-bas:EquityIndex .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( gw:Company gw:Country gw:StockIndex ) .
+
+# -----------------------------------------------------------------------------
+# Object properties (Step 5)
+# -----------------------------------------------------------------------------
+
+gw:country a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "country"@en ;
+    skos:definition "Links a company to the country the index provider assigns it to."@en ;
+    skos:scopeNote "This is the index-assigned country, not legal domicile or headquarters. For example, Stellantis N.V. is legally domiciled in the Netherlands but is assigned to Italy."@en ;
+    rdfs:domain gw:Company ;
+    rdfs:range gw:Country .
+
+gw:icbSubsector a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "ICB subsector"@en ;
+    skos:definition "Links a company to its 8-digit ICB subsector. Sector, supersector and industry are derived by following skos:broader from the subsector; they are not stored."@en ;
+    rdfs:domain gw:Company ;
+    rdfs:range skos:Concept .
+
+gw:isConstituentOf a owl:ObjectProperty ;
+    rdfs:label "is constituent of"@en ;
+    skos:definition "Links a company to a stock index it is a constituent of (snapshot; no membership history)."@en ;
+    owl:inverseOf gw:hasConstituent ;
+    rdfs:domain gw:Company ;
+    rdfs:range gw:StockIndex .
+
+gw:hasConstituent a owl:ObjectProperty ;
+    rdfs:label "has constituent"@en ;
+    skos:definition "Links a stock index to a company that is one of its constituents."@en ;
+    rdfs:domain gw:StockIndex ;
+    rdfs:range gw:Company .
+
+# -----------------------------------------------------------------------------
+# Datatype properties (Step 5)
+# -----------------------------------------------------------------------------
+
+gw:revenueFY2024 a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "revenue FY2024"@en ;
+    skos:definition "Company revenue for fiscal year 2024, in billions, in the company's reporting currency, as reported in the source dataset."@en ;
+    rdfs:comment "Remark on the numbers: figures are approximate, are not converted to a common currency, and are not comparable across sectors (bank and insurer revenue is defined differently from industrial revenue). Totals are sums as reported."@en ;
+    rdfs:domain gw:Company ;
+    rdfs:range xsd:decimal .
+
+# Reused properties, declared here only for documentation and SHACL targeting.
+schema:legalName a owl:DatatypeProperty ;
+    rdfs:label "legal name"@en .
+
+schema:url a owl:ObjectProperty ;
+    rdfs:label "url"@en .

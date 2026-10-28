@@ -1,0 +1,131 @@
+# Track A: robustness tests.
+# Each test is an ASK query that returns true when the check PASSES.
+# Header format: "# @test <id> | <graph> | <description>"
+#   graph = base      : ontology + instances + ICB taxonomy
+#   graph = reasoned  : base + OWL RL closure (owlrl)
+#   graph = icb       : ICB taxonomy only
+# A3 (SHACL) is run by scripts/run_tests.py with shapes/shapes.ttl.
+
+PREFIX gw:      <https://graphwise.ai/ontology/>
+PREFIX gwi:     <https://graphwise.ai/instance/>
+PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcat:    <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+
+# @test A1a | base | Every minted class and property has an rdfs:label and a skos:definition
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty }
+    ?term a ?kind .
+    FILTER(STRSTARTS(STR(?term), "https://graphwise.ai/ontology/"))
+    FILTER(NOT EXISTS { ?term rdfs:label ?l } || NOT EXISTS { ?term skos:definition ?d })
+  }
+}
+
+# @test A1b | base | Every minted property declares a domain and a range, and neither is owl:Thing
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:ObjectProperty owl:DatatypeProperty }
+    ?p a ?kind .
+    FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/"))
+    FILTER(NOT EXISTS { ?p rdfs:domain ?d } || NOT EXISTS { ?p rdfs:range ?r }
+           || EXISTS { ?p rdfs:domain owl:Thing } || EXISTS { ?p rdfs:range owl:Thing })
+  }
+}
+
+# @test A1c | base | The class hierarchy has no cycles
+ASK { FILTER NOT EXISTS { ?c rdfs:subClassOf+ ?c } }
+
+# @test A1d | base | Every minted class is justified: it is the domain or range of at least one minted property
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
+    FILTER NOT EXISTS {
+      ?p rdfs:domain|rdfs:range ?c .
+      FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/"))
+    }
+  }
+}
+
+# @test A1e | base | Reuse first: every minted class specialises a class from a reused vocabulary
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
+    FILTER NOT EXISTS {
+      ?c rdfs:subClassOf ?super .
+      FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/"))
+    }
+  }
+}
+
+# @test A2a | reasoned | No individual belongs to two disjoint classes
+ASK {
+  FILTER NOT EXISTS {
+    ?d a owl:AllDisjointClasses ;
+       owl:members/rdf:rest*/rdf:first ?c1 , ?c2 .
+    FILTER(?c1 != ?c2)
+    ?x a ?c1 , ?c2 .
+  }
+}
+
+# @test A2b | reasoned | hasConstituent is materialised from isConstituentOf for all 50 companies
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { gwi:index-euro-stoxx-50 gw:hasConstituent ?c } }
+  FILTER(?n = 50)
+  FILTER NOT EXISTS { ?c gw:isConstituentOf ?i . FILTER NOT EXISTS { ?i gw:hasConstituent ?c } }
+}
+
+# @test A2c | reasoned | Functional properties cause no unintended identity (no owl:sameAs between distinct companies)
+ASK {
+  FILTER NOT EXISTS { ?a owl:sameAs ?b . ?a a gw:Company . ?b a gw:Company . FILTER(?a != ?b) }
+}
+
+# @test A4a | icb | ICB hierarchy is acyclic
+ASK { FILTER NOT EXISTS { ?c skos:broader+ ?c } }
+
+# @test A4b | icb | Every ICB concept has at most one parent
+ASK { FILTER NOT EXISTS { ?c skos:broader ?p1 , ?p2 . FILTER(?p1 != ?p2) } }
+
+# @test A4c | icb | Every ICB concept is in icb:scheme
+ASK { FILTER NOT EXISTS { ?c a skos:Concept . FILTER NOT EXISTS { ?c skos:inScheme icb:scheme } } }
+
+# @test A4d | icb | skos:broader and skos:narrower are symmetric
+ASK {
+  FILTER NOT EXISTS { ?a skos:broader ?b . FILTER NOT EXISTS { ?b skos:narrower ?a } }
+  FILTER NOT EXISTS { ?a skos:narrower ?b . FILTER NOT EXISTS { ?b skos:broader ?a } }
+}
+
+# @test A5a | base | Exactly 50 companies were mapped
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c a gw:Company } }
+  FILTER(?n = 50)
+}
+
+# @test A6a | base | Every company traces back to a source distribution of a dataset
+ASK {
+  FILTER NOT EXISTS {
+    ?c a gw:Company .
+    FILTER NOT EXISTS { ?c prov:wasDerivedFrom ?d . ?d a dcat:Distribution . ?ds dcat:distribution ?d }
+  }
+}
+
+# @test A6b | base | The ontology and the ICB taxonomy are both versioned
+ASK {
+  <https://graphwise.ai/ontology/estx50> owl:versionIRI ?v1 .
+  icb:scheme owl:versionIRI ?v2 .
+}
+
+# @test A6c | base | The revenue comparability caveat is attached to the property and the dataset
+ASK {
+  gw:revenueFY2024 rdfs:comment ?c .
+  FILTER(CONTAINS(LCASE(STR(?c)), "not comparable"))
+  ?ds a dcat:Dataset ; dcterms:description ?d .
+  FILTER(CONTAINS(LCASE(STR(?d)), "not comparable"))
+}

@@ -1,0 +1,4 @@
+rdflib==7.6.0
+pyshacl==0.40.1
+owlrl==7.6.2
+pylode==3.2.1

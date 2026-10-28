@@ -3,13 +3,13 @@
 Workshop materials for **AI Week Frankfurt, October 2026**.
 
 How leading data publishers build data products on top of ontologies and knowledge
-graphs — and how AI accelerates every step of the pipeline, from requirements to
-integration.
+graphs — and how AI accelerates the work, from requirements to a tested knowledge
+graph.
 
 ## What you will take away
 
 - **Case studies** of leading data publishers with real data products built using this approach
-- **A hands-on tutorial** for building the data product pipeline end to end
+- **A hands-on tutorial** that builds and tests an ontology for the EURO STOXX 50 constituents, step by step
 - **This repository**, with the code and data used in the workshop
 - **A value model** for estimating the drivers and measurable benefits of the approach
 
@@ -20,23 +20,21 @@ integration.
 | 1 | Current state — the data product catalog of a leading European data company | [docs/01-current-state.md](docs/01-current-state.md) |
 | 2 | State of the art — what leading data providers do (S&P Global, Bloomberg) | [docs/02-state-of-the-art.md](docs/02-state-of-the-art.md) |
 | 3 | ROI drivers — return-on-investment hypothesis and value drivers | [docs/03-roi-drivers.md](docs/03-roi-drivers.md) |
-| 4 | Tutorial — the data product pipeline | [tutorial/](tutorial/README.md) |
+| 4 | Tutorial — a tested ontology for the EURO STOXX 50 constituents | [tutorial/](tutorial/README.md) |
 | 5 | Target state — what already works, measurable outcomes | [docs/05-target-state.md](docs/05-target-state.md) |
 
-## The pipeline
+## The tutorial
 
-```text
-Elicitation → Modelling → Mapping → Ingesting → Indexing & Retrieving → Integrating
-```
+The [tutorial](tutorial/README.md) builds a small OWL ontology for the 50 EURO STOXX 50
+constituents, linked to the ICB industry taxonomy (SKOS), following the nine steps of
+the Graphwise ontology-engineer methodology. It maps the source CSVs to RDF, validates
+the result with SHACL and checks it against two sets of competency questions:
+robustness tests and business questions with a precomputed answer key.
 
-| Step | Folder |
-|------|--------|
-| Elicitation of requirements | [tutorial/01-elicitation](tutorial/01-elicitation/) |
-| Modelling | [tutorial/02-modelling](tutorial/02-modelling/) |
-| Mapping | [tutorial/03-mapping](tutorial/03-mapping/) |
-| Ingesting | [tutorial/04-ingesting](tutorial/04-ingesting/) |
-| Indexing and retrieving | [tutorial/05-indexing-retrieving](tutorial/05-indexing-retrieving/) |
-| Integrating | [tutorial/06-integrating](tutorial/06-integrating/) |
+Every design decision, and what was rejected, is recorded in the
+[decision log](tutorial/decision-log.md). The `tutorial/` folder is self-contained and
+holds the authoritative copy of all data; see [tutorial/data](tutorial/data/README.md)
+for sources and licences.
 
 ## Claude Code plugin
 
@@ -65,13 +63,25 @@ To pick up a newer version later, run `/plugin marketplace update ontology-data-
 
 ```text
 docs/            Talk material: case studies, ROI drivers, target state
-tutorial/        Step-by-step pipeline, one folder per step
-data/            Sample source data used in the tutorial
+tutorial/        EURO STOXX 50 tutorial: data, ontology, shapes, queries, scripts, reports
 slides/          Presentation slides
+Literature/      Methodology papers and slide decks
 skills/          Claude skills shipped by the plugin
 .claude-plugin/  Plugin and marketplace manifests
 ```
 
 ## Prerequisites
 
-_To be completed once the tutorial tooling is fixed._
+To run the tutorial you need Python 3.10 or later:
+
+```bash
+cd tutorial
+pip install -r requirements.txt
+python scripts/map_csv.py
+python scripts/make_answer_key.py
+python scripts/run_tests.py
+```
+
+GraphDB is optional: everything runs locally with rdflib, pySHACL and owlrl. The
+[tutorial README](tutorial/README.md#load-into-graphdb) explains how to load the
+result into GraphDB.

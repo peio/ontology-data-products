@@ -1,0 +1,62 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix gw:      <https://graphwise.ai/ontology/> .
+@prefix gwsh:    <https://graphwise.ai/shapes/estx50/> .
+@prefix icb:     <https://graphwise.ai/taxonomy/icb/> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Track A3: data conformance. Validate against instances + icb-skos.ttl.
+
+gwsh:CompanyShape a sh:NodeShape ;
+    sh:targetClass gw:Company ;
+    rdfs:label "Company shape"@en ;
+    sh:property [
+        sh:path schema:legalName ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A company needs exactly one legal name (xsd:string)." ] ;
+    sh:property [
+        sh:path schema:url ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "A company needs exactly one website, given as an IRI." ] ;
+    sh:property [
+        sh:path gw:country ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class gw:Country ;
+        sh:message "A company needs exactly one country, typed gw:Country." ] ;
+    sh:property [
+        sh:path gw:icbSubsector ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:node gwsh:IcbSubsectorShape ;
+        sh:message "A company needs exactly one ICB classification, and it must be an 8-digit subsector in icb:scheme." ] ;
+    sh:property [
+        sh:path gw:revenueFY2024 ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "A company needs exactly one FY2024 revenue: an xsd:decimal of 0 or more." ] ;
+    sh:property [
+        sh:path gw:isConstituentOf ;
+        sh:minCount 1 ;
+        sh:class gw:StockIndex ;
+        sh:message "A company must be a constituent of a gw:StockIndex." ] ;
+    sh:property [
+        sh:path prov:wasDerivedFrom ;
+        sh:minCount 1 ;
+        sh:class dcat:Distribution ;
+        sh:message "A company must trace back to a source dcat:Distribution." ] .
+
+gwsh:IcbSubsectorShape a sh:NodeShape ;
+    rdfs:label "ICB subsector shape"@en ;
+    sh:class skos:Concept ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue icb:scheme ] ;
+    sh:property [
+        sh:path [ sh:inversePath skos:member ] ;
+        sh:hasValue icb:subsectors ] .

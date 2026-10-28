@@ -1,0 +1,64 @@
+# Track B: business questions.
+# Header format: "# @query <id> | <question>"
+# The first projected variable is the row key; the remaining ones are compared
+# with answer-key.csv by scripts/run_tests.py (decimals rounded to 1 place).
+
+PREFIX gw:      <https://graphwise.ai/ontology/>
+PREFIX gwi:     <https://graphwise.ai/instance/>
+PREFIX icb:     <https://graphwise.ai/taxonomy/icb/>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcat:    <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+
+# @query B1 | Which constituents are banks?
+# Roll-up: any subsector at or below the ICB "Banks" supersector (icb:3010).
+SELECT ?company WHERE {
+  ?c a gw:Company ; rdfs:label ?company ;
+     gw:icbSubsector/skos:broader* icb:3010 .
+}
+ORDER BY ?company
+
+# @query B2 | Revenue by ICB industry, rolled up from subsectors via skos:broader+
+SELECT ?industry (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a gw:Company ; gw:revenueFY2024 ?revenue ;
+     gw:icbSubsector/skos:broader* ?ind .
+  ?ind skos:topConceptOf icb:scheme ; skos:prefLabel ?industry .
+}
+GROUP BY ?industry
+ORDER BY DESC(?totalRevenue)
+
+# @query B3 | Revenue by country
+SELECT ?country (SUM(?revenue) AS ?totalRevenue) (COUNT(?c) AS ?companies) WHERE {
+  ?c a gw:Company ; gw:revenueFY2024 ?revenue ; gw:country ?ctry .
+  ?ctry rdfs:label ?country .
+}
+GROUP BY ?country
+ORDER BY DESC(?totalRevenue)
+
+# @query B4 | Which countries' constituents span the most industries?
+SELECT ?country (COUNT(DISTINCT ?ind) AS ?industries) WHERE {
+  ?c a gw:Company ; gw:country ?ctry ;
+     gw:icbSubsector/skos:broader* ?ind .
+  ?ind skos:topConceptOf icb:scheme .
+  ?ctry rdfs:label ?country .
+}
+GROUP BY ?country
+ORDER BY DESC(?industries) ?country
+
+# @query B5 | Which is the largest constituent by revenue (returned with the comparability caveat)?
+SELECT ?company ?revenue (BOUND(?caveat) AS ?caveatAttached) WHERE {
+  ?c a gw:Company ; rdfs:label ?company ; gw:revenueFY2024 ?revenue .
+  OPTIONAL { gw:revenueFY2024 rdfs:comment ?caveat }
+}
+ORDER BY DESC(?revenue)
+LIMIT 1
+
+# @query B6 | Where do ASML Holding's figures come from, and are they approximate?
+SELECT ?source (CONTAINS(LCASE(STR(?description)), "approximate") AS ?approximate) WHERE {
+  ?c rdfs:label "ASML Holding" ; prov:wasDerivedFrom ?dist .
+  ?dist dcterms:title ?source .
+  ?ds dcat:distribution ?dist ; dcterms:description ?description .
+}
+ORDER BY ?source

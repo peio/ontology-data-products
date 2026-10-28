@@ -1,0 +1,45 @@
+# Step 7 teaching aid: three deliberately broken companies.
+# Validate this file TOGETHER with estx50-instances.ttl and icb-skos.ttl;
+# SHACL must report exactly three violations, one per company below.
+# Never load this file into the production repository.
+
+@prefix gw:     <https://graphwise.ai/ontology/> .
+@prefix gwi:    <https://graphwise.ai/instance/> .
+@prefix icb:    <https://graphwise.ai/taxonomy/icb/> .
+@prefix schema: <https://schema.org/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix wd:     <http://www.wikidata.org/entity/> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# Violation 1: missing country.
+gwi:demo-no-country a gw:Company ;
+    rdfs:label "Demo: missing country" ;
+    schema:legalName "Demo Missing Country SE"^^xsd:string ;
+    schema:url <https://example.org/no-country> ;
+    gw:icbSubsector icb:30101010 ;
+    gw:revenueFY2024 10.0 ;
+    gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwi:distribution-csv2 .
+
+# Violation 2: negative revenue.
+gwi:demo-negative-revenue a gw:Company ;
+    rdfs:label "Demo: negative revenue" ;
+    schema:legalName "Demo Negative Revenue AG"^^xsd:string ;
+    schema:url <https://example.org/negative-revenue> ;
+    gw:country wd:Q183 ;
+    gw:icbSubsector icb:10101015 ;
+    gw:revenueFY2024 -4.2 ;
+    gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwi:distribution-csv2 .
+
+# Violation 3: classified at the industry level (icb:30 Financials), not a subsector.
+gwi:demo-industry-level a gw:Company ;
+    rdfs:label "Demo: industry-level classification" ;
+    schema:legalName "Demo Industry Level SA"^^xsd:string ;
+    schema:url <https://example.org/industry-level> ;
+    gw:country wd:Q142 ;
+    gw:icbSubsector icb:30 ;
+    gw:revenueFY2024 7.5 ;
+    gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwi:distribution-csv2 .
