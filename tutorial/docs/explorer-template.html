@@ -1,0 +1,484 @@
+<title>EURO STOXX 50 Semantic Layer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a working tool. Header with the thesis and figures, tabbed views, the CSV table as the anchor.
+   Colour encodes where a term's meaning comes from; everything else stays neutral. */
+:root {
+  --bg: #f5f6f8; --panel: #ffffff; --ink: #16202a; --muted: #5b6673; --rule: #dde1e7; --wash: #eceff3;
+  --accent: #1d4f91;
+  --src-gw: #b0344a; --src-schema: #157386; --src-fibo: #8a5b00; --src-icb: #6a4aa5; --src-wd: #2e7040; --src-prov: #556372; --src-none: #9aa3ad;
+  --eur: #1d4f91; --usd: #c26a1b; --bad: #b42318; --bad-wash: #fdecea; --ok: #2e7040;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f151b; --panel: #161e26; --ink: #e4e9ee; --muted: #98a3ae; --rule: #2a3540; --wash: #1c2630;
+  --accent: #7fb0ee;
+  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
+  --eur: #7fb0ee; --usd: #f0a35c; --bad: #ff8a7a; --bad-wash: #3a1c19; --ok: #7cc78d; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f151b; --panel: #161e26; --ink: #e4e9ee; --muted: #98a3ae; --rule: #2a3540; --wash: #1c2630;
+  --accent: #7fb0ee;
+  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
+  --eur: #7fb0ee; --usd: #f0a35c; --bad: #ff8a7a; --bad-wash: #3a1c19; --ok: #7cc78d; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15 }
+h1 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); letter-spacing: -0.01em }
+h2 { font-size: 1.35rem }
+h3 { font-size: 1.05rem }
+p { margin: 0 }
+code, .mono { font-family: var(--mono); font-size: 0.86em }
+.muted { color: var(--muted) }
+.eyebrow { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted) }
+
+header.top { display: grid; gap: 14px; margin-bottom: 22px }
+.thesis { max-width: 68ch; font-size: 1.02rem; color: var(--muted) }
+.thesis strong { color: var(--ink); font-weight: 600 }
+.figures { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-family: var(--mono); font-size: 0.84rem; font-variant-numeric: tabular-nums }
+.figures .arrow { color: var(--muted) }
+.figures b { font-weight: 500; font-size: 1.05rem; color: var(--ink) }
+.fig { display: flex; gap: 6px; align-items: baseline }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted) }
+.legend span { display: inline-flex; align-items: center; gap: 6px }
+.dot { width: 9px; height: 9px; border-radius: 2px; background: var(--c, var(--src-none)); flex: none }
+
+nav.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--rule); margin-bottom: 20px; overflow-x: auto; scrollbar-width: thin }
+nav.tabs button { font: 500 0.92rem var(--body); color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 14px; cursor: pointer; white-space: nowrap }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent) }
+nav.tabs button:hover { color: var(--ink) }
+button:focus-visible, select:focus-visible, th:focus-visible, tr:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+
+.view { display: grid; gap: 18px }
+.intro { max-width: 72ch; color: var(--muted) }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start }
+@media (max-width: 900px) { .split { grid-template-columns: minmax(0, 1fr) } }
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px }
+.pad { padding: 16px 18px }
+
+/* source chips */
+.chip { display: inline-flex; align-items: center; gap: 5px; font: 500 0.74rem/1.2 var(--mono); color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); background: color-mix(in srgb, var(--c) 9%, transparent); padding: 2px 6px; border-radius: 3px; white-space: nowrap }
+.s-gw { --c: var(--src-gw) } .s-schema { --c: var(--src-schema) } .s-fibo { --c: var(--src-fibo) } .s-icb { --c: var(--src-icb) }
+.s-wd { --c: var(--src-wd) } .s-prov { --c: var(--src-prov) } .s-none { --c: var(--src-none) }
+
+/* the CSV table */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 5px; overflow: hidden; background: var(--panel) }
+.seg button { font: 500 0.82rem var(--body); border: 0; background: none; color: var(--muted); padding: 6px 12px; cursor: pointer }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg) }
+.scroll { overflow: auto; max-height: 560px; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel) }
+table { border-collapse: collapse; font-size: 0.82rem; font-variant-numeric: tabular-nums }
+table.csv { min-width: 1180px; width: 100% }
+.csv th, .csv td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; white-space: nowrap }
+.csv thead th { position: sticky; background: var(--panel); z-index: 2 }
+.csv thead tr.h1 th { top: 0; font: 500 0.78rem var(--mono); color: var(--ink); cursor: pointer; border-bottom: 0; padding-top: 10px }
+.csv thead tr.h2 th { top: 33px; padding-bottom: 9px; cursor: pointer; border-bottom: 1px solid var(--rule) }
+.csv thead th.sel { background: color-mix(in srgb, var(--accent) 10%, var(--panel)) }
+.csv td.sel { background: color-mix(in srgb, var(--accent) 6%, transparent) }
+.csv th.added, .csv td.added { background: color-mix(in srgb, var(--src-icb) 5%, var(--panel)); border-left: 1px dashed var(--rule) }
+.csv th.added.sel, .csv td.added.sel { background: color-mix(in srgb, var(--accent) 12%, var(--panel)) }
+.csv th.dropped, .csv td.dropped { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--src-none) }
+.csv tbody tr { cursor: pointer }
+.csv tbody tr:hover td { background: var(--wash) }
+.csv td.num { text-align: right }
+.tag-added { font: 500 0.64rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--src-icb); margin-left: 6px }
+.v-iri { font-family: var(--mono); font-size: 0.78rem }
+.v-derived { color: var(--src-icb); font-family: var(--mono); font-size: 0.78rem }
+
+.detail { display: grid; gap: 12px; position: sticky; top: 12px }
+.detail .from { font: 500 0.95rem var(--mono) }
+.detail dl { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px 12px; margin: 0; font-size: 0.86rem }
+.detail dt { color: var(--muted); font-size: 0.78rem; padding-top: 2px }
+.detail dd { margin: 0; min-width: 0; overflow-wrap: anywhere }
+.fate { font: 500 0.7rem var(--mono); text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 6px; border-radius: 3px; background: var(--wash); color: var(--muted) }
+.fate.mapped { color: var(--ok) } .fate.added { color: var(--src-icb) } .fate.dropped { color: var(--bad) }
+.becomes { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+
+/* company */
+.pick { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
+select { font: 0.92rem var(--body); padding: 6px 10px; border: 1px solid var(--rule); border-radius: 5px; background: var(--panel); color: var(--ink) }
+.twoviews { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 18px; align-items: start }
+@media (max-width: 900px) { .twoviews { grid-template-columns: minmax(0, 1fr) } }
+.kv { width: 100%; font-size: 0.84rem }
+.kv th { text-align: left; font: 400 0.76rem var(--mono); color: var(--muted); padding: 7px 10px 7px 0; vertical-align: top; width: 46% }
+.kv td { padding: 7px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere }
+.kv tr:last-child td { border-bottom: 0 }
+.graphbox { overflow-x: auto }
+.graphbox svg { display: block; min-width: 720px; width: 100%; height: auto }
+svg text { font-family: var(--body) }
+.adds { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px }
+.adds .panel { display: grid; gap: 6px; align-content: start }
+
+/* questions */
+.qs { display: grid; gap: 16px }
+.q { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: 0; overflow: hidden }
+@media (max-width: 860px) { .q { grid-template-columns: minmax(0, 1fr) } }
+.q .head { grid-column: 1 / -1; display: flex; gap: 12px; align-items: baseline; padding: 14px 18px; border-bottom: 1px solid var(--rule) }
+.q .qid { font: 600 0.8rem var(--mono); color: var(--accent) }
+.q .side { padding: 14px 18px; display: grid; gap: 8px; align-content: start }
+.q .side.table { background: var(--wash) }
+details summary { cursor: pointer; font-size: 0.8rem; color: var(--muted) }
+pre { margin: 8px 0 0; padding: 10px 12px; background: var(--wash); border-radius: 4px; overflow-x: auto; font: 0.76rem/1.5 var(--mono) }
+.bars { display: grid; gap: 4px; font-size: 0.8rem; font-variant-numeric: tabular-nums }
+.bar { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) 92px; gap: 10px; align-items: center }
+.bar .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.bar .track { height: 14px; background: var(--wash); border-radius: 2px; position: relative }
+.bar .fill { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--eur) }
+.bar .fill.usd { background: var(--usd) }
+.bar .val { text-align: right; font-family: var(--mono); font-size: 0.76rem }
+.cur { font: 500 0.68rem var(--mono); padding: 1px 5px; border-radius: 3px; color: var(--bg); background: var(--eur) }
+.cur.usd { background: var(--usd) }
+.names { display: flex; flex-wrap: wrap; gap: 6px }
+.names span { padding: 3px 8px; border: 1px solid var(--rule); border-radius: 3px; font-size: 0.82rem; background: var(--panel) }
+.rtable { width: 100%; font-size: 0.82rem }
+.rtable th { text-align: left; font: 400 0.72rem var(--mono); color: var(--muted); padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule) }
+.rtable td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule) }
+
+/* rules */
+.broken td.badcell { background: var(--bad-wash); color: var(--bad); font-weight: 600; outline: 1px solid var(--bad); outline-offset: -1px }
+.broken tr.msg td { white-space: normal; color: var(--bad); font-size: 0.8rem; padding-top: 0; border-bottom: 1px solid var(--rule) }
+.broken tr.row td { border-bottom: 0 }
+.rules { display: grid; gap: 0 }
+.rules .r { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 0.86rem }
+.rules .r:last-child { border-bottom: 0 }
+
+/* industries */
+.icicle { overflow-x: auto }
+.icicle svg { display: block; min-width: 900px; width: 100% }
+.heat { overflow-x: auto }
+.heat table { min-width: 640px }
+.heat th, .heat td { padding: 5px 6px; text-align: center; font-size: 0.78rem }
+.heat thead th { font: 400 0.72rem var(--body); color: var(--muted); vertical-align: bottom; max-width: 74px; white-space: normal; line-height: 1.2 }
+.heat tbody th { text-align: left; font-weight: 500; white-space: nowrap }
+.heat td.c { font-family: var(--mono); border-radius: 3px }
+.heat td.total { font-family: var(--mono); color: var(--muted) }
+footer { margin-top: 30px; font-size: 0.8rem; color: var(--muted); max-width: 80ch }
+@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width 0.4s ease } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1>The same 50 rows, with shared meaning</h1>
+    <p class="thesis">The EURO STOXX 50 file is a table with <strong>9 column headings</strong>. Its meaning lives in the headings' wording and in whoever reads them. The semantic layer gives each heading a defined term from a shared vocabulary, turns text values into links, and adds the facts the table cannot hold: the full industry hierarchy, index membership, provenance and validation rules.</p>
+    <div class="figures" id="figures"></div>
+    <div class="legend" id="legend"></div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+
+  <section class="view" id="v-table" role="tabpanel">
+    <p class="intro">Select a column heading to see what it becomes. The three shaded columns on the right are not in the file: the semantic layer adds them. Select a row to open that company.</p>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Cell values">
+        <button type="button" id="mode-csv" aria-pressed="true">CSV text</button>
+        <button type="button" id="mode-graph" aria-pressed="false">Graph values</button>
+      </div>
+      <span class="muted" style="font-size:.8rem" id="mode-note"></span>
+    </div>
+    <div class="split">
+      <div class="scroll"><table class="csv" id="csv"></table></div>
+      <aside class="panel pad detail" id="coldetail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-company" role="tabpanel" hidden>
+    <div class="pick">
+      <label for="company-select" class="eyebrow">Company</label>
+      <select id="company-select"></select>
+      <span class="muted" style="font-size:.84rem" id="company-sum"></span>
+    </div>
+    <div class="twoviews">
+      <div class="panel pad" style="display:grid;gap:10px">
+        <div class="eyebrow">As a CSV row</div>
+        <table class="kv" id="company-row"></table>
+      </div>
+      <div class="panel pad" style="display:grid;gap:10px;min-width:0">
+        <div class="eyebrow">As a graph</div>
+        <div class="graphbox" id="company-graph"></div>
+      </div>
+    </div>
+    <div class="adds" id="company-adds"></div>
+  </section>
+
+  <section class="view" id="v-questions" role="tabpanel" hidden>
+    <p class="intro">The six business questions the ontology was built to answer. Each answer below is the actual result of the SPARQL query over the graph, checked against an answer key computed independently from the CSV.</p>
+    <div class="qs" id="questions"></div>
+  </section>
+
+  <section class="view" id="v-rules" role="tabpanel" hidden>
+    <p class="intro">A spreadsheet accepts any value in any cell. The shapes file states what a valid company looks like. The three rows below were planted to break one rule each; all three are caught, and the 50 real companies pass.</p>
+    <div class="panel pad" style="display:grid;gap:12px">
+      <h2>Three broken rows</h2>
+      <div class="scroll" style="max-height:none"><table class="csv broken" id="broken"></table></div>
+    </div>
+    <div class="panel pad" style="display:grid;gap:8px">
+      <h2>Rules for every company</h2>
+      <div class="rules" id="rules"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-industries" role="tabpanel" hidden>
+    <p class="intro">The file's "ICB Industry" column has 11 distinct values. Each company in the graph links to one 8-digit subsector, and the three levels above it come from the ICB taxonomy. Row height is one company.</p>
+    <div class="panel pad" style="display:grid;gap:10px">
+      <h2>Industry hierarchy, derived from one link per company</h2>
+      <div class="icicle" id="icicle"></div>
+    </div>
+    <div class="panel pad" style="display:grid;gap:10px">
+      <h2>Constituents by country and industry</h2>
+      <p class="muted" style="font-size:.86rem">Company counts. Countries are Wikidata entities, so this grid could be joined with any other dataset that uses them.</p>
+      <div class="heat" id="heat"></div>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = n => Number(n).toLocaleString("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const SRC = { gw: "This ontology (gw:)", schema: "schema.org", fibo: "FIBO", icb: "ICB taxonomy (SKOS)", wd: "Wikidata", prov: "PROV-O / DCAT", none: "Not mapped" };
+const chip = (term, src) => `<span class="chip s-${src}">${esc(term)}</span>`;
+const ci = h => D.headings.indexOf(h);
+
+/* header */
+$("#eyebrow").textContent = `${D.title} · version ${D.version}`;
+const s = D.stats;
+$("#figures").innerHTML = [
+  `<span class="fig"><b>${s.rows}</b> rows × <b>${D.headings.length}</b> columns = <b>${s.cells}</b> cells</span>`,
+  `<span class="arrow" aria-hidden="true">→</span>`,
+  `<span class="fig"><b>${s.instance_triples}</b> facts about companies</span>`,
+  `<span class="fig">+ <b>${s.icb_concepts}</b> ICB concepts</span>`,
+  `<span class="fig">+ <b>${s.countries}</b> Wikidata countries</span>`,
+  `<span class="fig muted">${s.triples.toLocaleString("en-GB")} triples in all</span>`,
+].join("");
+$("#legend").innerHTML = '<span class="eyebrow" style="margin-right:4px">Meaning from</span>' +
+  ["gw", "schema", "fibo", "icb", "wd", "prov"].map(k => `<span><i class="dot s-${k}" style="background:var(--c)"></i>${SRC[k]}</span>`).join("");
+
+/* tabs */
+const VIEWS = [["table", "Table → meaning"], ["company", "One company, two views"], ["questions", "Questions"], ["rules", "Rules"], ["industries", "Industries"]];
+$("#tabs").innerHTML = VIEWS.map(([k, l]) => `<button type="button" role="tab" id="t-${k}" aria-controls="v-${k}" data-v="${k}">${l}</button>`).join("");
+function show(k) {
+  if (!VIEWS.some(v => v[0] === k)) k = "table";
+  for (const [v] of VIEWS) { $(`#v-${v}`).hidden = v !== k; $(`#t-${v}`).setAttribute("aria-selected", v === k); }
+  try { history.replaceState(null, "", "#" + k); } catch (e) {}
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (b) show(b.dataset.v); });
+
+/* ---------- view 1: table → meaning ---------- */
+let mode = "csv", selCol = 0;
+const nCsv = D.headings.length;
+function cellValue(c, i) {
+  const col = D.columns[i];
+  if (i >= nCsv) {
+    if (col.term === "gw:icbSubsector") { const sub = c.icb[3]; return mode === "csv" ? esc(sub.label) : `<span class="v-iri">icb:${sub.code}</span> ${esc(sub.label)}`; }
+    if (col.term === "gw:isConstituentOf") return mode === "csv" ? "EURO STOXX 50" : `<span class="v-iri">gwi:index-euro-stoxx-50</span>`;
+    if (col.term === "prov:wasDerivedFrom") return mode === "csv" ? `${c.sources.length} files` : `<span class="v-iri">gwi:distribution-csv2</span> +1`;
+  }
+  const raw = c.row[i];
+  if (mode === "csv") return esc(raw);
+  switch (D.headings[i]) {
+    case "Company": return `${esc(c.name)} <span class="v-iri muted">gwi:${esc(c.id)}</span>`;
+    case "Website": return `<span class="v-iri">&lt;${esc(c.url)}&gt;</span>`;
+    case "Country": return `<span class="v-iri">wd:${esc(c.country.qid)}</span> ${esc(c.country.iso)}`;
+    case "ICB Industry": case "ICB code": case "ICB concept IRI": return `<span class="v-derived">↑ from icb:${c.icb[3].code}</span>`;
+    case "Revenue FY2024 (bn, approx.)": return `${fmt(c.revenue)}<span class="muted v-iri">^^xsd:decimal</span>`;
+    case "Reporting currency": return `<span class="cur ${c.currency === "USD" ? "usd" : ""}">${esc(c.currency)}</span>`;
+    case "Country currency": return `<span class="muted">not mapped</span>`;
+  }
+  return esc(raw);
+}
+function renderTable() {
+  const cls = i => [D.columns[i].fate === "added" ? "added" : "", D.columns[i].fate === "dropped" ? "dropped" : "", i === selCol ? "sel" : "",
+                    D.headings[i] && D.headings[i].startsWith("Revenue") ? "num" : ""].filter(Boolean).join(" ");
+  const h1 = D.columns.map((c, i) => `<th scope="col" tabindex="0" data-col="${i}" class="${cls(i)}">${esc(c.heading)}${c.fate === "added" ? '<span class="tag-added">added</span>' : ""}</th>`).join("");
+  const h2 = D.columns.map((c, i) => `<th data-col="${i}" class="${cls(i)}">${chip(c.term, c.source)}</th>`).join("");
+  const body = D.companies.map(c => `<tr tabindex="0" data-co="${esc(c.id)}">${D.columns.map((_, i) => `<td class="${cls(i)}">${cellValue(c, i)}</td>`).join("")}</tr>`).join("");
+  $("#csv").innerHTML = `<thead><tr class="h1">${h1}</tr><tr class="h2">${h2}</tr></thead><tbody>${body}</tbody>`;
+  $("#mode-note").textContent = mode === "csv" ? "Values as they appear in the file." : "Values as stored in the graph: IRIs, typed literals, links into ICB and Wikidata.";
+}
+function renderColDetail() {
+  const c = D.columns[selCol];
+  const ex = D.companies[0];
+  const sample = selCol < nCsv ? ex.row[selCol] : (c.term === "gw:icbSubsector" ? ex.icb[3].label : c.term === "gw:isConstituentOf" ? "EURO STOXX 50" : ex.sources.join("; "));
+  const fateTxt = { mapped: "mapped", derived: "derived, not stored", dropped: "dropped", added: "added by the semantic layer" }[c.fate];
+  $("#coldetail").innerHTML = `
+    <div class="eyebrow">${c.fate === "added" ? "Not in the file" : "Column heading in the file"}</div>
+    <div class="from">${esc(c.heading)}</div>
+    <div class="becomes"><span class="muted">becomes</span> ${chip(c.term, c.source)} <span class="fate ${c.fate.split(" ")[0]}">${fateTxt}</span></div>
+    <dl>
+      <dt>Meaning from</dt><dd><i class="dot s-${c.source}" style="background:var(--c);display:inline-block;margin-right:6px"></i>${SRC[c.source]}</dd>
+      ${c.definition ? `<dt>Definition</dt><dd>${esc(c.definition)}</dd>` : ""}
+      <dt>What changes</dt><dd>${esc(c.adds)}</dd>
+      ${c.rule ? `<dt>Rule</dt><dd>${esc(c.rule)}</dd>` : ""}
+      <dt>Example</dt><dd class="mono">${esc(sample)} <span class="muted">(${esc(ex.name)})</span></dd>
+    </dl>`;
+}
+$("#csv").addEventListener("click", e => {
+  const th = e.target.closest("th[data-col]");
+  if (th) { selCol = +th.dataset.col; renderTable(); renderColDetail(); return; }
+  const tr = e.target.closest("tr[data-co]");
+  if (tr) { selectCompany(tr.dataset.co); show("company"); }
+});
+$("#csv").addEventListener("keydown", e => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const t = e.target; if (t.matches("th[data-col], tr[data-co]")) { e.preventDefault(); t.click(); }
+});
+for (const m of ["csv", "graph"]) $(`#mode-${m}`).addEventListener("click", () => {
+  mode = m; $("#mode-csv").setAttribute("aria-pressed", m === "csv"); $("#mode-graph").setAttribute("aria-pressed", m === "graph"); renderTable();
+});
+
+/* ---------- view 2: one company ---------- */
+const sel = $("#company-select");
+sel.innerHTML = [...D.companies].sort((a, b) => a.name.localeCompare(b.name)).map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+sel.addEventListener("change", () => selectCompany(sel.value));
+function node(x, y, w, title, sub, src, opts = {}) {
+  const h = sub ? 44 : 30;
+  return `<g><rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="${opts.literal ? 2 : 6}"
+     fill="var(--panel)" stroke="var(--src-${src})" stroke-width="${opts.strong ? 2.2 : 1.3}" ${opts.literal ? 'stroke-dasharray="3 3"' : ""}/>
+    <text x="${x}" y="${sub ? y - 4 : y + 4}" text-anchor="middle" font-size="12.5" font-weight="${opts.strong ? 600 : 500}" fill="var(--ink)">${esc(title)}</text>
+    ${sub ? `<text x="${x}" y="${y + 13}" text-anchor="middle" font-size="10.5" font-family="var(--mono)" fill="var(--src-${src})">${esc(sub)}</text>` : ""}</g>`;
+}
+function edge(x1, y1, x2, y2, label, src, lx, ly) {
+  const mx = lx ?? (x1 + x2) / 2, my = ly ?? (y1 + y2) / 2 - 5;
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--src-${src})" stroke-width="1.2" marker-end="url(#ah-${src})"/>
+    <text x="${mx}" y="${my}" text-anchor="middle" font-size="10" font-family="var(--mono)" fill="var(--src-${src})" paint-order="stroke" stroke="var(--panel)" stroke-width="4">${esc(label)}</text>`;
+}
+function selectCompany(id) {
+  const c = D.companies.find(x => x.id === id) || D.companies[0];
+  sel.value = c.id;
+  $("#company-sum").textContent = `${c.triples} facts in the graph, from one row of ${nCsv} cells`;
+  $("#company-row").innerHTML = D.headings.map((h, i) => `<tr><th scope="row">${esc(h)}</th><td>${esc(c.row[i]) || '<span class="muted">empty</span>'}</td></tr>`).join("");
+  const markers = ["gw", "schema", "fibo", "icb", "wd", "prov"].map(k => `<marker id="ah-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--src-${k})"/></marker>`).join("");
+  const X = 360, Y = 230;
+  const L = c.icb; // industry, supersector, sector, subsector
+  const svg = `<svg viewBox="0 0 760 510" role="img" aria-label="Graph of ${esc(c.name)} and its links">
+    <defs>${markers}</defs>
+    ${edge(X - 70, Y - 22, 140, 74, "schema:name", "schema", 210, 120)}
+    ${edge(X, Y - 22, X, 82, "schema:url", "schema", X + 4, 130)}
+    ${edge(X + 70, Y - 22, 590, 74, "gw:revenueFY2024", "gw", 520, 120)}
+    ${edge(590, 82, 590, 132, "gw:reportingCurrency", "gw", 668, 112)}
+    ${edge(X - 90, Y, 175, Y, "gw:isConstituentOf", "gw", 232, Y - 8)}
+    ${edge(X - 70, Y + 22, 175, 352, "prov:wasDerivedFrom", "prov", 222, 296)}
+    ${edge(X - 70, Y + 22, 175, 412, "", "prov")}
+    ${edge(X + 100, Y, 548, Y, "gw:country", "gw", 504, Y - 8)}
+    ${edge(X + 40, Y + 22, 523, 300, "gw:icbSubsector", "icb", 420, 300)}
+    ${[0, 1, 2].map(j => edge(640, 322 + j * 60, 640, 337 + j * 60, "", "icb")).join("")}
+    <text x="520" y="392" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--src-icb)">skos:broader ↓</text>
+    ${node(140, 60, 190, c.name, '"' + c.name + '"', "schema", { literal: true })}
+    ${node(X, 60, 220, c.url.replace(/^https?:\/\//, ""), "IRI", "schema", { literal: true })}
+    ${node(590, 60, 170, fmt(c.revenue) + " bn", "xsd:decimal", "gw", { literal: true })}
+    ${node(590, 156, 110, c.currency, "ISO 4217", "gw", { literal: true })}
+    ${node(X, Y, 200, c.name, "gw:Company · schema:Corporation", "gw", { strong: true })}
+    ${node(95, Y, 160, "EURO STOXX 50", "fibo:EquityIndex", "fibo")}
+    ${node(95, 352, 160, "CSV2 file", "dcat:Distribution", "prov")}
+    ${node(95, 412, 160, "ICB assignments", "dcat:Distribution · provisional", "prov")}
+    ${node(640, Y, 180, c.country.label, `wd:${c.country.qid} · ${c.country.iso}`, "wd")}
+    ${[3, 2, 1, 0].map((k, j) => node(640, 300 + j * 60, 230, L[k].label, `${L[k].level} · icb:${L[k].code}`, "icb", { strong: k === 3 })).join("")}
+  </svg>`;
+  $("#company-graph").innerHTML = svg;
+  $("#company-adds").innerHTML = [
+    ["Two types, one asserted each", `${c.types.map(t => `<code>${esc(t)}</code>`).join(" and ")}. Tools that know schema.org see a Corporation without running a reasoner.`],
+    ["Four ICB levels from one link", `${L.map(l => esc(l.label)).join(" › ")}. The file only says <em>${esc(c.row[ci("ICB Industry")])}</em>. Basis for the subsector: ${esc(c.basis)}.`],
+    ["A country you can join on", `<code>wd:${esc(c.country.qid)}</code> is ${esc(c.country.label)} in Wikidata, ISO code ${esc(c.country.iso)}. The file has the text "${esc(c.row[ci("Country")])}".`],
+    ["Where it came from", `${c.sources.map(esc).join(" and ")}. The dataset description says the figures are approximate and the subsectors provisional.`],
+  ].map(([h, t]) => `<div class="panel pad"><h3>${h}</h3><p class="muted" style="font-size:.86rem">${t}</p></div>`).join("");
+}
+
+/* ---------- view 3: questions ---------- */
+function curOf(key) { const m = /\((EUR|USD)\)$/.exec(key); return m ? m[1] : ""; }
+function renderResult(q) {
+  const v = q.vars;
+  if (v.includes("totalRevenue")) {
+    const max = Math.max(...q.rows.map(r => r[1]));
+    return `<div class="bars">${q.rows.map(r => { const cur = curOf(r[0]); const lbl = r[0].replace(/ \((EUR|USD)\)$/, "");
+      return `<div class="bar"><span class="lbl" title="${esc(lbl)}">${esc(lbl)} <span class="cur ${cur === "USD" ? "usd" : ""}">${cur}</span></span>
+        <span class="track"><span class="fill ${cur === "USD" ? "usd" : ""}" style="width:${(r[1] / max * 100).toFixed(1)}%"></span></span>
+        <span class="val">${fmt(r[1])} · ${r[2]} co.</span></div>`; }).join("")}</div>
+      <p class="muted" style="font-size:.76rem">Billions, as reported. Bars share one scale, but EUR and USD bars are not comparable with each other.</p>`;
+  }
+  if (q.id === "B1") return `<div class="names">${q.rows.map(r => `<span>${esc(r[0])}</span>`).join("")}</div><p class="muted" style="font-size:.8rem">${q.rows.length} of the 11 companies in Financials.</p>`;
+  if (q.id === "B4") {
+    const max = Math.max(...q.rows.map(r => r[1]));
+    return `<div class="bars">${q.rows.map(r => `<div class="bar"><span class="lbl">${esc(r[0])}</span><span class="track"><span class="fill" style="width:${r[1] / max * 100}%;background:var(--src-icb)"></span></span><span class="val">${r[1]} industries</span></div>`).join("")}</div>`;
+  }
+  const head = v.map(x => `<th>${esc(x)}</th>`).join("");
+  const body = q.rows.map(r => `<tr>${r.map((x, i) => `<td>${typeof x === "boolean" ? (x ? "yes" : "no") : typeof x === "number" ? fmt(x) : v[i] === "currency" ? `<span class="cur ${x === "USD" ? "usd" : ""}">${esc(x)}</span>` : esc(x)}</td>`).join("")}</tr>`).join("");
+  return `<table class="rtable"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+$("#questions").innerHTML = D.questions.map(q => `
+  <article class="panel q">
+    <div class="head"><span class="qid">${q.id}</span><h3>${esc(q.question)}</h3></div>
+    <div class="side table"><div class="eyebrow">In the table</div><p style="font-size:.88rem">${esc(q.table)}</p></div>
+    <div class="side"><div class="eyebrow">In the graph</div>${renderResult(q)}
+      <details><summary>SPARQL query</summary><pre>${esc(q.sparql)}</pre></details></div>
+  </article>`).join("");
+
+/* ---------- view 4: rules ---------- */
+const BAD = { "gw:country": "Country", "gw:revenueFY2024": "Revenue", "gw:icbSubsector": "ICB subsector" };
+const bcols = ["Company", "Country", "ICB subsector", "Revenue", "Currency", "Website"];
+$("#broken").innerHTML = `<thead><tr class="h1">${bcols.map(h => `<th style="cursor:default">${h}</th>`).join("")}</tr></thead><tbody>` +
+  D.violations.map(x => {
+    const vals = { Company: x.name, Country: x.country || "", "ICB subsector": x.icb, Revenue: x.revenue, Currency: x.currency, Website: x.url };
+    const bad = BAD[x.path];
+    return `<tr class="row">${bcols.map(h => `<td class="${h === bad ? "badcell" : ""}">${esc(vals[h]) || (h === bad ? "missing" : "")}</td>`).join("")}</tr>
+      <tr class="msg"><td colspan="${bcols.length}">${esc(x.message)} <span class="mono muted">(${esc(x.path)})</span></td></tr>`;
+  }).join("") + "</tbody>";
+$("#rules").innerHTML = D.columns.filter(c => c.rule).map(c => `<div class="r"><span>${chip(c.term, c.source)}</span><span>${esc(c.rule)}</span></div>`).join("");
+
+/* ---------- view 5: industries ---------- */
+(function icicle() {
+  const sorted = [...D.companies].sort((a, b) => a.icb.map(l => l.code).join().localeCompare(b.icb.map(l => l.code).join()) || a.name.localeCompare(b.name));
+  const RH = 19, top = 26, colW = [150, 175, 190, 220, 170], gap = 4;
+  const xs = colW.reduce((a, w, i) => (a.push(i ? a[i - 1] + colW[i - 1] + gap : 0), a), []);
+  const H = top + sorted.length * RH + 4, W = xs[4] + colW[4];
+  let out = ["Industry", "Supersector", "Sector", "Subsector", "Company"].map((h, i) => `<text x="${xs[i] + 4}" y="15" font-size="10.5" font-family="var(--mono)" fill="var(--muted)">${h.toUpperCase()}</text>`).join("");
+  for (let lvl = 0; lvl < 4; lvl++) {
+    let i = 0;
+    while (i < sorted.length) {
+      let j = i; const code = sorted[i].icb[lvl].code;
+      while (j < sorted.length && sorted[j].icb[lvl].code === code) j++;
+      const y = top + i * RH, h = (j - i) * RH - 2, lab = sorted[i].icb[lvl].label;
+      const op = [0.30, 0.20, 0.13, 0.08][lvl];
+      out += `<g><title>${esc(lab)} (icb:${code}): ${j - i} compan${j - i > 1 ? "ies" : "y"}</title>
+        <rect x="${xs[lvl]}" y="${y}" width="${colW[lvl]}" height="${h}" rx="2" fill="var(--src-icb)" fill-opacity="${op}" stroke="var(--src-icb)" stroke-opacity="0.35"/>
+        ${h >= 15 ? `<text x="${xs[lvl] + 6}" y="${y + 13}" font-size="11" fill="var(--ink)">${esc(lab.length > (colW[lvl] / 6.4) ? lab.slice(0, Math.floor(colW[lvl] / 6.4) - 1) + "…" : lab)}</text>` : ""}</g>`;
+      i = j;
+    }
+  }
+  sorted.forEach((c, i) => {
+    const y = top + i * RH;
+    out += `<g style="cursor:pointer" data-co="${esc(c.id)}"><title>${esc(c.name)}: ${fmt(c.revenue)} bn ${c.currency}</title>
+      <rect x="${xs[4]}" y="${y}" width="${colW[4]}" height="${RH - 2}" rx="2" fill="var(--wash)"/>
+      <text x="${xs[4] + 6}" y="${y + 13}" font-size="11" fill="var(--ink)">${esc(c.name.length > 25 ? c.name.slice(0, 24) + "…" : c.name)}</text></g>`;
+  });
+  $("#icicle").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="ICB hierarchy of the 50 constituents">${out}</svg>`;
+  $("#icicle").addEventListener("click", e => { const g = e.target.closest("[data-co]"); if (g) { selectCompany(g.dataset.co); show("company"); } });
+})();
+(function heat() {
+  const inds = [...new Set(D.companies.map(c => c.icb[0].label))].sort();
+  const ctrs = [...new Set(D.companies.map(c => c.country.label))];
+  const n = (ct, ind) => D.companies.filter(c => c.country.label === ct && c.icb[0].label === ind).length;
+  ctrs.sort((a, b) => D.companies.filter(c => c.country.label === b).length - D.companies.filter(c => c.country.label === a).length || a.localeCompare(b));
+  const max = Math.max(...ctrs.flatMap(ct => inds.map(i => n(ct, i))));
+  $("#heat").innerHTML = `<table><thead><tr><th></th>${inds.map(i => `<th scope="col">${esc(i)}</th>`).join("")}<th scope="col">Total</th></tr></thead><tbody>` +
+    ctrs.map(ct => { const co = D.companies.find(c => c.country.label === ct).country;
+      return `<tr><th scope="row">${esc(ct)} <span class="mono muted" style="font-weight:400">wd:${co.qid}</span></th>${inds.map(i => { const k = n(ct, i);
+        return `<td class="c" style="background:${k ? `color-mix(in srgb, var(--src-wd) ${Math.round(14 + 60 * k / max)}%, transparent)` : "transparent"}">${k || '<span class="muted">·</span>'}</td>`; }).join("")}
+        <td class="total">${D.companies.filter(c => c.country.label === ct).length}</td></tr>`; }).join("") + "</tbody></table>";
+})();
+
+$("#foot").innerHTML = `Generated from the tutorial's own files by <code>scripts/build_explorer.py</code>: the source CSVs, the ontology, the ICB taxonomy, the instance data, the SHACL shapes and the Track B queries. Revenue figures are approximate, in each company's reporting currency, and not comparable across sectors. ICB subsector assignments are provisional and must be checked against FTSE Russell.`;
+
+renderTable(); renderColDetail(); selectCompany("company-asml-holding");
+show(location.hash.slice(1));
+</script>

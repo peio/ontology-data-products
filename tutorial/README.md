@@ -41,6 +41,9 @@ Design decisions for every step are in [`decision-log.md`](decision-log.md). The
 | `scripts/run_tests.py` | Runs both tracks and writes `reports/test-report.md` |
 | `reports/` | Test report and SHACL reports |
 | `docs/estx50-ontology.html` | HTML documentation (pyLODE) |
+| `docs/estx50-explorer.html` | Semantic-layer explorer: the CSV next to its meaning, one company as a row and a graph, the business questions, rules and ICB hierarchy. Open in a browser |
+| `docs/explorer-template.html` | Page template for the explorer |
+| `scripts/build_explorer.py` | Builds the explorer from the repository files |
 
 ## Run it
 
@@ -52,6 +55,7 @@ python scripts/map_csv.py          # CSV -> data/estx50-instances.ttl
 python scripts/make_answer_key.py  # CSV -> queries/answer-key.csv
 python scripts/run_tests.py        # Track A + B -> reports/test-report.md
 python -m pylode ontology/estx50-ontology.ttl -o docs/estx50-ontology.html
+python scripts/build_explorer.py   # -> docs/estx50-explorer.html
 ```
 
 Run from the `tutorial/` folder. `run_tests.py` exits non-zero if any check fails. Expected: Track A 22/22, Track B 6/6. With the pinned versions in `requirements.txt` the generated files reproduce byte for byte, apart from the date in `reports/test-report.md`. pyLODE is pinned to 3.2.1 because 3.3 fails on a `kurra` dependency conflict.
