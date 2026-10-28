@@ -26,6 +26,7 @@ SCHEMA = Namespace("https://schema.org/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 WD = Namespace("http://www.wikidata.org/entity/")
+FIBO_BAS = Namespace("https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/")
 
 # Countries: Wikidata IRIs, ISO 3166-1 alpha-2 as skos:notation.
 COUNTRIES = {
@@ -80,7 +81,8 @@ def main() -> int:
 
     g = Graph()
     for p, ns in [("gw", GW), ("gwi", GWI), ("icb", ICB), ("schema", SCHEMA), ("dcat", DCAT),
-                  ("prov", PROV), ("dcterms", DCTERMS), ("skos", SKOS), ("wd", WD)]:
+                  ("prov", PROV), ("dcterms", DCTERMS), ("skos", SKOS), ("wd", WD),
+                  ("fibo-ind-mkt-bas", FIBO_BAS)]:
         g.bind(p, ns)
 
     # Dataset and its two source distributions (Step 7 / A6 provenance).
@@ -108,13 +110,17 @@ def main() -> int:
 
     # The index.
     idx = GWI["index-euro-stoxx-50"]
+    # Reused classes are asserted alongside the local ones (dual typing), so the
+    # schema.org / FIBO alignment is visible without a reasoner.
     g.add((idx, RDF.type, GW.StockIndex))
+    g.add((idx, RDF.type, FIBO_BAS.EquityIndex))
     g.add((idx, RDFS.label, Literal("EURO STOXX 50", lang="en")))
 
     # Countries.
     for name, (qid, iso) in COUNTRIES.items():
         c = WD[qid]
         g.add((c, RDF.type, GW.Country))
+        g.add((c, RDF.type, SCHEMA.Country))
         g.add((c, RDFS.label, Literal(name, lang="en")))
         g.add((c, SKOS.notation, Literal(iso)))
 
@@ -137,6 +143,7 @@ def main() -> int:
             continue
 
         g.add((co, RDF.type, GW.Company))
+        g.add((co, RDF.type, SCHEMA.Corporation))
         g.add((co, RDFS.label, Literal(name)))
         g.add((co, SCHEMA.legalName, Literal(name, datatype=XSD.string)))
         g.add((co, SCHEMA.url, URIRef(r["Website"])))

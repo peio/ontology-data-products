@@ -2,6 +2,7 @@
 # and data/icb-subsector-assignments.csv. Do not edit by hand.
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/> .
 @prefix gw: <https://graphwise.ai/ontology/> .
 @prefix gwi: <https://graphwise.ai/instance/> .
 @prefix icb: <https://graphwise.ai/taxonomy/icb/> .
@@ -12,7 +13,8 @@
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-gwi:company-adidas a gw:Company ;
+gwi:company-adidas a gw:Company,
+        schema:Corporation ;
     rdfs:label "Adidas" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -23,7 +25,8 @@ gwi:company-adidas a gw:Company ;
     schema:legalName "Adidas"^^xsd:string ;
     schema:url <https://www.adidas-group.com> .
 
-gwi:company-adyen a gw:Company ;
+gwi:company-adyen a gw:Company,
+        schema:Corporation ;
     rdfs:label "Adyen" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -34,7 +37,8 @@ gwi:company-adyen a gw:Company ;
     schema:legalName "Adyen"^^xsd:string ;
     schema:url <https://www.adyen.com> .
 
-gwi:company-ahold-delhaize a gw:Company ;
+gwi:company-ahold-delhaize a gw:Company,
+        schema:Corporation ;
     rdfs:label "Ahold Delhaize" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -45,7 +49,8 @@ gwi:company-ahold-delhaize a gw:Company ;
     schema:legalName "Ahold Delhaize"^^xsd:string ;
     schema:url <https://www.aholddelhaize.com> .
 
-gwi:company-air-liquide a gw:Company ;
+gwi:company-air-liquide a gw:Company,
+        schema:Corporation ;
     rdfs:label "Air Liquide" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -56,7 +61,8 @@ gwi:company-air-liquide a gw:Company ;
     schema:legalName "Air Liquide"^^xsd:string ;
     schema:url <https://www.airliquide.com> .
 
-gwi:company-airbus a gw:Company ;
+gwi:company-airbus a gw:Company,
+        schema:Corporation ;
     rdfs:label "Airbus" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -67,7 +73,8 @@ gwi:company-airbus a gw:Company ;
     schema:legalName "Airbus"^^xsd:string ;
     schema:url <https://www.airbus.com> .
 
-gwi:company-allianz a gw:Company ;
+gwi:company-allianz a gw:Company,
+        schema:Corporation ;
     rdfs:label "Allianz" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -78,7 +85,8 @@ gwi:company-allianz a gw:Company ;
     schema:legalName "Allianz"^^xsd:string ;
     schema:url <https://www.allianz.com> .
 
-gwi:company-anheuser-busch-inbev a gw:Company ;
+gwi:company-anheuser-busch-inbev a gw:Company,
+        schema:Corporation ;
     rdfs:label "Anheuser-Busch InBev" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -89,7 +97,8 @@ gwi:company-anheuser-busch-inbev a gw:Company ;
     schema:legalName "Anheuser-Busch InBev"^^xsd:string ;
     schema:url <https://www.ab-inbev.com> .
 
-gwi:company-asml-holding a gw:Company ;
+gwi:company-asml-holding a gw:Company,
+        schema:Corporation ;
     rdfs:label "ASML Holding" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -100,7 +109,8 @@ gwi:company-asml-holding a gw:Company ;
     schema:legalName "ASML Holding"^^xsd:string ;
     schema:url <https://www.asml.com> .
 
-gwi:company-axa a gw:Company ;
+gwi:company-axa a gw:Company,
+        schema:Corporation ;
     rdfs:label "AXA" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -111,7 +121,8 @@ gwi:company-axa a gw:Company ;
     schema:legalName "AXA"^^xsd:string ;
     schema:url <https://www.axa.com> .
 
-gwi:company-banco-santander a gw:Company ;
+gwi:company-banco-santander a gw:Company,
+        schema:Corporation ;
     rdfs:label "Banco Santander" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -122,7 +133,8 @@ gwi:company-banco-santander a gw:Company ;
     schema:legalName "Banco Santander"^^xsd:string ;
     schema:url <https://www.santander.com> .
 
-gwi:company-basf a gw:Company ;
+gwi:company-basf a gw:Company,
+        schema:Corporation ;
     rdfs:label "BASF" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -133,7 +145,8 @@ gwi:company-basf a gw:Company ;
     schema:legalName "BASF"^^xsd:string ;
     schema:url <https://www.basf.com> .
 
-gwi:company-bayer a gw:Company ;
+gwi:company-bayer a gw:Company,
+        schema:Corporation ;
     rdfs:label "Bayer" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -144,7 +157,8 @@ gwi:company-bayer a gw:Company ;
     schema:legalName "Bayer"^^xsd:string ;
     schema:url <https://www.bayer.com> .
 
-gwi:company-bbva a gw:Company ;
+gwi:company-bbva a gw:Company,
+        schema:Corporation ;
     rdfs:label "BBVA" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -155,7 +169,8 @@ gwi:company-bbva a gw:Company ;
     schema:legalName "BBVA"^^xsd:string ;
     schema:url <https://www.bbva.com> .
 
-gwi:company-bmw a gw:Company ;
+gwi:company-bmw a gw:Company,
+        schema:Corporation ;
     rdfs:label "BMW" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -166,7 +181,8 @@ gwi:company-bmw a gw:Company ;
     schema:legalName "BMW"^^xsd:string ;
     schema:url <https://www.bmwgroup.com> .
 
-gwi:company-bnp-paribas a gw:Company ;
+gwi:company-bnp-paribas a gw:Company,
+        schema:Corporation ;
     rdfs:label "BNP Paribas" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -177,7 +193,8 @@ gwi:company-bnp-paribas a gw:Company ;
     schema:legalName "BNP Paribas"^^xsd:string ;
     schema:url <https://group.bnpparibas> .
 
-gwi:company-crh a gw:Company ;
+gwi:company-crh a gw:Company,
+        schema:Corporation ;
     rdfs:label "CRH" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -188,7 +205,8 @@ gwi:company-crh a gw:Company ;
     schema:legalName "CRH"^^xsd:string ;
     schema:url <https://www.crh.com> .
 
-gwi:company-danone a gw:Company ;
+gwi:company-danone a gw:Company,
+        schema:Corporation ;
     rdfs:label "Danone" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -199,7 +217,8 @@ gwi:company-danone a gw:Company ;
     schema:legalName "Danone"^^xsd:string ;
     schema:url <https://www.danone.com> .
 
-gwi:company-deutsche-borse a gw:Company ;
+gwi:company-deutsche-borse a gw:Company,
+        schema:Corporation ;
     rdfs:label "Deutsche Börse" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -210,7 +229,8 @@ gwi:company-deutsche-borse a gw:Company ;
     schema:legalName "Deutsche Börse"^^xsd:string ;
     schema:url <https://www.deutsche-boerse.com> .
 
-gwi:company-deutsche-telekom a gw:Company ;
+gwi:company-deutsche-telekom a gw:Company,
+        schema:Corporation ;
     rdfs:label "Deutsche Telekom" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -221,7 +241,8 @@ gwi:company-deutsche-telekom a gw:Company ;
     schema:legalName "Deutsche Telekom"^^xsd:string ;
     schema:url <https://www.telekom.com> .
 
-gwi:company-dhl-group a gw:Company ;
+gwi:company-dhl-group a gw:Company,
+        schema:Corporation ;
     rdfs:label "DHL Group" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -232,7 +253,8 @@ gwi:company-dhl-group a gw:Company ;
     schema:legalName "DHL Group"^^xsd:string ;
     schema:url <https://group.dhl.com> .
 
-gwi:company-enel a gw:Company ;
+gwi:company-enel a gw:Company,
+        schema:Corporation ;
     rdfs:label "Enel" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -243,7 +265,8 @@ gwi:company-enel a gw:Company ;
     schema:legalName "Enel"^^xsd:string ;
     schema:url <https://www.enel.com> .
 
-gwi:company-engie a gw:Company ;
+gwi:company-engie a gw:Company,
+        schema:Corporation ;
     rdfs:label "Engie" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -254,7 +277,8 @@ gwi:company-engie a gw:Company ;
     schema:legalName "Engie"^^xsd:string ;
     schema:url <https://www.engie.com> .
 
-gwi:company-eni a gw:Company ;
+gwi:company-eni a gw:Company,
+        schema:Corporation ;
     rdfs:label "Eni" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -265,7 +289,8 @@ gwi:company-eni a gw:Company ;
     schema:legalName "Eni"^^xsd:string ;
     schema:url <https://www.eni.com> .
 
-gwi:company-essilorluxottica a gw:Company ;
+gwi:company-essilorluxottica a gw:Company,
+        schema:Corporation ;
     rdfs:label "EssilorLuxottica" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -276,7 +301,8 @@ gwi:company-essilorluxottica a gw:Company ;
     schema:legalName "EssilorLuxottica"^^xsd:string ;
     schema:url <https://www.essilorluxottica.com> .
 
-gwi:company-flutter-entertainment a gw:Company ;
+gwi:company-flutter-entertainment a gw:Company,
+        schema:Corporation ;
     rdfs:label "Flutter Entertainment" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -287,7 +313,8 @@ gwi:company-flutter-entertainment a gw:Company ;
     schema:legalName "Flutter Entertainment"^^xsd:string ;
     schema:url <https://www.flutter.com> .
 
-gwi:company-hermes-international a gw:Company ;
+gwi:company-hermes-international a gw:Company,
+        schema:Corporation ;
     rdfs:label "Hermès International" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -298,7 +325,8 @@ gwi:company-hermes-international a gw:Company ;
     schema:legalName "Hermès International"^^xsd:string ;
     schema:url <https://www.hermes.com> .
 
-gwi:company-iberdrola a gw:Company ;
+gwi:company-iberdrola a gw:Company,
+        schema:Corporation ;
     rdfs:label "Iberdrola" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -309,7 +337,8 @@ gwi:company-iberdrola a gw:Company ;
     schema:legalName "Iberdrola"^^xsd:string ;
     schema:url <https://www.iberdrola.com> .
 
-gwi:company-inditex a gw:Company ;
+gwi:company-inditex a gw:Company,
+        schema:Corporation ;
     rdfs:label "Inditex" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -320,7 +349,8 @@ gwi:company-inditex a gw:Company ;
     schema:legalName "Inditex"^^xsd:string ;
     schema:url <https://www.inditex.com> .
 
-gwi:company-infineon-technologies a gw:Company ;
+gwi:company-infineon-technologies a gw:Company,
+        schema:Corporation ;
     rdfs:label "Infineon Technologies" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -331,7 +361,8 @@ gwi:company-infineon-technologies a gw:Company ;
     schema:legalName "Infineon Technologies"^^xsd:string ;
     schema:url <https://www.infineon.com> .
 
-gwi:company-ing-group a gw:Company ;
+gwi:company-ing-group a gw:Company,
+        schema:Corporation ;
     rdfs:label "ING Group" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -342,7 +373,8 @@ gwi:company-ing-group a gw:Company ;
     schema:legalName "ING Group"^^xsd:string ;
     schema:url <https://www.ing.com> .
 
-gwi:company-intesa-sanpaolo a gw:Company ;
+gwi:company-intesa-sanpaolo a gw:Company,
+        schema:Corporation ;
     rdfs:label "Intesa Sanpaolo" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -353,7 +385,8 @@ gwi:company-intesa-sanpaolo a gw:Company ;
     schema:legalName "Intesa Sanpaolo"^^xsd:string ;
     schema:url <https://group.intesasanpaolo.com> .
 
-gwi:company-kering a gw:Company ;
+gwi:company-kering a gw:Company,
+        schema:Corporation ;
     rdfs:label "Kering" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -364,7 +397,8 @@ gwi:company-kering a gw:Company ;
     schema:legalName "Kering"^^xsd:string ;
     schema:url <https://www.kering.com> .
 
-gwi:company-loreal a gw:Company ;
+gwi:company-loreal a gw:Company,
+        schema:Corporation ;
     rdfs:label "L'Oréal" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -375,7 +409,8 @@ gwi:company-loreal a gw:Company ;
     schema:legalName "L'Oréal"^^xsd:string ;
     schema:url <https://www.loreal.com> .
 
-gwi:company-lvmh a gw:Company ;
+gwi:company-lvmh a gw:Company,
+        schema:Corporation ;
     rdfs:label "LVMH" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -386,7 +421,8 @@ gwi:company-lvmh a gw:Company ;
     schema:legalName "LVMH"^^xsd:string ;
     schema:url <https://www.lvmh.com> .
 
-gwi:company-mercedes-benz-group a gw:Company ;
+gwi:company-mercedes-benz-group a gw:Company,
+        schema:Corporation ;
     rdfs:label "Mercedes-Benz Group" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -397,7 +433,8 @@ gwi:company-mercedes-benz-group a gw:Company ;
     schema:legalName "Mercedes-Benz Group"^^xsd:string ;
     schema:url <https://group.mercedes-benz.com> .
 
-gwi:company-munich-re a gw:Company ;
+gwi:company-munich-re a gw:Company,
+        schema:Corporation ;
     rdfs:label "Munich Re" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -408,7 +445,8 @@ gwi:company-munich-re a gw:Company ;
     schema:legalName "Munich Re"^^xsd:string ;
     schema:url <https://www.munichre.com> .
 
-gwi:company-nokia a gw:Company ;
+gwi:company-nokia a gw:Company,
+        schema:Corporation ;
     rdfs:label "Nokia" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -419,7 +457,8 @@ gwi:company-nokia a gw:Company ;
     schema:legalName "Nokia"^^xsd:string ;
     schema:url <https://www.nokia.com> .
 
-gwi:company-nordea-bank a gw:Company ;
+gwi:company-nordea-bank a gw:Company,
+        schema:Corporation ;
     rdfs:label "Nordea Bank" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -430,7 +469,8 @@ gwi:company-nordea-bank a gw:Company ;
     schema:legalName "Nordea Bank"^^xsd:string ;
     schema:url <https://www.nordea.com> .
 
-gwi:company-pernod-ricard a gw:Company ;
+gwi:company-pernod-ricard a gw:Company,
+        schema:Corporation ;
     rdfs:label "Pernod Ricard" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -441,7 +481,8 @@ gwi:company-pernod-ricard a gw:Company ;
     schema:legalName "Pernod Ricard"^^xsd:string ;
     schema:url <https://www.pernod-ricard.com> .
 
-gwi:company-prosus a gw:Company ;
+gwi:company-prosus a gw:Company,
+        schema:Corporation ;
     rdfs:label "Prosus" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -452,7 +493,8 @@ gwi:company-prosus a gw:Company ;
     schema:legalName "Prosus"^^xsd:string ;
     schema:url <https://www.prosus.com> .
 
-gwi:company-safran a gw:Company ;
+gwi:company-safran a gw:Company,
+        schema:Corporation ;
     rdfs:label "Safran" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -463,7 +505,8 @@ gwi:company-safran a gw:Company ;
     schema:legalName "Safran"^^xsd:string ;
     schema:url <https://www.safran-group.com> .
 
-gwi:company-sanofi a gw:Company ;
+gwi:company-sanofi a gw:Company,
+        schema:Corporation ;
     rdfs:label "Sanofi" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -474,7 +517,8 @@ gwi:company-sanofi a gw:Company ;
     schema:legalName "Sanofi"^^xsd:string ;
     schema:url <https://www.sanofi.com> .
 
-gwi:company-sap a gw:Company ;
+gwi:company-sap a gw:Company,
+        schema:Corporation ;
     rdfs:label "SAP" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -485,7 +529,8 @@ gwi:company-sap a gw:Company ;
     schema:legalName "SAP"^^xsd:string ;
     schema:url <https://www.sap.com> .
 
-gwi:company-schneider-electric a gw:Company ;
+gwi:company-schneider-electric a gw:Company,
+        schema:Corporation ;
     rdfs:label "Schneider Electric" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -496,7 +541,8 @@ gwi:company-schneider-electric a gw:Company ;
     schema:legalName "Schneider Electric"^^xsd:string ;
     schema:url <https://www.se.com> .
 
-gwi:company-siemens a gw:Company ;
+gwi:company-siemens a gw:Company,
+        schema:Corporation ;
     rdfs:label "Siemens" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -507,7 +553,8 @@ gwi:company-siemens a gw:Company ;
     schema:legalName "Siemens"^^xsd:string ;
     schema:url <https://www.siemens.com> .
 
-gwi:company-stellantis a gw:Company ;
+gwi:company-stellantis a gw:Company,
+        schema:Corporation ;
     rdfs:label "Stellantis" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -518,7 +565,8 @@ gwi:company-stellantis a gw:Company ;
     schema:legalName "Stellantis"^^xsd:string ;
     schema:url <https://www.stellantis.com> .
 
-gwi:company-totalenergies a gw:Company ;
+gwi:company-totalenergies a gw:Company,
+        schema:Corporation ;
     rdfs:label "TotalEnergies" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -529,7 +577,8 @@ gwi:company-totalenergies a gw:Company ;
     schema:legalName "TotalEnergies"^^xsd:string ;
     schema:url <https://www.totalenergies.com> .
 
-gwi:company-unicredit a gw:Company ;
+gwi:company-unicredit a gw:Company,
+        schema:Corporation ;
     rdfs:label "UniCredit" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -540,7 +589,8 @@ gwi:company-unicredit a gw:Company ;
     schema:legalName "UniCredit"^^xsd:string ;
     schema:url <https://www.unicreditgroup.eu> .
 
-gwi:company-vinci a gw:Company ;
+gwi:company-vinci a gw:Company,
+        schema:Corporation ;
     rdfs:label "Vinci" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -551,7 +601,8 @@ gwi:company-vinci a gw:Company ;
     schema:legalName "Vinci"^^xsd:string ;
     schema:url <https://www.vinci.com> .
 
-gwi:company-vonovia a gw:Company ;
+gwi:company-vonovia a gw:Company,
+        schema:Corporation ;
     rdfs:label "Vonovia" ;
     prov:wasDerivedFrom gwi:distribution-csv2,
         gwi:distribution-icb-assignments ;
@@ -569,39 +620,48 @@ gwi:dataset-estx50 a dcat:Dataset ;
     dcat:distribution gwi:distribution-csv2,
         gwi:distribution-icb-assignments .
 
-wd:Q31 a gw:Country ;
+wd:Q31 a gw:Country,
+        schema:Country ;
     rdfs:label "Belgium"@en ;
     skos:notation "BE" .
 
-wd:Q27 a gw:Country ;
+wd:Q27 a gw:Country,
+        schema:Country ;
     rdfs:label "Ireland"@en ;
     skos:notation "IE" .
 
-wd:Q33 a gw:Country ;
+wd:Q33 a gw:Country,
+        schema:Country ;
     rdfs:label "Finland"@en ;
     skos:notation "FI" .
 
-wd:Q29 a gw:Country ;
+wd:Q29 a gw:Country,
+        schema:Country ;
     rdfs:label "Spain"@en ;
     skos:notation "ES" .
 
-wd:Q38 a gw:Country ;
+wd:Q38 a gw:Country,
+        schema:Country ;
     rdfs:label "Italy"@en ;
     skos:notation "IT" .
 
-wd:Q55 a gw:Country ;
+wd:Q55 a gw:Country,
+        schema:Country ;
     rdfs:label "Netherlands"@en ;
     skos:notation "NL" .
 
-wd:Q183 a gw:Country ;
+wd:Q183 a gw:Country,
+        schema:Country ;
     rdfs:label "Germany"@en ;
     skos:notation "DE" .
 
-wd:Q142 a gw:Country ;
+wd:Q142 a gw:Country,
+        schema:Country ;
     rdfs:label "France"@en ;
     skos:notation "FR" .
 
-gwi:index-euro-stoxx-50 a gw:StockIndex ;
+gwi:index-euro-stoxx-50 a gw:StockIndex,
+        fibo-ind-mkt-bas:EquityIndex ;
     rdfs:label "EURO STOXX 50"@en .
 
 gwi:distribution-csv2 a dcat:Distribution ;

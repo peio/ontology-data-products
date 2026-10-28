@@ -305,7 +305,7 @@ td {
       },
       {
         "@language": "en",
-        "@value": "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small."
+        "@value": "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small; instance data is additionally typed with the reused classes so the alignment does not depend on reasoning."
       }
     ],
     "https://schema.org/license": [
@@ -409,7 +409,7 @@ td {
             <dd>
               <ul>
                 <li><p>A small OWL ontology describing the 50 constituents of the EURO STOXX 50 index: each company, its country, its ICB subsector and its FY2024 revenue. Industries are reused from the ICB SKOS taxonomy; dataset provenance uses DCAT and PROV-O.</p></li>
-                <li><p>ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small.</p></li>
+                <li><p>ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small; instance data is additionally typed with the reused classes so the alignment does not depend on reasoning.</p></li>
               </ul>
             </dd>
           </div>
@@ -434,7 +434,7 @@ td {
               </th>
               <td>
                 <ul>
-                  <li><p>Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself.</p></li>
+                  <li><p>Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself. Instances are typed with both gw:Company and schema:Corporation, so the reuse is visible without a reasoner.</p></li>
                   <li><p>A listed company that is a constituent of the EURO STOXX 50 index.</p></li>
                 </ul>
               </td>
@@ -753,19 +753,6 @@ td {
             </tr>
           </table>
         </div>
-        <div class="property entity" id="url">
-          <h3>url
-            <sup class="sup-op" title="OWL Object Property">op</sup>
-          </h3>
-          <table>
-            <tr>
-              <th>IRI</th>
-              <td>
-                <code>https://schema.org/url</code>
-              </td>
-            </tr>
-          </table>
-        </div>
       </div>
       <div class="section" id="datatypeproperties">
         <h2>Datatype Properties</h2>
@@ -808,19 +795,6 @@ td {
               </th>
               <td>
                 <a href="http://www.w3.org/2001/XMLSchema#decimal">xsd:decimal</a>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div class="property entity" id="legalname">
-          <h3>legal name
-            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
-          </h3>
-          <table>
-            <tr>
-              <th>IRI</th>
-              <td>
-                <code>https://schema.org/legalName</code>
               </td>
             </tr>
           </table>
@@ -1093,9 +1067,6 @@ td {
             <li>
               <a href="#hasConstituent">has constituent</a>
             </li>
-            <li>
-              <a href="#url">url</a>
-            </li>
           </ul>
         </li>
         <li>
@@ -1105,9 +1076,6 @@ td {
           <ul class="second">
             <li>
               <a href="#revenueFY2024">revenue FY2024</a>
-            </li>
-            <li>
-              <a href="#legalname">legal name</a>
             </li>
           </ul>
         </li>

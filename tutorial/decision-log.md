@@ -11,8 +11,9 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 ## At a glance
 
 - **Result:** a small OWL ontology plus SKOS taxonomy describing the 50 EURO STOXX 50 constituents.
-- **Tests:** Track A (robustness) 20/20 passed; Track B (business questions) 6/6 passed.
-- **Size:** 2,375 triples (ontology + ICB taxonomy + instances); 3,925 after OWL RL reasoning.
+- **Tests:** Track A (robustness) 22/22 passed; Track B (business questions) 6/6 passed.
+- **Size:** 2,430 triples (ontology + ICB taxonomy + instances); 3,915 after OWL RL reasoning.
+- **Revision 1 (Step 8):** reuse made visible without a reasoner. Instances now carry the schema.org and FIBO types directly, and the ontology no longer redeclares schema.org terms.
 - **Core model:** 3 minted classes, 5 minted properties, 2 reused properties, 1 reused taxonomy (ICB, 249 concepts).
 - **Biggest caveat:** ICB subsector assignments are provisional. They were chosen from the taxonomy labels, not taken from FTSE Russell.
 
@@ -84,9 +85,18 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 | Index | `fibo-ind-mkt-bas:EquityIndex` (superclass) | FIBO's equity index class, checked against the FIBO source on GitHub |
 | Provenance | DCAT (`Dataset`, `Distribution`), PROV-O (`wasDerivedFrom`), Dublin Core | W3C standards for dataset metadata |
 
-- **Align, don't import.** FIBO and schema.org are referenced with `rdfs:subClassOf` only, with no `owl:imports`.
-  - Why: FIBO's import closure is large and would swamp a 50-row tutorial. The alignment still lets FIBO-aware tools classify the data.
+- **Align, don't import.** FIBO and schema.org are referenced with `rdfs:subClassOf`, with no `owl:imports`.
+  - Why: FIBO's import closure is large and would swamp a 50-row tutorial.
   - Rejected: importing FIBO IND, because it is heavyweight for no gain in the competency questions.
+- **Reuse is applied in three ways.** Each way decides whether the reused term shows up in the files or only after reasoning.
+
+  | Mechanism | Terms | Visible in the plain data? |
+  | --- | --- | --- |
+  | Alignment: local class `rdfs:subClassOf` reused class | `schema:Corporation`, `schema:Country`, `fibo-ind-mkt-bas:EquityIndex` | Yes, through dual typing (Revision 1); before that, only after reasoning |
+  | Direct use, no local wrapper | `schema:legalName`, `schema:url`, DCAT, PROV-O, Dublin Core, SKOS | Yes |
+  | Reuse as data | ICB concepts, Wikidata country IRIs | Yes |
+
+- **Do not redeclare terms we do not own** (Revision 1). The ontology types and labels only `gw:` terms; reused classes and properties are referenced, never declared.
 - **ICB is loaded alongside the ontology, not imported.** It is a separate artifact with its own version (1.0.0) and FTSE Russell licensing.
 
 **Produced:** reuse table (above), no `owl:imports` by design.
@@ -124,6 +134,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   | `gw:StockIndex` | `fibo-ind-mkt-bas:EquityIndex` |
 
   - Why minted: local constraints (disjointness, SHACL targets) should not assert anything about schema.org or FIBO.
+  - Instances are typed with both the local and the reused class, e.g. `a gw:Company, schema:Corporation` (Revision 1).
 - **Industry is a SKOS concept scheme, not an OWL class hierarchy** (methodology §4.4, §4.6).
   - Why: ICB is a terminological hierarchy; its levels carry no distinct properties.
   - Rejected: 249 OWL classes, which would make each company an instance of a class like "Banks" and blur instance and class.
@@ -134,7 +145,12 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Produced:** classes in `ontology/estx50-ontology.ttl`.
 
-**Checks:** A1c no cycles; A1d every class justified; A1e every class specialises a reused class.
+**Checks:**
+- A1c: no cycles.
+- A1d: every class is justified.
+- A1e: every class specialises a reused class.
+- A1f: every instance also carries the reused superclass as an asserted type.
+- A1g: no external terms are redeclared.
 
 ---
 
@@ -235,8 +251,8 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Results**
 
-- 50 rows → 50 companies; 541 instance triples.
-- **Track A: 20/20 passed.** The planted-violation file produces exactly 3 top-level SHACL violations, one per demo company.
+- 50 rows → 50 companies; 600 instance triples (541 before Revision 1 added 59 type triples).
+- **Track A: 22/22 passed.** The planted-violation file produces exactly 3 top-level SHACL violations, one per demo company.
 - **Track B: 6/6 passed**, against the CSV-derived answer key:
 
   | # | Result |
@@ -262,7 +278,33 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 | --- | --- | --- |
 | The planted-violation test first reported 4 violations instead of 3 | pySHACL also reports the nested `sh:node` failure for `icb:30` as a detail result | Count only the report's top-level `sh:result`s. The nested detail stays in the report, where it explains *why* `icb:30` fails. |
 | pyLODE 3.3 failed to start | Version conflict with its `kurra` dependency | Pinned `pylode==3.2.1` (recorded in the README) |
-| No mapping or model defects found | The roll-up cross-check in the mapping script caught consistency up front | None needed |
+| No mapping defects found | The roll-up cross-check in the mapping script caught consistency up front | None needed |
+| **Revision 1:** reuse was invisible without a reasoner. The plain data had 0 instances of `schema:Corporation`, `schema:Country` and `EquityIndex`; OWL RL inferred 50, 8 and 1. | Instances were typed only with the `gw:` classes; the reused classes were reachable only through `rdfs:subClassOf` | Dual typing in the mapping (see below) |
+| **Revision 1:** the ontology contradicted its own rationale. It declared `schema:legalName a owl:DatatypeProperty` and `schema:url a owl:ObjectProperty`, which are claims about terms schema.org owns. The `url` typing was also wrong: schema.org's range is the `URL` datatype. | Declarations added "for documentation" | Removed both declarations |
+| **Revision 1:** no test checked that reuse actually reaches the data | A1e checked only that a superclass exists | Added A1f and A1g |
+
+**Revision 1: reuse made visible without a reasoner**
+
+- **Problem.** The reuse depended on reasoning. GraphDB with OWL2-RL would infer the schema.org and FIBO types. A plain triple store, a schema.org-aware crawler, or an LLM reading the TTL would not, so to them the data looked like it reused nothing.
+- **Decision.** The mapping asserts the reused class next to the local one:
+
+  ```turtle
+  gwi:company-sap           a gw:Company , schema:Corporation .
+  wd:Q183                   a gw:Country , schema:Country .
+  gwi:index-euro-stoxx-50   a gw:StockIndex , fibo-ind-mkt-bas:EquityIndex .
+  ```
+
+  - The `rdfs:subClassOf` axioms stay, so the two are consistent, and a reasoner adds nothing new for these types.
+  - Cost: 59 triples (50 + 8 + 1).
+  - Rejected:
+    - relying on reasoning only, which makes visibility depend on the consumer's setup
+    - typing with the reused classes only, which would put disjointness and SHACL targets back on terms we do not own
+- **Decision.** Remove the two `schema:` property declarations. The ontology now declares only `gw:` terms. Ontology triples: 68 → 64.
+- **New tests.**
+  - **A1f** runs on the plain data, with no reasoner. Every instance of a minted class must also carry that class's reused superclass, and at least one Corporation, Country and EquityIndex must exist, so the test cannot pass vacuously.
+  - **A1g** checks that no external term is typed as a class or property in our files.
+  - Both tests were confirmed to fail on the pre-revision state before the fix was applied.
+- **Result.** Track A 22/22 (was 20/20); Track B unchanged at 6/6.
 
 **Deferred candidates**
 

@@ -6,7 +6,7 @@ as a precedent when a modelling decision is not obvious. Each pattern below name
 the general rule first, then what the example did and what it rejected.
 
 Result: 3 minted classes, 5 minted properties, 1 reused SKOS taxonomy (ICB, 249
-concepts), 50 companies; 20/20 robustness tests and 6/6 business questions pass.
+concepts), 50 companies; 22/22 robustness tests and 6/6 business questions pass.
 Full sources, scripts and decision log:
 https://github.com/peio/ontology-data-products/tree/main/tutorial
 
@@ -33,11 +33,20 @@ https://github.com/peio/ontology-data-products/tree/main/tutorial
 - **Use global identifiers for well-known entities.** Countries are Wikidata IRIs,
   with the ISO 3166 code as `skos:notation`, rather than minted IRIs.
 - **Verify every reused term against its source** before using it.
+- **Never redeclare terms you do not own.** The ontology types and labels only its
+  own terms; `schema:legalName` and `schema:url` are used, not declared. An early
+  draft declared `schema:url a owl:ObjectProperty`, which was both a claim about
+  schema.org and wrong (schema.org's range is the `URL` datatype).
 
 ## Step 4: Classes
 
 - **Mint a local subclass of the reused class** (`gw:Company` ⊑ `schema:Corporation`)
   so local disjointness and SHACL targets assert nothing about the external vocabulary.
+- **Type instances with both the local and the reused class**
+  (`a gw:Company, schema:Corporation`). With `rdfs:subClassOf` alone, the reused
+  types appear only after reasoning: the first version had 0 asserted
+  `schema:Corporation` instances and needed OWL RL to infer all 50. Test it: every
+  instance of a minted class also carries the reused superclass as an asserted type.
 - **Terminological hierarchies stay SKOS.** ICB industries, sectors and subsectors
   carry no distinct properties per level, so they are `skos:Concept`s, not 249 OWL
   classes. Rejected: making each company an instance of a class like "Banks", which

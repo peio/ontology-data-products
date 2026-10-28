@@ -65,6 +65,30 @@ ASK {
   }
 }
 
+# @test A1f | base | Reuse is visible without a reasoner: every instance of a minted class also carries the reused superclass as an asserted type
+ASK {
+  FILTER NOT EXISTS {
+    ?c a owl:Class ; rdfs:subClassOf ?super .
+    FILTER(STRSTARTS(STR(?c), "https://graphwise.ai/ontology/"))
+    FILTER(isIRI(?super) && !STRSTARTS(STR(?super), "https://graphwise.ai/ontology/"))
+    ?x a ?c .
+    FILTER NOT EXISTS { ?x a ?super }
+  }
+  # and the check is not vacuous
+  ?co a <https://schema.org/Corporation> .
+  ?ctry a <https://schema.org/Country> .
+  ?idx a <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/EquityIndex> .
+}
+
+# @test A1g | base | The ontology redeclares no terms it does not own (no typing of schema.org, FIBO or other external terms)
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?kind { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
+    ?t a ?kind .
+    FILTER(isIRI(?t) && !STRSTARTS(STR(?t), "https://graphwise.ai/ontology/"))
+  }
+}
+
 # @test A2a | reasoned | No individual belongs to two disjoint classes
 ASK {
   FILTER NOT EXISTS {

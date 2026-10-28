@@ -28,7 +28,7 @@
     owl:versionInfo "1.0.0" ;
     vann:preferredNamespacePrefix "gw" ;
     vann:preferredNamespaceUri "https://graphwise.ai/ontology/" ;
-    rdfs:comment "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small."@en .
+    rdfs:comment "ICB is reused by reference (icb-skos.ttl is loaded alongside, not imported). FIBO and schema.org are aligned via rdfs:subClassOf without owl:imports, to keep the import closure small; instance data is additionally typed with the reused classes so the alignment does not depend on reasoning."@en .
 
 # -----------------------------------------------------------------------------
 # Classes (Step 4)
@@ -38,7 +38,7 @@ gw:Company a owl:Class ;
     rdfs:label "Company"@en ;
     skos:definition "A listed company that is a constituent of the EURO STOXX 50 index."@en ;
     rdfs:subClassOf schema:Corporation ;
-    rdfs:comment "Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself."@en .
+    rdfs:comment "Minted as a local subclass of schema:Corporation so that local constraints (disjointness, SHACL shapes) do not assert anything about schema.org itself. Instances are typed with both gw:Company and schema:Corporation, so the reuse is visible without a reasoner."@en .
 
 gw:Country a owl:Class ;
     rdfs:label "Country"@en ;
@@ -94,9 +94,6 @@ gw:revenueFY2024 a owl:DatatypeProperty , owl:FunctionalProperty ;
     rdfs:domain gw:Company ;
     rdfs:range xsd:decimal .
 
-# Reused properties, declared here only for documentation and SHACL targeting.
-schema:legalName a owl:DatatypeProperty ;
-    rdfs:label "legal name"@en .
-
-schema:url a owl:ObjectProperty ;
-    rdfs:label "url"@en .
+# Reused properties (schema:legalName, schema:url) are used directly in the data
+# and are deliberately NOT redeclared here: this file makes no claims about
+# terms it does not own.

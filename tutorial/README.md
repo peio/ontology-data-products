@@ -16,7 +16,7 @@ Design decisions for every step are in [`decision-log.md`](decision-log.md). The
 | [5. Properties](decision-log.md#step-5-properties) | Country, ICB subsector, revenue, index membership | Properties in `ontology/estx50-ontology.ttl` |
 | [6. Facets and constraints](decision-log.md#step-6-facets-and-constraints) | OWL for inference, SHACL for validation | Facets in `ontology/estx50-ontology.ttl`, `shapes/shapes.ttl` |
 | [7. Instances and testing](decision-log.md#step-7-instances-and-testing) | Map CSV to RDF, plant violations, run both tracks | `data/estx50-instances.ttl`, `data/violations-demo.ttl`, `queries/*.rq`, `scripts/run_tests.py`, `reports/` |
-| [8. Refine and iterate](decision-log.md#step-8-refine-and-iterate) | Fix what the tests exposed | Changelog in the decision log |
+| [8. Refine and iterate](decision-log.md#step-8-refine-and-iterate) | Fix what the tests exposed; Revision 1 makes reuse visible without a reasoner | Changelog and Revision 1 in the decision log |
 | [9. Document and deploy](decision-log.md#step-9-document-and-deploy) | Ontology metadata, HTML docs, GraphDB load | `docs/estx50-ontology.html`, this README |
 
 ## Contents
@@ -53,11 +53,13 @@ python scripts/run_tests.py        # Track A + B -> reports/test-report.md
 python -m pylode ontology/estx50-ontology.ttl -o docs/estx50-ontology.html
 ```
 
-Run from the `tutorial/` folder. `run_tests.py` exits non-zero if any check fails. Expected: Track A 20/20, Track B 6/6. With the pinned versions in `requirements.txt` the generated files reproduce byte for byte, apart from the date in `reports/test-report.md`. pyLODE is pinned to 3.2.1 because 3.3 fails on a `kurra` dependency conflict.
+Run from the `tutorial/` folder. `run_tests.py` exits non-zero if any check fails. Expected: Track A 22/22, Track B 6/6. With the pinned versions in `requirements.txt` the generated files reproduce byte for byte, apart from the date in `reports/test-report.md`. pyLODE is pinned to 3.2.1 because 3.3 fails on a `kurra` dependency conflict.
+
+Reused classes are asserted directly on the instances (`a gw:Company, schema:Corporation`), so schema.org and FIBO types are visible even without a reasoner.
 
 ## Load into GraphDB
 
-1. Create a repository with the **OWL2-RL** ruleset (this materialises `gw:hasConstituent` from `gw:isConstituentOf`).
+1. Create a repository with the **OWL2-RL** ruleset. This materialises `gw:hasConstituent` from `gw:isConstituentOf`; the schema.org and FIBO types are already asserted.
 2. Import, in this order: `ontology/estx50-ontology.ttl`, `ontology/icb-skos.ttl`, `data/estx50-instances.ttl`.
 3. Optional: enable SHACL validation on the repository and load `shapes/shapes.ttl` into the SHACL shape graph (`http://rdf4j.org/schema/rdf4j#SHACLShapeGraph`). Then try importing `data/violations-demo.ttl` to see it rejected.
 4. Run the queries in `queries/business-queries.rq` in the SPARQL editor.
@@ -73,7 +75,6 @@ Never load `violations-demo.ttl` into a production repository.
 ## Caveats
 
 - **ICB subsector codes are provisional.** They were chosen from the taxonomy labels based on each company's main business, not taken from FTSE Russell. To replace them, edit `data/icb-subsector-assignments.csv` and re-run the three scripts; the mapping refuses any code that does not roll up to the industry stated in CSV2.
-
 ## Namespaces
 
 | Prefix | IRI |
