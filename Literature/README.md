@@ -24,3 +24,7 @@ business case for semantic layers and knowledge graphs.
 ## Links
 
 - [How Anthropic enables self-service data analytics with Claude](https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude): the original post summarised in the self-service analytics deck.
+
+- [S&P Global Metadata Marketplace](https://metadata.marketplace.spglobal.com/)
+
+- [SiX Data Portal](https://web.apiportal.six-group.com/portal/bfi/catalog)
