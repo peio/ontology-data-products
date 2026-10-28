@@ -34,6 +34,30 @@ SH = Namespace("http://www.w3.org/ns/shacl#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 FIBO_EQUITY_INDEX = ("A financial index whose constituents are equities (FIBO IND, "
                      "MarketIndices/BasketIndices).")
+# FIBO is aligned, not bundled, so its labels and definitions are copied here from
+# FIBO 2026Q2 IND/MarketIndices/BasketIndices.ttl.
+FIBO_CHAIN = [
+    dict(curie="fibo-ind-mkt-bas:EquityIndex", source="fibo", label="equity index",
+         definition="benchmark whose constituents are exclusively equity instruments"),
+    dict(curie="fibo-ind-mkt-bas:ReferenceIndex", source="fibo", label="reference index",
+         definition="measure of change in the value of the contents of a basket over a given period of time"),
+]
+# Which terms give each heading its meaning, in reading order: the property first,
+# then the class its values belong to.
+HEADING_TERMS = {
+    "Company": ["gw:Company", "schema:name"],
+    "Website": ["schema:url"],
+    "Country": ["gw:country", "gw:Country"],
+    "ICB Industry": ["gw:icbSubsector", "icb:industries"],
+    "ICB code": ["gw:icbSubsector", "icb:industries"],
+    "ICB concept IRI": ["gw:icbSubsector", "icb:industries"],
+    "Revenue FY2024 (bn, approx.)": ["gw:revenueFY2024"],
+    "Reporting currency": ["gw:reportingCurrency"],
+    "Country currency": [],
+    "ICB subsector": ["gw:icbSubsector", "icb:subsectors"],
+    "Index": ["gw:isConstituentOf", "gw:StockIndex"],
+    "Source": ["prov:wasDerivedFrom", "gwi:dataset-estx50", "gwi:distribution-icb-assignments"],
+}
 
 # What each CSV heading becomes in the semantic layer. "term" is the CURIE shown;
 # its definition is read from the ontology (gw:), the bundled schema.org file, or ICB.
@@ -187,13 +211,96 @@ def main() -> int:
             message=text(rg, res, SH.resultMessage)))
     violations.sort(key=lambda v: v["id"])
 
+    # Meaning: the labels, definitions and notes behind each heading, with the
+    # definitions inherited from the reused vocabularies.
+    OWL = Namespace("http://www.w3.org/2002/07/owl#")
+    NS = {"gw": GW, "schema": SCHEMA, "skos": SKOS, "prov": PROV, "icb": ICB, "gwi": GWI}
+    NOTE_KINDS = [("definition", SKOS.definition), ("scope note", SKOS.scopeNote), ("comment", RDFS.comment),
+                  ("description", DCTERMS.description), ("editorial note", SKOS.editorialNote)]
+
+    def short(iri):
+        for pfx, ns in [("gw", GW), ("schema", SCHEMA), ("skos", SKOS), ("xsd", Namespace("http://www.w3.org/2001/XMLSchema#")),
+                        ("fibo-ind-mkt-bas", Namespace("https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/"))]:
+            if str(iri).startswith(str(ns)):
+                return f"{pfx}:{str(iri)[len(str(ns)):]}"
+        return str(iri)
+
+    def schema_chain(cls):
+        chain, node = [], cls
+        while node is not None:
+            chain.append(dict(curie=short(node), source="schema", label=text(schema, node, RDFS.label),
+                              definition=text(schema, node, RDFS.comment)))
+            node = schema.value(node, RDFS.subClassOf)
+        return chain
+
+    def term_info(curie):
+        pfx, local = curie.split(":", 1)
+        iri = NS[pfx][local]
+        src = {"gw": "gw", "schema": "schema", "prov": "prov", "icb": "icb", "gwi": "prov"}[pfx]
+        g = {"gw": ont, "schema": schema, "icb": icb, "gwi": inst}.get(pfx, Graph())
+        info = dict(curie=curie, source=src, label=text(g, iri, RDFS.label) or text(g, iri, SKOS.prefLabel)
+                    or text(g, iri, DCTERMS.title), notes=[], inherited=[], facets=[])
+        for kind, p in NOTE_KINDS:
+            v = text(g, iri, p)
+            if not v and pfx == "schema" and p == RDFS.comment:
+                continue
+            if v:
+                info["notes"].append(dict(kind="definition" if pfx == "schema" else kind, text=v))
+        if pfx == "prov":
+            provo = Graph().parse(ROOT / "ontologies" / "prov-o.ttl")
+            info["label"] = text(provo, iri, RDFS.label)
+            info["notes"].append(dict(kind="definition", text=text(provo, iri, PROV.definition)))
+        types = set(ont.objects(iri, RDF.type))
+        info["kind"] = ("class" if OWL.Class in types else "property" if types & {OWL.ObjectProperty, OWL.DatatypeProperty}
+                        else "collection" if (iri, RDF.type, SKOS.Collection) in icb else "record" if pfx == "gwi" else "property")
+        if OWL.FunctionalProperty in types:
+            info["facets"].append("one value per company (functional)")
+        d, r = ont.value(iri, RDFS.domain), ont.value(iri, RDFS.range)
+        if d is not None:
+            info["facets"].append(f"from {short(d)} to {short(r)}")
+        inv = ont.value(iri, OWL.inverseOf)
+        if inv is not None:
+            info["facets"].append(f"inverse: {short(inv)}, inferred by the reasoner")
+        if iri in shape_msgs:
+            info["facets"].append("rule: " + shape_msgs[iri])
+        for sup in ont.objects(iri, RDFS.subClassOf):
+            if str(sup).startswith(str(SCHEMA)):
+                info["inherited"] = schema_chain(sup)
+            elif "BasketIndices" in str(sup):
+                info["inherited"] = FIBO_CHAIN
+        if pfx == "icb":
+            info["notes"].append(dict(kind="scheme", text=text(icb, ICB["scheme"], DCTERMS.description)))
+        return info
+
+    terms = {}
+    for curies in HEADING_TERMS.values():
+        for t in curies:
+            terms.setdefault(t, term_info(t))
+    asml = next(c for c in companies if c.get("id") == "company-asml-holding")
+    examples = {
+        "Company": f'"{asml["name"]}" names the resource gwi:{asml["id"]}, typed gw:Company and schema:Corporation.',
+        "Website": f'<{asml["url"]}> is a link, not a string.',
+        "Country": f'"{asml["country"]["label"]}" is wd:{asml["country"]["qid"]}, ISO 3166 code {asml["country"]["iso"]}.',
+        "ICB Industry": f'"{asml["icb"][0]["label"]}" is icb:{asml["icb"][0]["code"]}, reached from icb:{asml["icb"][3]["code"]} {asml["icb"][3]["label"]}.',
+        "ICB code": f'"{asml["icb"][0]["code"]}" is the skos:notation of icb:{asml["icb"][0]["code"]}, the ICB industry {asml["icb"][0]["label"]}.',
+        "ICB concept IRI": f'Cross-checked against the industry reached from icb:{asml["icb"][3]["code"]}.',
+        "Revenue FY2024 (bn, approx.)": f'{asml["revenue"]} is an xsd:decimal, in {asml["currency"]}, approximate.',
+        "Reporting currency": f'"{asml["currency"]}" is an ISO 4217 code, required to be three capital letters.',
+        "Country currency": "Not mapped. Its meaning stays in the heading.",
+        "ICB subsector": f'icb:{asml["icb"][3]["code"]} {asml["icb"][3]["label"]}, a member of the subsector level.',
+        "Index": "gwi:index-euro-stoxx-50, typed gw:StockIndex and fibo-ind-mkt-bas:EquityIndex.",
+        "Source": "Two dcat:Distributions: the constituents CSV and the provisional subsector assignments.",
+    }
+    meaning = dict(terms=terms, headings=[dict(heading=c["heading"], fate=c["fate"], terms=HEADING_TERMS[c["heading"]],
+                                               example=examples[c["heading"]]) for c in columns])
+
     data = dict(
         title=text(ont, URIRef("https://graphwise.ai/ontology/estx50"), DCTERMS.title),
         version=text(ont, URIRef("https://graphwise.ai/ontology/estx50"), URIRef("http://www.w3.org/2002/07/owl#versionInfo")),
         headings=headings, columns=columns, companies=companies, questions=questions, violations=violations,
         stats=dict(rows=len(rows), cells=len(rows) * len(headings), triples=len(base), instance_triples=len(inst),
                    icb_concepts=len(set(icb.subjects(RDF.type, SKOS.Concept))), countries=len(COUNTRIES)),
-        fibo=FIBO_EQUITY_INDEX,
+        fibo=FIBO_EQUITY_INDEX, meaning=meaning,
     )
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     page = TEMPLATE.read_text(encoding="utf-8").replace("/*__DATA__*/null", payload)

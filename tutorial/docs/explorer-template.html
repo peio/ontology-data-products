@@ -159,6 +159,45 @@ pre { margin: 8px 0 0; padding: 10px 12px; background: var(--wash); border-radiu
 .heat tbody th { text-align: left; font-weight: 500; white-space: nowrap }
 .heat td.c { font-family: var(--mono); border-radius: 3px }
 .heat td.total { font-family: var(--mono); color: var(--muted) }
+/* meaning */
+.mchart { display: grid; gap: 3px; font-size: 0.82rem; font-variant-numeric: tabular-nums }
+.mrow { display: grid; grid-template-columns: minmax(150px, 230px) minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding: 5px 8px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; background: none; text-align: left; font: inherit; color: inherit }
+@media (max-width: 560px) { .mrow { grid-template-columns: minmax(0, 1fr) 96px } .mrow .stack { grid-column: 1 / -1; grid-row: 2 } }
+.mrow:hover { background: var(--wash) }
+.mrow[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 9%, transparent); border-color: color-mix(in srgb, var(--accent) 35%, transparent) }
+.mrow .h { font-family: var(--mono); font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.stack { display: flex; height: 14px; border-radius: 2px; overflow: hidden; background: var(--wash) }
+.stack i { display: block; height: 100%; background: var(--c) }
+.stack i + i { border-left: 1px solid var(--panel) }
+.mrow .n { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); text-align: right; white-space: nowrap }
+.mrow .n b { color: var(--ink); font-weight: 500 }
+.mgrid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start }
+@media (max-width: 900px) { .mgrid { grid-template-columns: minmax(0, 1fr) } }
+.ladder { display: grid; gap: 0 }
+.rung { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px }
+.rung .rail { display: flex; flex-direction: column; align-items: center }
+.rung .rail .pt { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--c, var(--src-none)); background: var(--panel); margin-top: 4px; flex: none }
+.rung .rail .ln { flex: 1; width: 2px; background: var(--rule); margin-top: 2px }
+.rung .body { padding-bottom: 16px; display: grid; gap: 6px; min-width: 0 }
+.rung .what { font: 500 0.68rem var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted) }
+.rung .tl { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline }
+.rung .tl .lbl { font-family: var(--display); font-weight: 600; font-size: 1.02rem }
+.note { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 0.87rem }
+@media (max-width: 560px) { .note { grid-template-columns: minmax(0, 1fr); gap: 2px } }
+.note .k { font-size: 0.74rem; color: var(--muted); padding-top: 2px }
+.note .t { max-width: 62ch }
+.inh { display: grid; gap: 6px; margin-top: 2px; padding-left: 12px; border-left: 2px solid color-mix(in srgb, var(--c) 40%, transparent) }
+.inh .step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; font-size: 0.84rem; align-items: baseline }
+.inh .sub { font: 0.7rem var(--mono); color: var(--muted); grid-column: 1 / -1 }
+.facets { margin: 2px 0 0; padding-left: 18px; font-size: 0.82rem; color: var(--muted); display: grid; gap: 2px }
+.bare { font: 500 1.05rem var(--mono); padding: 6px 10px; border: 1px dashed var(--src-none); border-radius: 4px; justify-self: start; background: var(--wash) }
+.cov { overflow-x: auto }
+.cov table { width: 100%; min-width: 560px; font-size: 0.8rem }
+.cov th, .cov td { padding: 6px 6px; border-bottom: 1px solid var(--rule); text-align: center }
+.cov thead th { font: 400 0.68rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; vertical-align: bottom }
+.cov tbody th { text-align: left; font-weight: 400; white-space: nowrap }
+.cov .on { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c) }
+.cov .off { color: var(--muted) }
 footer { margin-top: 30px; font-size: 0.8rem; color: var(--muted); max-width: 80ch }
 @media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width 0.4s ease } }
 </style>
@@ -186,6 +225,25 @@ footer { margin-top: 30px; font-size: 0.8rem; color: var(--muted); max-width: 80
     <div class="split">
       <div class="scroll"><table class="csv" id="csv"></table></div>
       <aside class="panel pad detail" id="coldetail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-meaning" role="tabpanel" hidden>
+    <p class="intro">A column heading is a few words, and what they mean is left to the reader. Behind each heading, the semantic layer holds labels, definitions, scope notes and rules, plus the definitions it inherits from shared vocabularies. Each bar counts the words of defined meaning behind a heading, coloured by where they come from. Select a heading to read them.</p>
+    <div class="panel pad" style="display:grid;gap:10px">
+      <h2>Words in the heading, and words of meaning behind it</h2>
+      <div class="mchart" id="m-chart"></div>
+    </div>
+    <div class="mgrid">
+      <div class="panel pad" style="display:grid;gap:12px;min-width:0">
+        <div class="eyebrow">Meaning stack</div>
+        <div class="ladder" id="m-stack" aria-live="polite"></div>
+      </div>
+      <div class="panel pad" style="display:grid;gap:10px;min-width:0">
+        <h2>Which terms carry which annotations</h2>
+        <p class="muted" style="font-size:.84rem">Every term behind the headings. A filled dot means the annotation is in the files; its colour shows whose meaning it is.</p>
+        <div class="cov" id="m-cov"></div>
+      </div>
     </div>
   </section>
 
@@ -265,7 +323,7 @@ $("#legend").innerHTML = '<span class="eyebrow" style="margin-right:4px">Meaning
   ["gw", "schema", "fibo", "icb", "wd", "prov"].map(k => `<span><i class="dot s-${k}" style="background:var(--c)"></i>${SRC[k]}</span>`).join("");
 
 /* tabs */
-const VIEWS = [["table", "Table → meaning"], ["company", "One company, two views"], ["questions", "Questions"], ["rules", "Rules"], ["industries", "Industries"]];
+const VIEWS = [["table", "Table → meaning"], ["meaning", "Meaning behind the headings"], ["company", "One company, two views"], ["questions", "Questions"], ["rules", "Rules"], ["industries", "Industries"]];
 $("#tabs").innerHTML = VIEWS.map(([k, l]) => `<button type="button" role="tab" id="t-${k}" aria-controls="v-${k}" data-v="${k}">${l}</button>`).join("");
 function show(k) {
   if (!VIEWS.some(v => v[0] === k)) k = "table";
@@ -336,6 +394,75 @@ $("#csv").addEventListener("keydown", e => {
 for (const m of ["csv", "graph"]) $(`#mode-${m}`).addEventListener("click", () => {
   mode = m; $("#mode-csv").setAttribute("aria-pressed", m === "csv"); $("#mode-graph").setAttribute("aria-pressed", m === "graph"); renderTable();
 });
+
+/* ---------- view: meaning behind the headings ---------- */
+const M = D.meaning;
+const words = t => (String(t || "").match(/[\p{L}\p{N}][\p{L}\p{N}'.-]*/gu) || []).length;
+const NOTE_LABEL = { definition: "Definition", "scope note": "Scope note", comment: "Comment", description: "Description", "editorial note": "Editorial note", scheme: "From scheme" };
+const SRC_ORDER = ["gw", "schema", "fibo", "icb", "wd", "prov"];
+function headingWords(h) {
+  const by = {};
+  const add = (src, n) => { by[src] = (by[src] || 0) + n; };
+  for (const c of h.terms) {
+    const t = M.terms[c];
+    add(t.source, words(t.label));
+    t.notes.forEach(n => add(t.source, words(n.text)));
+    t.facets.forEach(f => add(t.source, words(f)));
+    t.inherited.forEach(i => add(i.source, words(i.label) + words(i.definition)));
+  }
+  return by;
+}
+const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
+let selHeading = Math.max(0, M.headings.findIndex(h => h.heading === "Country"));
+function renderMeaning() {
+  const rows = M.headings.map(h => ({ h, by: headingWords(h) }));
+  const max = Math.max(...rows.map(r => sum(r.by)));
+  $("#m-chart").innerHTML = rows.map((r, i) => {
+    const segs = SRC_ORDER.filter(k => r.by[k]).map(k => `<i class="s-${k}" style="width:${(r.by[k] / max * 100).toFixed(2)}%" title="${SRC[k]}: ${r.by[k]} words"></i>`).join("");
+    return `<button type="button" class="mrow" data-h="${i}" aria-pressed="${i === selHeading}">
+      <span class="h" title="${esc(r.h.heading)}">${esc(r.h.heading)}${r.h.fate === "added" ? '<span class="tag-added">added</span>' : ""}</span>
+      <span class="stack" aria-hidden="true">${segs}</span>
+      <span class="n"><b>${r.h.fate === "added" ? 0 : words(r.h.heading)}</b> → <b>${sum(r.by)}</b> words</span></button>`;
+  }).join("");
+
+  const h = M.headings[selHeading];
+  const nw = words(h.heading);
+  const inFile = h.fate === "added" ? "Not in the file. The semantic layer adds this column." : `${nw} word${nw > 1 ? "s" : ""}, no definition, no rule.`;
+  let out = `<div class="rung"><div class="rail"><span class="pt"></span><span class="ln"></span></div><div class="body">
+    <span class="what">In the file</span><span class="bare">${esc(h.heading)}</span><span class="muted" style="font-size:.84rem">${inFile}</span></div></div>`;
+  if (!h.terms.length) out += `<div class="rung"><div class="rail"><span class="pt"></span><span class="ln"></span></div><div class="body"><span class="what">In the graph</span>
+    <span style="font-size:.87rem">Dropped as out of scope, so its meaning was never written down.</span></div></div>`;
+  for (const c of h.terms) {
+    const t = M.terms[c];
+    const kind = { class: "Class", property: "Property", collection: "ICB level", record: "Dataset record" }[t.kind] || "Term";
+    out += `<div class="rung s-${t.source}"><div class="rail"><span class="pt"></span><span class="ln"></span></div><div class="body">
+      <span class="what">${kind} · ${SRC[t.source]}</span>
+      <div class="tl">${chip(t.curie, t.source)}<span class="lbl">${esc(t.label)}</span></div>
+      ${t.notes.map(n => `<div class="note"><span class="k">${NOTE_LABEL[n.kind] || esc(n.kind)}</span><span class="t">${esc(n.text)}</span></div>`).join("")}
+      ${t.facets.length ? `<ul class="facets">${t.facets.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+      ${t.inherited.length ? `<div class="note"><span class="k">Inherits</span><div class="inh s-${t.inherited[0].source}">${t.inherited.map((x, j) => `<div class="step">
+          ${chip(x.curie, x.source)}<span><b style="font-weight:600">${esc(x.label)}</b>${x.definition ? ` · ${esc(x.definition)}` : ""}</span>
+          ${j < t.inherited.length - 1 ? '<span class="sub">subclass of ↓</span>' : ""}</div>`).join("")}</div></div>` : ""}
+    </div></div>`;
+  }
+  out += `<div class="rung"><div class="rail"><span class="pt" style="border-color:var(--accent)"></span></div><div class="body">
+    <span class="what">A value, read with this meaning</span><span style="font-size:.87rem">${esc(h.example)}</span></div></div>`;
+  $("#m-stack").innerHTML = out;
+}
+(function coverage() {
+  const cols = [["Label", t => !!t.label], ["Definition", t => t.notes.some(n => n.kind === "definition" || n.kind === "description")],
+    ["Scope note", t => t.notes.some(n => n.kind === "scope note" || n.kind === "editorial note")], ["Comment", t => t.notes.some(n => n.kind === "comment")],
+    ["Domain → range", t => t.facets.some(f => f.startsWith("from "))], ["Rule", t => t.facets.some(f => f.startsWith("rule: "))],
+    ["Inherited", t => t.inherited.length > 0]];
+  const list = Object.values(M.terms);
+  $("#m-cov").innerHTML = `<table><thead><tr><th></th>${cols.map(c => `<th scope="col">${c[0]}</th>`).join("")}</tr></thead><tbody>` +
+    list.map(t => `<tr><th scope="row">${chip(t.curie, t.source)}</th>${cols.map(([name, f]) => {
+      const on = f(t), src = name === "Inherited" && on ? t.inherited[0].source : t.source;
+      return `<td>${on ? `<span class="on s-${src}" title="${esc(name)}"></span>` : '<span class="off">·</span>'}</td>`; }).join("")}</tr>`).join("") +
+    `<tr><th scope="row"><span class="chip s-none">a CSV heading</span></th>${cols.map((c, i) => `<td>${i === 0 ? '<span class="on s-none" title="The heading text is its only label"></span>' : '<span class="off">·</span>'}</td>`).join("")}</tr></tbody></table>`;
+})();
+$("#m-chart").addEventListener("click", e => { const b = e.target.closest("[data-h]"); if (b) { selHeading = +b.dataset.h; renderMeaning(); } });
+renderMeaning();
 
 /* ---------- view 2: one company ---------- */
 const sel = $("#company-select");
