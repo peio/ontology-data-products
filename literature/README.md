@@ -1,7 +1,7 @@
 # Literature
 
 Background material for the workshop. The papers are the methodology sources
-behind how the AI Ontologist skills gather requirements and build schemas; the
+behind the graphwise-ontology-engineer skill and the tutorial's nine steps; the
 slide decks are Graphwise material that applies that methodology and makes the
 business case for semantic layers and knowledge graphs.
 

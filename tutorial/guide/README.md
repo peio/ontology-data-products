@@ -6,7 +6,7 @@ The [decision log](../decision-log.md) records *why* each choice was made. This 
 
 - **Audience:** data and analytics people who know tables and SQL; no RDF experience needed.
 - **Time:** about 105 minutes for the core (Parts 1–3), plus about 60 for the FIBO part (Part 4).
-- **Status:** draft for review, 2026-10-29. Every command and every number below was run against the commits named in [Stages](#stages).
+- **Tested:** 2026-10-29. Every command and every number below was run against the commits named in [Stages](#stages).
 - **Method:** the nine steps of the [Graphwise ontology-engineer methodology](../../skills/graphwise-ontology-engineer/SKILL.md#workflow), based on Noy and McGuinness, *Ontology Development 101*. In Parts 1–3 the module number is the step number.
 
 ## Modules
@@ -65,11 +65,6 @@ The objective of each step is taken from the methodology ([SKILL.md](../../skill
 | G8 | — | No assumption register | Closed: [assumption register](../decision-log.md#assumption-register) in the log (AS1–AS8), used in C7. The skill's `DESIGN.md` is the tutorial's `decision-log.md` |
 
 G4 and G5 were recorded after the fact, on 2026-10-29, and the log says so.
-
-Two findings concern the skill rather than the guide:
-
-- The skill's default namespace (`gw: <https://graphwise.ai/ontology/>`) is the shared namespace that Revision 2 (C8b) moved away from, and the skill's own worked example says to give each ontology its own namespace.
-- The skill's worked example (`references/worked-example-estx50.md`) has no Step 3 or Step 8 section, although Step 8 holds the tutorial's two most useful lessons.
 
 ## How each module is laid out
 

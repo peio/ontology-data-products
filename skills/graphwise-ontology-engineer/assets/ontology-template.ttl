@@ -1,4 +1,7 @@
 # Replace NAME with the ontology's short name (e.g. estx50): one namespace per ontology.
+# Replace CREATOR with the author's name.
+# No owl:imports by default: align reused classes with rdfs:subClassOf, and add
+# owl:imports only for what the Step 2 import plan lists.
 @prefix gw:      <https://graphwise.ai/ontology/NAME/> .
 @prefix gwi:     <https://graphwise.ai/instance/NAME/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -12,8 +15,7 @@
 
 gw: a owl:Ontology ;
   dcterms:title "NAME Ontology" ;
-  dcterms:creator "Peio @ Agents" ;
-  dcterms:license <https://graphwise.ai/> ;
+  dcterms:creator "CREATOR" ;
+  dcterms:publisher "Graphwise" ;
   owl:versionInfo "1.0.0" ;
-  owl:versionIRI <https://graphwise.ai/ontology/NAME/1.0.0> ;
-  owl:imports <http://www.w3.org/ns/dcat#>, <http://www.w3.org/ns/prov#> .
+  owl:versionIRI <https://graphwise.ai/ontology/NAME/1.0.0> .

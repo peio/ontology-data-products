@@ -12,7 +12,7 @@
       "name": "graphwise-ontology",
       "source": "./",
       "description": "Ontology engineering skill for designing OWL/RDFS/SKOS ontologies as Turtle files with the Graphwise methodology.",
-      "version": "1.2.0"
+      "version": "1.2.1"
     }
   ]
 }

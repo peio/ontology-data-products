@@ -2,7 +2,7 @@
 
 A small, tested OWL ontology for the 50 EURO STOXX 50 constituents, built step by step with the Graphwise ontology-engineer methodology. Each company is linked to its country (Wikidata) and to its ICB subsector (SKOS). Industry roll-ups follow `skos:broader`.
 
-Design decisions for every step are in [`decision-log.md`](decision-log.md). A hands-on walk through the core, with exercises, is in [`guide/`](guide/README.md) (draft). The [graphwise-ontology-engineer skill](../skills/graphwise-ontology-engineer/SKILL.md) carries a condensed version of these decisions as reusable patterns in [`worked-example-estx50.md`](../skills/graphwise-ontology-engineer/references/worked-example-estx50.md).
+Design decisions for every step are in [`decision-log.md`](decision-log.md). A hands-on walk through the core, with exercises, is in [`guide/`](guide/README.md). The [graphwise-ontology-engineer skill](../skills/graphwise-ontology-engineer/SKILL.md) carries a condensed version of these decisions as reusable patterns in [`worked-example-estx50.md`](../skills/graphwise-ontology-engineer/references/worked-example-estx50.md).
 
 ## Steps
 
@@ -45,7 +45,7 @@ Design decisions for every step are in [`decision-log.md`](decision-log.md). A h
 | `docs/explorer-template.html` | Page template for the explorer |
 | `scripts/build_explorer.py` | Builds the explorer from the repository files |
 | `scripts/query.py` | Runs one SPARQL query over the graph and prints a table (used by the guide) |
-| `guide/` | Hands-on guide to the core tutorial, with exercise queries (draft) |
+| `guide/` | Hands-on guide to the core tutorial, with exercise queries |
 
 ## Run it
 
