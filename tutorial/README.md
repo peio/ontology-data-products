@@ -99,6 +99,7 @@ Only five terms are minted (`gwf:Revenue`, `gwf:hasRevenue`, `gwf:indexAssignedC
 | `queries/answer-key-fibo.csv` | Track B expected results (as `answer-key.csv`, with LCC country names) |
 | `reports/test-report-fibo.md` | Test report for the FIBO variant |
 | `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py` | CSV → FIBO RDF; ICB alignment and FIBO extract |
+| `docs/estx50-fibo-explorer.html` | The semantic-layer explorer for the FIBO variant, built from the same template |
 | `ontology/estx50-fibo-bridge.ttl` | Optional bridge: 2.0.0 terms ⊑ FIBO terms (see below) |
 | `queries/bridge-revenue.rq`, `queries/bridge-tests.rq` | Revenue conversion rule and checks for the bridge |
 | `scripts/check_bridge.py`, `reports/bridge-check.md` | Runs the bridge checks; its report |
@@ -110,6 +111,7 @@ python scripts/map_csv_fibo.py          # CSV -> data/estx50-fibo-instances.ttl
 python scripts/build_fibo_files.py      # -> ontology/icb-fibo-alignment.ttl, ontology/fibo-extract.ttl
 python scripts/run_tests.py --variant fibo  # -> reports/test-report-fibo.md
 python -m pylode ontology/estx50-fibo-ontology.ttl -o docs/estx50-fibo-ontology.html
+python scripts/build_explorer.py --variant fibo  # -> docs/estx50-fibo-explorer.html
 ```
 
 `build_fibo_files.py` needs `ontologies/QuickFIBOProd.ttl` (FIBO 2026Q2) and fails if any FIBO term used in the ontology, data or shapes is not in it. The other steps do not need it. Expected: Track A 26/26, Track B 6/6.

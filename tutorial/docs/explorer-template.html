@@ -9,7 +9,7 @@
 :root {
   --bg: #f5f6f8; --panel: #ffffff; --ink: #16202a; --muted: #5b6673; --rule: #dde1e7; --wash: #eceff3;
   --accent: #1d4f91;
-  --src-gw: #b0344a; --src-schema: #157386; --src-fibo: #8a5b00; --src-icb: #6a4aa5; --src-wd: #2e7040; --src-prov: #556372; --src-none: #9aa3ad;
+  --src-gw: #b0344a; --src-schema: #157386; --src-fibo: #8a5b00; --src-icb: #6a4aa5; --src-wd: #2e7040; --src-cmns: #2f5fae; --src-lcc: #2e7040; --src-prov: #556372; --src-none: #9aa3ad;
   --eur: #1d4f91; --usd: #c26a1b; --bad: #b42318; --bad-wash: #fdecea; --ok: #2e7040;
   --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -18,12 +18,12 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0f151b; --panel: #161e26; --ink: #e4e9ee; --muted: #98a3ae; --rule: #2a3540; --wash: #1c2630;
   --accent: #7fb0ee;
-  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
+  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-cmns: #8fb0f0; --src-lcc: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
   --eur: #7fb0ee; --usd: #f0a35c; --bad: #ff8a7a; --bad-wash: #3a1c19; --ok: #7cc78d; color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #0f151b; --panel: #161e26; --ink: #e4e9ee; --muted: #98a3ae; --rule: #2a3540; --wash: #1c2630;
   --accent: #7fb0ee;
-  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
+  --src-gw: #ef7d8f; --src-schema: #5cc4d6; --src-fibo: #e0ad4a; --src-icb: #b39af0; --src-wd: #7cc78d; --src-cmns: #8fb0f0; --src-lcc: #7cc78d; --src-prov: #a2b0bd; --src-none: #6b7580;
   --eur: #7fb0ee; --usd: #f0a35c; --bad: #ff8a7a; --bad-wash: #3a1c19; --ok: #7cc78d; color-scheme: dark }
 
 * { box-sizing: border-box }
@@ -66,7 +66,7 @@ button:focus-visible, select:focus-visible, th:focus-visible, tr:focus-visible, 
 /* source chips */
 .chip { display: inline-flex; align-items: center; gap: 5px; font: 500 0.74rem/1.2 var(--mono); color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); background: color-mix(in srgb, var(--c) 9%, transparent); padding: 2px 6px; border-radius: 3px; white-space: nowrap }
 .s-gw { --c: var(--src-gw) } .s-schema { --c: var(--src-schema) } .s-fibo { --c: var(--src-fibo) } .s-icb { --c: var(--src-icb) }
-.s-wd { --c: var(--src-wd) } .s-prov { --c: var(--src-prov) } .s-none { --c: var(--src-none) }
+.s-wd { --c: var(--src-wd) } .s-cmns { --c: var(--src-cmns) } .s-lcc { --c: var(--src-lcc) } .s-prov { --c: var(--src-prov) } .s-none { --c: var(--src-none) }
 
 /* the CSV table */
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between }
@@ -155,7 +155,7 @@ pre { margin: 8px 0 0; padding: 10px 12px; background: var(--wash); border-radiu
 .heat { overflow-x: auto }
 .heat table { min-width: 640px }
 .heat th, .heat td { padding: 5px 6px; text-align: center; font-size: 0.78rem }
-.heat thead th { font: 400 0.72rem var(--body); color: var(--muted); vertical-align: bottom; max-width: 74px; white-space: normal; line-height: 1.2 }
+.heat thead th { font: 400 0.72rem var(--body); color: var(--muted); vertical-align: bottom; max-width: 74px; white-space: normal; overflow-wrap: anywhere; hyphens: auto; line-height: 1.2 }
 .heat tbody th { text-align: left; font-weight: 500; white-space: nowrap }
 .heat td.c { font-family: var(--mono); border-radius: 3px }
 .heat td.total { font-family: var(--mono); color: var(--muted) }
@@ -272,7 +272,7 @@ footer { margin-top: 30px; font-size: 0.8rem; color: var(--muted); max-width: 80
   </section>
 
   <section class="view" id="v-rules" role="tabpanel" hidden>
-    <p class="intro">A spreadsheet accepts any value in any cell. The shapes file states what a valid company looks like. The three rows below were planted to break one rule each; all three are caught, and the 50 real companies pass.</p>
+    <p class="intro" id="rules-note"></p>
     <div class="panel pad" style="display:grid;gap:12px">
       <h2>Three broken rows</h2>
       <div class="scroll" style="max-height:none"><table class="csv broken" id="broken"></table></div>
@@ -291,7 +291,7 @@ footer { margin-top: 30px; font-size: 0.8rem; color: var(--muted); max-width: 80
     </div>
     <div class="panel pad" style="display:grid;gap:10px">
       <h2>Constituents by country and industry</h2>
-      <p class="muted" style="font-size:.86rem">Company counts. Countries are Wikidata entities, so this grid could be joined with any other dataset that uses them.</p>
+      <p class="muted" style="font-size:.86rem" id="heat-note"></p>
       <div class="heat" id="heat"></div>
     </div>
   </section>
@@ -304,7 +304,9 @@ const D = /*__DATA__*/null;
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const fmt = n => Number(n).toLocaleString("en-GB", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const SRC = { gw: "This ontology (gw:)", schema: "schema.org", fibo: "FIBO", icb: "ICB taxonomy (SKOS)", wd: "Wikidata", prov: "PROV-O / DCAT", none: "Not mapped" };
+const SRC = Object.fromEntries([...D.sources, ["none", "Not mapped"]]);
+const SRC_KEYS = D.sources.map(x => x[0]);
+const codeify = t => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>");
 const chip = (term, src) => `<span class="chip s-${src}">${esc(term)}</span>`;
 const ci = h => D.headings.indexOf(h);
 
@@ -316,11 +318,11 @@ $("#figures").innerHTML = [
   `<span class="arrow" aria-hidden="true">→</span>`,
   `<span class="fig"><b>${s.instance_triples}</b> facts about companies</span>`,
   `<span class="fig">+ <b>${s.icb_concepts}</b> ICB concepts</span>`,
-  `<span class="fig">+ <b>${s.countries}</b> Wikidata countries</span>`,
+  `<span class="fig">+ <b>${s.countries}</b> ${esc(D.texts.countries)}</span>`,
   `<span class="fig muted">${s.triples.toLocaleString("en-GB")} triples in all</span>`,
 ].join("");
 $("#legend").innerHTML = '<span class="eyebrow" style="margin-right:4px">Meaning from</span>' +
-  ["gw", "schema", "fibo", "icb", "wd", "prov"].map(k => `<span><i class="dot s-${k}" style="background:var(--c)"></i>${SRC[k]}</span>`).join("");
+  SRC_KEYS.map(k => `<span><i class="dot s-${k}" style="background:var(--c)"></i>${SRC[k]}</span>`).join("");
 
 /* tabs */
 const VIEWS = [["table", "Table → meaning"], ["meaning", "Meaning behind the headings"], ["company", "One company, two views"], ["questions", "Questions"], ["rules", "Rules"], ["industries", "Industries"]];
@@ -336,24 +338,11 @@ $("#tabs").addEventListener("click", e => { const b = e.target.closest("button[d
 let mode = "csv", selCol = 0;
 const nCsv = D.headings.length;
 function cellValue(c, i) {
-  const col = D.columns[i];
-  if (i >= nCsv) {
-    if (col.term === "gw:icbSubsector") { const sub = c.icb[3]; return mode === "csv" ? esc(sub.label) : `<span class="v-iri">icb:${sub.code}</span> ${esc(sub.label)}`; }
-    if (col.term === "gw:isConstituentOf") return mode === "csv" ? "EURO STOXX 50" : `<span class="v-iri">gwi:index-euro-stoxx-50</span>`;
-    if (col.term === "prov:wasDerivedFrom") return mode === "csv" ? `${c.sources.length} files` : `<span class="v-iri">gwi:distribution-csv2</span> +1`;
-  }
-  const raw = c.row[i];
-  if (mode === "csv") return esc(raw);
-  switch (D.headings[i]) {
-    case "Company": return `${esc(c.name)} <span class="v-iri muted">gwi:${esc(c.id)}</span>`;
-    case "Website": return `<span class="v-iri">&lt;${esc(c.url)}&gt;</span>`;
-    case "Country": return `<span class="v-iri">wd:${esc(c.country.qid)}</span> ${esc(c.country.iso)}`;
-    case "ICB Industry": case "ICB code": case "ICB concept IRI": return `<span class="v-derived">↑ from icb:${c.icb[3].code}</span>`;
-    case "Revenue FY2024 (bn, approx.)": return `${fmt(c.revenue)}<span class="muted v-iri">^^xsd:decimal</span>`;
-    case "Reporting currency": return `<span class="cur ${c.currency === "USD" ? "usd" : ""}">${esc(c.currency)}</span>`;
-    case "Country currency": return `<span class="muted">not mapped</span>`;
-  }
-  return esc(raw);
+  const cell = c.cells[i];
+  if (mode === "csv") return esc(cell.csv);
+  const cls = k => k.split(" ").map(x => ({ iri: "v-iri", derived: "v-derived" })[x] || x).join(" ");
+  return cell.graph.map(([t, k]) => k === "cur" ? `<span class="cur ${t === "USD" ? "usd" : ""}">${esc(t)}</span>`
+    : k === "txt" ? esc(t) : `<span class="${cls(k)}">${esc(t)}</span>`).join(" ");
 }
 function renderTable() {
   const cls = i => [D.columns[i].fate === "added" ? "added" : "", D.columns[i].fate === "dropped" ? "dropped" : "", i === selCol ? "sel" : "",
@@ -362,12 +351,12 @@ function renderTable() {
   const h2 = D.columns.map((c, i) => `<th data-col="${i}" class="${cls(i)}">${chip(c.term, c.source)}</th>`).join("");
   const body = D.companies.map(c => `<tr tabindex="0" data-co="${esc(c.id)}">${D.columns.map((_, i) => `<td class="${cls(i)}">${cellValue(c, i)}</td>`).join("")}</tr>`).join("");
   $("#csv").innerHTML = `<thead><tr class="h1">${h1}</tr><tr class="h2">${h2}</tr></thead><tbody>${body}</tbody>`;
-  $("#mode-note").textContent = mode === "csv" ? "Values as they appear in the file." : "Values as stored in the graph: IRIs, typed literals, links into ICB and Wikidata.";
+  $("#mode-note").textContent = mode === "csv" ? "Values as they appear in the file." : D.texts.mode_graph;
 }
 function renderColDetail() {
   const c = D.columns[selCol];
   const ex = D.companies[0];
-  const sample = selCol < nCsv ? ex.row[selCol] : (c.term === "gw:icbSubsector" ? ex.icb[3].label : c.term === "gw:isConstituentOf" ? "EURO STOXX 50" : ex.sources.join("; "));
+  const sample = ex.cells[selCol].csv;
   const fateTxt = { mapped: "mapped", derived: "derived, not stored", dropped: "dropped", added: "added by the semantic layer" }[c.fate];
   $("#coldetail").innerHTML = `
     <div class="eyebrow">${c.fate === "added" ? "Not in the file" : "Column heading in the file"}</div>
@@ -399,7 +388,6 @@ for (const m of ["csv", "graph"]) $(`#mode-${m}`).addEventListener("click", () =
 const M = D.meaning;
 const words = t => (String(t || "").match(/[\p{L}\p{N}][\p{L}\p{N}'.-]*/gu) || []).length;
 const NOTE_LABEL = { definition: "Definition", "scope note": "Scope note", comment: "Comment", description: "Description", "editorial note": "Editorial note", scheme: "From scheme" };
-const SRC_ORDER = ["gw", "schema", "fibo", "icb", "wd", "prov"];
 function headingWords(h) {
   const by = {};
   const add = (src, n) => { by[src] = (by[src] || 0) + n; };
@@ -418,7 +406,7 @@ function renderMeaning() {
   const rows = M.headings.map(h => ({ h, by: headingWords(h) }));
   const max = Math.max(...rows.map(r => sum(r.by)));
   $("#m-chart").innerHTML = rows.map((r, i) => {
-    const segs = SRC_ORDER.filter(k => r.by[k]).map(k => `<i class="s-${k}" style="width:${(r.by[k] / max * 100).toFixed(2)}%" title="${SRC[k]}: ${r.by[k]} words"></i>`).join("");
+    const segs = SRC_KEYS.filter(k => r.by[k]).map(k => `<i class="s-${k}" style="width:${(r.by[k] / max * 100).toFixed(2)}%" title="${SRC[k]}: ${r.by[k]} words"></i>`).join("");
     return `<button type="button" class="mrow" data-h="${i}" aria-pressed="${i === selHeading}">
       <span class="h" title="${esc(r.h.heading)}">${esc(r.h.heading)}${r.h.fate === "added" ? '<span class="tag-added">added</span>' : ""}</span>
       <span class="stack" aria-hidden="true">${segs}</span>
@@ -485,40 +473,49 @@ function selectCompany(id) {
   sel.value = c.id;
   $("#company-sum").textContent = `${c.triples} facts in the graph, from one row of ${nCsv} cells`;
   $("#company-row").innerHTML = D.headings.map((h, i) => `<tr><th scope="row">${esc(h)}</th><td>${esc(c.row[i]) || '<span class="muted">empty</span>'}</td></tr>`).join("");
-  const markers = ["gw", "schema", "fibo", "icb", "wd", "prov"].map(k => `<marker id="ah-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--src-${k})"/></marker>`).join("");
-  const X = 360, Y = 230;
-  const L = c.icb; // industry, supersector, sector, subsector
-  const svg = `<svg viewBox="0 0 760 510" role="img" aria-label="Graph of ${esc(c.name)} and its links">
+  const G = D.graph, W = G.width, X = 360, Y = 230, L = c.icb, RX = W - 120, CW = 236;
+  const markers = [...SRC_KEYS, "none"].map(k => `<marker id="ah-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--src-${k})"/></marker>`).join("");
+  let revenue;
+  if (G.revenue_node) {
+    const RN = W - 265;
+    revenue = `
+    ${edge(X + 60, Y - 22, RN - 40, 82, G.revenue_node[0], G.revenue_node[1], X + 142, 150)}
+    ${edge(RN, 82, RN, 134, G.currency[0], G.currency[1], RN - 8, 112)}
+    ${edge(RN + 60, 82, W - 80, 134, G.revenue[0], G.revenue[1], W - 92, 104)}
+    ${node(RN, 60, 190, "Revenue FY2024", G.revenue_node[2], G.revenue_node[1])}
+    ${node(RN, 156, 190, c.currency.code, c.currency.curie, G.currency[1])}
+    ${node(W - 80, 156, 140, fmt(c.revenue), G.revenue[2], G.revenue[1], { literal: true })}`;
+  } else {
+    revenue = `
+    ${edge(X + 70, Y - 22, W - 170, 74, G.revenue[0], G.revenue[1], W - 240, 120)}
+    ${edge(W - 170, 82, W - 170, 132, G.currency[0], G.currency[1], W - 92, 112)}
+    ${node(W - 170, 60, 170, fmt(c.revenue) + " bn", G.revenue[2], G.revenue[1], { literal: true })}
+    ${node(W - 170, 156, 110, c.currency.code, G.currency[2], G.currency[1], { literal: true })}`;
+  }
+  const svg = `<svg viewBox="0 0 ${W} 510" role="img" aria-label="Graph of ${esc(c.name)} and its links">
     <defs>${markers}</defs>
-    ${edge(X - 70, Y - 22, 140, 74, "schema:name", "schema", 210, 120)}
-    ${edge(X, Y - 22, X, 82, "schema:url", "schema", X + 4, 130)}
-    ${edge(X + 70, Y - 22, 590, 74, "gw:revenueFY2024", "gw", 520, 120)}
-    ${edge(590, 82, 590, 132, "gw:reportingCurrency", "gw", 668, 112)}
-    ${edge(X - 90, Y, 175, Y, "gw:isConstituentOf", "gw", 232, Y - 8)}
+    ${edge(X - 70, Y - 22, 140, 74, G.name[0], G.name[1], 200, 120)}
+    ${edge(X, Y - 22, X, 82, G.url[0], G.url[1], X + 4, 130)}
+    ${revenue}
+    ${edge(X - CW / 2, Y, 175, Y, G.index[0], G.index[1], 208, Y - 26)}
     ${edge(X - 70, Y + 22, 175, 352, "prov:wasDerivedFrom", "prov", 222, 296)}
     ${edge(X - 70, Y + 22, 175, 412, "", "prov")}
-    ${edge(X + 100, Y, 548, Y, "gw:country", "gw", 504, Y - 8)}
-    ${edge(X + 40, Y + 22, 523, 300, "gw:icbSubsector", "icb", 420, 300)}
-    ${[0, 1, 2].map(j => edge(640, 322 + j * 60, 640, 337 + j * 60, "", "icb")).join("")}
-    <text x="520" y="392" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--src-icb)">skos:broader ↓</text>
-    ${node(140, 60, 190, c.name, '"' + c.name + '"', "schema", { literal: true })}
-    ${node(X, 60, 220, c.url.replace(/^https?:\/\//, ""), "IRI", "schema", { literal: true })}
-    ${node(590, 60, 170, fmt(c.revenue) + " bn", "xsd:decimal", "gw", { literal: true })}
-    ${node(590, 156, 110, c.currency, "ISO 4217", "gw", { literal: true })}
-    ${node(X, Y, 200, c.name, "gw:Company · schema:Corporation", "gw", { strong: true })}
-    ${node(95, Y, 160, "EURO STOXX 50", "fibo:EquityIndex", "fibo")}
+    ${edge(X + CW / 2, Y, RX - 92, Y, G.country[0], G.country[1], (X + CW / 2 + RX - 92) / 2, Y - 8)}
+    ${edge(X + 40, Y + 22, RX - 117, 300, G.icb[0], G.icb[1], X + 70, 300)}
+    ${[0, 1, 2].map(j => edge(RX, 322 + j * 60, RX, 337 + j * 60, "", "icb")).join("")}
+    <text x="${RX - 120}" y="392" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--src-icb)">skos:broader ↓</text>
+    ${node(140, 60, 190, c.name, '"' + c.name + '"', G.name[1], { literal: true })}
+    ${node(X, 60, 220, c.url.replace(/^https?:\/\//, ""), G.url[2], G.url[1], { literal: true })}
+    ${node(X, Y, CW, c.name, G.company_sub, "gw", { strong: true })}
+    ${node(95, Y, 160, "EURO STOXX 50", G.index[2], G.index[3])}
     ${node(95, 352, 160, "CSV2 file", "dcat:Distribution", "prov")}
     ${node(95, 412, 160, "ICB assignments", "dcat:Distribution · provisional", "prov")}
-    ${node(640, Y, 180, c.country.label, `wd:${c.country.qid} · ${c.country.iso}`, "wd")}
-    ${[3, 2, 1, 0].map((k, j) => node(640, 300 + j * 60, 230, L[k].label, `${L[k].level} · icb:${L[k].code}`, "icb", { strong: k === 3 })).join("")}
+    ${node(RX, Y, 184, c.country.label, c.country.curie + (c.country.code ? " · " + c.country.code : ""), G.country[2])}
+    ${[3, 2, 1, 0].map((k, j) => node(RX, 300 + j * 60, 230, L[k].label, `${L[k].level} · icb:${L[k].code}`, "icb", { strong: k === 3 })).join("")}
   </svg>`;
   $("#company-graph").innerHTML = svg;
-  $("#company-adds").innerHTML = [
-    ["Two types, one asserted each", `${c.types.map(t => `<code>${esc(t)}</code>`).join(" and ")}. Tools that know schema.org see a Corporation without running a reasoner.`],
-    ["Four ICB levels from one link", `${L.map(l => esc(l.label)).join(" › ")}. The file only says <em>${esc(c.row[ci("ICB Industry")])}</em>. Basis for the subsector: ${esc(c.basis)}.`],
-    ["A country you can join on", `<code>wd:${esc(c.country.qid)}</code> is ${esc(c.country.label)} in Wikidata, ISO code ${esc(c.country.iso)}. The file has the text "${esc(c.row[ci("Country")])}".`],
-    ["Where it came from", `${c.sources.map(esc).join(" and ")}. The dataset description says the figures are approximate and the subsectors provisional.`],
-  ].map(([h, t]) => `<div class="panel pad"><h3>${h}</h3><p class="muted" style="font-size:.86rem">${t}</p></div>`).join("");
+  $("#company-adds").innerHTML = c.adds.map(([h, t]) => [esc(h), codeify(t)])
+    .map(([h, t]) => `<div class="panel pad"><h3>${h}</h3><p class="muted" style="font-size:.86rem">${t}</p></div>`).join("");
 }
 
 /* ---------- view 3: questions ---------- */
@@ -539,7 +536,7 @@ function renderResult(q) {
     return `<div class="bars">${q.rows.map(r => `<div class="bar"><span class="lbl">${esc(r[0])}</span><span class="track"><span class="fill" style="width:${r[1] / max * 100}%;background:var(--src-icb)"></span></span><span class="val">${r[1]} industries</span></div>`).join("")}</div>`;
   }
   const head = v.map(x => `<th>${esc(x)}</th>`).join("");
-  const body = q.rows.map(r => `<tr>${r.map((x, i) => `<td>${typeof x === "boolean" ? (x ? "yes" : "no") : typeof x === "number" ? fmt(x) : v[i] === "currency" ? `<span class="cur ${x === "USD" ? "usd" : ""}">${esc(x)}</span>` : esc(x)}</td>`).join("")}</tr>`).join("");
+  const body = q.rows.map(r => `<tr>${r.map((x, i) => `<td>${typeof x === "boolean" ? (x ? "yes" : "no") : typeof x === "number" ? fmt(x) : (v[i] === "currency" || v[i] === "code") ? `<span class="cur ${x === "USD" ? "usd" : ""}">${esc(x)}</span>` : esc(x)}</td>`).join("")}</tr>`).join("");
   return `<table class="rtable"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }
 $("#questions").innerHTML = D.questions.map(q => `
@@ -551,12 +548,11 @@ $("#questions").innerHTML = D.questions.map(q => `
   </article>`).join("");
 
 /* ---------- view 4: rules ---------- */
-const BAD = { "gw:country": "Country", "gw:revenueFY2024": "Revenue", "gw:icbSubsector": "ICB subsector" };
 const bcols = ["Company", "Country", "ICB subsector", "Revenue", "Currency", "Website"];
 $("#broken").innerHTML = `<thead><tr class="h1">${bcols.map(h => `<th style="cursor:default">${h}</th>`).join("")}</tr></thead><tbody>` +
   D.violations.map(x => {
     const vals = { Company: x.name, Country: x.country || "", "ICB subsector": x.icb, Revenue: x.revenue, Currency: x.currency, Website: x.url };
-    const bad = BAD[x.path];
+    const bad = x.column;
     return `<tr class="row">${bcols.map(h => `<td class="${h === bad ? "badcell" : ""}">${esc(vals[h]) || (h === bad ? "missing" : "")}</td>`).join("")}</tr>
       <tr class="msg"><td colspan="${bcols.length}">${esc(x.message)} <span class="mono muted">(${esc(x.path)})</span></td></tr>`;
   }).join("") + "</tbody>";
@@ -599,13 +595,15 @@ $("#rules").innerHTML = D.columns.filter(c => c.rule).map(c => `<div class="r"><
   const max = Math.max(...ctrs.flatMap(ct => inds.map(i => n(ct, i))));
   $("#heat").innerHTML = `<table><thead><tr><th></th>${inds.map(i => `<th scope="col">${esc(i)}</th>`).join("")}<th scope="col">Total</th></tr></thead><tbody>` +
     ctrs.map(ct => { const co = D.companies.find(c => c.country.label === ct).country;
-      return `<tr><th scope="row">${esc(ct)} <span class="mono muted" style="font-weight:400">wd:${co.qid}</span></th>${inds.map(i => { const k = n(ct, i);
+      return `<tr><th scope="row">${esc(ct)} <span class="mono muted" style="font-weight:400">${esc(co.curie)}</span></th>${inds.map(i => { const k = n(ct, i);
         return `<td class="c" style="background:${k ? `color-mix(in srgb, var(--src-wd) ${Math.round(14 + 60 * k / max)}%, transparent)` : "transparent"}">${k || '<span class="muted">·</span>'}</td>`; }).join("")}
         <td class="total">${D.companies.filter(c => c.country.label === ct).length}</td></tr>`; }).join("") + "</tbody></table>";
 })();
 
 $("#foot").innerHTML = `Generated from the tutorial's own files by <code>scripts/build_explorer.py</code>: the source CSVs, the ontology, the ICB taxonomy, the instance data, the SHACL shapes and the Track B queries. Revenue figures are approximate, in each company's reporting currency, and not comparable across sectors. ICB subsector assignments are provisional and must be checked against FTSE Russell.`;
 
+$("#heat-note").textContent = D.texts.heat;
+$("#rules-note").textContent = D.texts.rules;
 renderTable(); renderColDetail(); selectCompany("company-asml-holding");
 show(location.hash.slice(1));
 </script>
