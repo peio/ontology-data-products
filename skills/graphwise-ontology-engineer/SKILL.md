@@ -57,8 +57,11 @@ Never invent terms inside a reused namespace.
 - No "Class"/"Property" in names, no abbreviations; siblings are named consistently.
 - Every term has `rdfs:label`, `rdfs:comment` (or `skos:definition`); synonyms go in
   `skos:altLabel`, never in separate classes.
-- Default namespaces: `gw: <https://graphwise.ai/ontology/>`,
-  `gwi: <https://graphwise.ai/instance/>` unless the user gives their own.
+- Default namespaces, one per ontology (`<name>` is the ontology's short name, e.g.
+  `estx50`): `gw: <https://graphwise.ai/ontology/<name>/>`,
+  `gwi: <https://graphwise.ai/instance/<name>/>` unless the user gives their own.
+  Never mint terms in the shared `https://graphwise.ai/ontology/` namespace, where
+  `gw:Company` would clash with the next ontology.
 
 ## Workflow
 
@@ -93,7 +96,7 @@ hierarchy, membership as a relation, align vs. import, OWL vs. SHACL, two test t
 8. **Refine & iterate.** Fix failures, missing concepts and modelling errors;
    return to the step where the problem originated. Log each decision.
 9. **Document & deploy.** Finalize `DESIGN.md`, set `owl:versionInfo` and
-   `owl:versionIRI` (semantic versioning, e.g. `https://graphwise.ai/ontology/1.0.0`),
+   `owl:versionIRI` (semantic versioning, e.g. `https://graphwise.ai/ontology/<name>/1.0.0`),
    add a changelog entry, and note how to load the files into GraphDB.
 
 ## Quality bar

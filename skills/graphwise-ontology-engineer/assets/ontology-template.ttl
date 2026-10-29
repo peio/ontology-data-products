@@ -1,5 +1,6 @@
-@prefix gw:      <https://graphwise.ai/ontology/> .
-@prefix gwi:     <https://graphwise.ai/instance/> .
+# Replace NAME with the ontology's short name (e.g. estx50): one namespace per ontology.
+@prefix gw:      <https://graphwise.ai/ontology/NAME/> .
+@prefix gwi:     <https://graphwise.ai/instance/NAME/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dcat:    <http://www.w3.org/ns/dcat#> .
 @prefix prov:    <http://www.w3.org/ns/prov#> .
@@ -10,9 +11,9 @@
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
 gw: a owl:Ontology ;
-  dcterms:title "Graphwise Core Ontology" ;
+  dcterms:title "NAME Ontology" ;
   dcterms:creator "Peio @ Agents" ;
   dcterms:license <https://graphwise.ai/> ;
   owl:versionInfo "1.0.0" ;
-  owl:versionIRI <https://graphwise.ai/ontology/1.0.0> ;
+  owl:versionIRI <https://graphwise.ai/ontology/NAME/1.0.0> ;
   owl:imports <http://www.w3.org/ns/dcat#>, <http://www.w3.org/ns/prov#> .
