@@ -1,0 +1,46 @@
+# Bridge rule: convert 2.0.0 revenue into FIBO-variant revenue nodes.
+# OWL cannot map gw:revenueFY2024 (a number on the company) onto
+# gwf:hasRevenue / fibo-fnd-acc-cur:hasAmount (a path through a node), so this
+# SPARQL rule does it. See ontology/estx50-fibo-bridge.ttl.
+#
+# Run over 2.0.0 instances + ontology/fibo-extract.ttl (the extract supplies the
+# ISO 4217 code of each FIBO currency). To store the result in GraphDB, replace
+# CONSTRUCT with INSERT. Amounts stay in billions, as gwf:Revenue requires.
+# Run by scripts/check_bridge.py.
+
+PREFIX gw:      <https://graphwise.ai/ontology/estx50/>
+PREFIX gwf:     <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/>
+PREFIX fibo-fnd-arr-doc: <https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/>
+PREFIX fibo-fnd-rel-rel: <https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/>
+PREFIX cmns-dt: <https://www.omg.org/spec/Commons/DatesAndTimes/>
+PREFIX cmns-id: <https://www.omg.org/spec/Commons/Identifiers/>
+
+CONSTRUCT {
+  ?c gwf:hasRevenue ?rev .
+  ?rev a gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+       rdfs:label ?label ;
+       fibo-fnd-acc-cur:hasAmount ?amount ;
+       fibo-fnd-acc-cur:hasCurrency ?cur ;
+       fibo-fnd-arr-doc:hasReportingPeriod ?period ;
+       prov:wasDerivedFrom ?dist .
+  ?period a cmns-dt:ExplicitDatePeriod ;
+       rdfs:label "FY2024"@en ;
+       skos:note "Each company's own fiscal year 2024. Start and end dates differ between companies and are not in the source, so none are given."@en .
+}
+WHERE {
+  ?c a gw:Company ; rdfs:label ?name ;
+     gw:revenueFY2024 ?amount ; gw:reportingCurrency ?code .
+  # Map the ISO 4217 code to the FIBO currency (not the code individual).
+  ?id a fibo-fnd-acc-cur:CurrencyIdentifier ; fibo-fnd-rel-rel:hasTag ?tag ; cmns-id:identifies ?cur .
+  FILTER(STR(?tag) = STR(?code))
+  # The revenue figure comes from the main CSV only, not the ICB assignments.
+  OPTIONAL { ?c prov:wasDerivedFrom ?dist . ?dist dcterms:identifier "EURO_STOXX_50_Constituents_CSV2.csv" }
+  BIND(IRI(CONCAT(STR(?c), "-revenue-fy2024")) AS ?rev)
+  BIND(IRI("https://graphwise.ai/instance/period-fy2024") AS ?period)
+  BIND(STRLANG(CONCAT(?name, " revenue FY2024"), "en") AS ?label)
+}

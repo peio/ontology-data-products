@@ -1,0 +1,44 @@
+@prefix gw:      <https://graphwise.ai/ontology/estx50/> .
+@prefix gwf:     <https://graphwise.ai/ontology/estx50-fibo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/> .
+@prefix cmns-cls:      <https://www.omg.org/spec/Commons/Classifiers/> .
+@prefix cmns-loc:      <https://www.omg.org/spec/Commons/Locations/> .
+
+# =============================================================================
+# Bridge from the EURO STOXX 50 ontology 2.0.0 to its FIBO variant.
+# Optional: load it only if 2.0.0 data should also be readable in FIBO terms.
+# One-way links only (subclass / subproperty, never equivalence), so 2.0.0 data
+# shows up in FIBO-shaped queries and nothing flows back into the 2.0.0 view.
+# =============================================================================
+
+<https://graphwise.ai/ontology/estx50-fibo-bridge> a owl:Ontology ;
+    dcterms:title "EURO STOXX 50 bridge: 2.0.0 to FIBO variant"@en ;
+    dcterms:description "Four one-way links that let a reasoner read data built with the EURO STOXX 50 ontology 2.0.0 (gw:) in the terms of its FIBO variant (gwf:) and FIBO. The two ontologies stay separate; this file mints no terms and changes neither of them."@en ;
+    dcterms:creator "Peio Popov" ;
+    dcterms:publisher "Graphwise" ;
+    dcterms:created "2026-10-29"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionIRI <https://graphwise.ai/ontology/estx50-fibo-bridge/1.0.0> ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:seeAlso <https://graphwise.ai/ontology/estx50> , <https://graphwise.ai/ontology/estx50-fibo> ;
+    rdfs:comment "Load together with estx50-ontology.ttl, estx50-fibo-ontology.ttl and fibo-extract.ttl, in a repository with OWL2-RL (or RDFS) reasoning; without reasoning the links have no effect. Nothing is imported."@en ;
+    rdfs:comment "Equivalence (owl:equivalentClass / owl:equivalentProperty) is deliberately not used. It would push the FIBO data into the 2.0.0 classes as well, so the 2.0.0 shapes would start checking FIBO companies, and the two functional country properties would make the reasoner conclude that a Wikidata country and an LCC country are the same individual."@en ;
+    rdfs:comment "Revenue cannot be linked with OWL: 2.0.0 states it as a number on the company (gw:revenueFY2024, gw:reportingCurrency), the FIBO variant as a node (gwf:hasRevenue to a gwf:Revenue with amount, currency and period), and OWL cannot map a data value onto a path through a node. queries/bridge-revenue.rq converts it with a SPARQL rule instead."@en ;
+    rdfs:comment "Not bridged: countries stay Wikidata IRIs. gw:country ⊑ cmns-loc:hasCountry makes them Commons countries (cmns-loc:Country, the range of cmns-loc:hasCountry) but not LCC countries, so FIBO queries that read LCC country names (lcc-cr:hasEnglishShortName) find nothing for 2.0.0 data."@en .
+
+gw:Company rdfs:subClassOf fibo-be-le-cb:PubliclyHeldCompany ;
+    skos:editorialNote "Bridge: a company whose shares are listed on a stock exchange (gw:Company) is a corporation whose shares are traded and held publicly (fibo-be-le-cb:PubliclyHeldCompany)."@en .
+
+gw:icbSubsector rdfs:subPropertyOf cmns-cls:isClassifiedBy ;
+    skos:editorialNote "Bridge: the ICB subsector link is a FIBO classification link. With icb-fibo-alignment.ttl loaded, its values are also FIBO ICB classifiers."@en .
+
+gw:country rdfs:subPropertyOf cmns-loc:hasCountry ;
+    skos:editorialNote "Bridge: the index-assigned country is a country link in the Commons sense. Not a subproperty of gwf:indexAssignedCountry, whose range is lcc-cr:Country: 2.0.0 uses Wikidata IRIs, which would wrongly be typed as LCC countries."@en .
+
+gw:isConstituentOf rdfs:subPropertyOf gwf:isConstituentOf ;
+    skos:editorialNote "Bridge: the same index-membership shortcut. Its domain and range in the FIBO variant (fibo-be-le-cb:PubliclyHeldCompany, fibo-ind-mkt-bas:EquityIndex) agree with gw:Company and gw:StockIndex, which are subclasses of both."@en .

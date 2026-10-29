@@ -1,0 +1,113 @@
+# Bridge checks: 2.0.0 data read in FIBO terms through ontology/estx50-fibo-bridge.ttl.
+# Each test is an ASK query that returns true when the check PASSES.
+# Header format: "# @test <id> | <graph> | <description>"
+#   graph = bridge   : estx50-fibo-bridge.ttl only
+#   graph = bridged  : 2.0.0 ontology + ICB + 2.0.0 instances + bridge + FIBO variant ontology
+#                      + FIBO extract + ICB alignment + bridge-revenue.rq output, after OWL RL
+#   graph = both     : bridged + the FIBO variant's own instances, after OWL RL
+# Run by scripts/check_bridge.py, which also runs the FIBO Track B queries on the bridged graph.
+
+PREFIX gw:      <https://graphwise.ai/ontology/estx50/>
+PREFIX gwf:     <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX gwi:     <https://graphwise.ai/instance/>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fibo-be-le-cb:    <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+PREFIX fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/>
+PREFIX fibo-fnd-arr-doc: <https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/>
+PREFIX fibo-sec-sec-cls: <https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/SecuritiesClassification/>
+PREFIX cmns-cls:         <https://www.omg.org/spec/Commons/Classifiers/>
+PREFIX cmns-loc:         <https://www.omg.org/spec/Commons/Locations/>
+PREFIX cmns-org:         <https://www.omg.org/spec/Commons/Organizations/>
+PREFIX lcc-cr:           <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/>
+
+# @test C1a | bridge | The bridge mints and redeclares nothing: no typed resource except its own ontology header
+ASK {
+  FILTER NOT EXISTS { ?t a ?kind . FILTER(?t != <https://graphwise.ai/ontology/estx50-fibo-bridge>) }
+}
+
+# @test C1b | bridge | The bridge uses only one-way links (no equivalence, no inverse, no sameAs)
+ASK {
+  FILTER NOT EXISTS {
+    VALUES ?p { owl:equivalentClass owl:equivalentProperty owl:inverseOf owl:sameAs }
+    ?s ?p ?o .
+  }
+  { SELECT (COUNT(*) AS ?n) WHERE { ?s rdfs:subClassOf|rdfs:subPropertyOf ?o } }
+  FILTER(?n = 4)
+}
+
+# @test C2a | bridged | Every 2.0.0 company is a FIBO publicly held company and legal entity
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c a gw:Company , fibo-be-le-cb:PubliclyHeldCompany , cmns-org:LegalEntity } }
+  FILTER(?n = 50)
+}
+
+# @test C2b | bridged | Every 2.0.0 ICB subsector is also a FIBO classification, pointing to a FIBO ICB classifier
+ASK {
+  FILTER NOT EXISTS { ?c gw:icbSubsector ?s . FILTER NOT EXISTS { ?c cmns-cls:isClassifiedBy ?s . ?s a fibo-sec-sec-cls:IndustryClassificationBenchmarkClassifier } }
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c a gw:Company ; cmns-cls:isClassifiedBy ?s } }
+  FILTER(?n = 50)
+}
+
+# @test C2c | bridged | Every 2.0.0 country link is a Commons country link, and no Wikidata country is typed as an LCC country
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c gw:country ?x ; cmns-loc:hasCountry ?x . ?x a cmns-loc:Country } }
+  FILTER(?n = 50)
+  FILTER NOT EXISTS { ?c gw:country ?x . ?x a lcc-cr:Country }
+}
+
+# @test C2d | bridged | The 2.0.0 index has all 50 companies as FIBO-variant constituents
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { gwi:index-euro-stoxx-50 gwf:hasConstituent ?c . ?c gwf:isConstituentOf gwi:index-euro-stoxx-50 } }
+  FILTER(?n = 50)
+}
+
+# @test C3a | bridged | The revenue rule gives every 2.0.0 company exactly one gwf:Revenue with one amount, one FIBO currency and one period
+ASK {
+  { SELECT (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c a gw:Company ; gwf:hasRevenue ?r } }
+  FILTER(?n = 50)
+  FILTER NOT EXISTS {
+    ?c a gw:Company .
+    FILTER NOT EXISTS {
+      ?c gwf:hasRevenue ?r . ?r a gwf:Revenue , fibo-fnd-acc-cur:MonetaryAmount ;
+         fibo-fnd-acc-cur:hasAmount ?a ; fibo-fnd-acc-cur:hasCurrency ?cur ; fibo-fnd-arr-doc:hasReportingPeriod ?p .
+      ?cur a fibo-fnd-acc-cur:Currency .
+    }
+  }
+  FILTER NOT EXISTS { ?r fibo-fnd-acc-cur:hasAmount ?a1 , ?a2 . FILTER(?a1 != ?a2) }
+  FILTER NOT EXISTS { ?r fibo-fnd-acc-cur:hasCurrency ?c1 , ?c2 . FILTER(?c1 != ?c2) }
+}
+
+# @test C3b | bridged | Every converted amount equals the 2.0.0 figure
+ASK {
+  FILTER NOT EXISTS {
+    ?c gw:revenueFY2024 ?v ; gwf:hasRevenue/fibo-fnd-acc-cur:hasAmount ?a .
+    FILTER(?a != ?v)
+  }
+}
+
+# @test C4a | both | Consistent: no member of owl:Nothing, no disjointness clash, no owl:sameAs between distinct resources
+ASK {
+  FILTER NOT EXISTS { ?x a owl:Nothing }
+  FILTER NOT EXISTS {
+    ?d a owl:AllDisjointClasses ; owl:members/rdf:rest*/rdf:first ?c1 , ?c2 .
+    FILTER(?c1 != ?c2)
+    ?x a ?c1 , ?c2 .
+  }
+  FILTER NOT EXISTS { ?a owl:sameAs ?b . FILTER(?a != ?b) }
+}
+
+# @test C4b | both | One way only: nothing in the FIBO variant's data becomes 2.0.0 data
+ASK {
+  FILTER NOT EXISTS {
+    ?x a ?k .
+    FILTER(STRSTARTS(STR(?x), "https://graphwise.ai/instance/estx50-fibo/"))
+    FILTER(STRSTARTS(STR(?k), "https://graphwise.ai/ontology/estx50/"))
+  }
+  FILTER NOT EXISTS {
+    ?x ?p ?o .
+    FILTER(STRSTARTS(STR(?x), "https://graphwise.ai/instance/estx50-fibo/"))
+    FILTER(STRSTARTS(STR(?p), "https://graphwise.ai/ontology/estx50/"))
+  }
+}

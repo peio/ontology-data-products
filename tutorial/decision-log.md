@@ -376,3 +376,20 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 **Tests:** Track A 26/26 (new: A1h extract completeness, A1i currencies and countries are individuals of the right kind, A2a companies inferred as FIBO legal entities, A2d `cmns-loc:hasCountry` inferred, A4e ICB alignment), Track B 6/6 against `answer-key-fibo.csv`, which differs from `answer-key.csv` only in the Netherlands' LCC name, "Netherlands (the)".
 
 **Produced:** `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl`, `ontology/icb-fibo-alignment.ttl`, `data/estx50-fibo-instances.ttl`, `data/violations-demo-fibo.ttl`, `shapes/shapes-fibo.ttl`, `queries/*-fibo.*`, `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py`, `reports/test-report-fibo.md`, `docs/estx50-fibo-ontology.html`.
+
+### Bridge from 2.0.0 (2026-10-29)
+
+**Goal:** let 2.0.0 data be read in FIBO terms without merging the two ontologies.
+
+**Decisions**
+
+- **Separate, optional file.** `ontology/estx50-fibo-bridge.ttl` (1.0.0) mints no terms and is loaded only by choice; both ontologies and both test suites are unchanged.
+  - Rejected: merging `estx50-ontology.ttl` and `estx50-fibo-ontology.ttl` into one file. It would put two models of the same facts side by side (two "is constituent of" properties), fail each suite's "declares no terms it doesn't own" check, fold two versions into one, and reverse D2.
+- **One-way links only:** `gw:Company` ⊑ `fibo-be-le-cb:PubliclyHeldCompany`, `gw:icbSubsector` ⊑ `cmns-cls:isClassifiedBy`, `gw:country` ⊑ `cmns-loc:hasCountry`, `gw:isConstituentOf` ⊑ `gwf:isConstituentOf`.
+  - Rejected: equivalence. It pushes FIBO data into the 2.0.0 classes (test C4b fails when equivalence is swapped in), and the two functional country properties would merge Wikidata and LCC countries.
+  - Rejected: `gw:country` ⊑ `gwf:indexAssignedCountry`, whose range would type Wikidata IRIs as LCC countries.
+- **Revenue by SPARQL rule,** `queries/bridge-revenue.rq`: OWL cannot map a number on the company onto a node with amount and currency. The rule looks up the FIBO currency through the extract's ISO 4217 codes and keeps the billions scale.
+
+**Tests:** `scripts/check_bridge.py`: bridge checks 10/10. FIBO Track B on bridged 2.0.0 data: B1, B2, B5, B6 match `answer-key-fibo.csv`; B3 and B4 return no rows, as expected, because 2.0.0 countries are not LCC countries.
+
+**Produced:** `ontology/estx50-fibo-bridge.ttl`, `queries/bridge-revenue.rq`, `queries/bridge-tests.rq`, `scripts/check_bridge.py`, `reports/bridge-check.md`.

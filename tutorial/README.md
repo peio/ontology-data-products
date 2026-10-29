@@ -99,6 +99,9 @@ Only five terms are minted (`gwf:Revenue`, `gwf:hasRevenue`, `gwf:indexAssignedC
 | `queries/answer-key-fibo.csv` | Track B expected results (as `answer-key.csv`, with LCC country names) |
 | `reports/test-report-fibo.md` | Test report for the FIBO variant |
 | `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py` | CSV → FIBO RDF; ICB alignment and FIBO extract |
+| `ontology/estx50-fibo-bridge.ttl` | Optional bridge: 2.0.0 terms ⊑ FIBO terms (see below) |
+| `queries/bridge-revenue.rq`, `queries/bridge-tests.rq` | Revenue conversion rule and checks for the bridge |
+| `scripts/check_bridge.py`, `reports/bridge-check.md` | Runs the bridge checks; its report |
 
 Run it (after the main pipeline):
 
@@ -118,6 +121,29 @@ Caveats specific to the FIBO variant:
 - **Billions.** FIBO reads `fibo-fnd-acc-cur:hasAmount` in currency units; here it is in billions, and this is stated only on `gwf:Revenue`. Never copy a `gwf:Revenue` amount onto a plain FIBO monetary amount.
 - **Incomplete, not inconsistent.** FIBO expects a legal name, an incorporation date and jurisdiction, a legal address and issued capital for a publicly held company. The source has none of them, and the shapes do not require them.
 - **Country names.** LCC's `rdfs:label` is in the local language ("Deutschland"@de); query the English name with `lcc-cr:hasEnglishShortName`. For the Netherlands it is "Netherlands (the)".
+
+### Optional bridge from 2.0.0
+
+[`ontology/estx50-fibo-bridge.ttl`](ontology/estx50-fibo-bridge.ttl) is a separate, optional file that lets a reasoner read 2.0.0 data in FIBO terms. Neither ontology changes, and neither test suite loads it. It mints no terms and holds four one-way links:
+
+| 2.0.0 term | Bridged to |
+| --- | --- |
+| `gw:Company` | ⊑ `fibo-be-le-cb:PubliclyHeldCompany` |
+| `gw:icbSubsector` | ⊑ `cmns-cls:isClassifiedBy` |
+| `gw:country` | ⊑ `cmns-loc:hasCountry` |
+| `gw:isConstituentOf` | ⊑ `gwf:isConstituentOf` |
+
+Equivalence is deliberately not used: it would push FIBO data into the 2.0.0 classes, so the 2.0.0 shapes would start checking FIBO companies, and the two functional country properties would make a Wikidata country and an LCC country the same individual. Revenue cannot be linked in OWL (a number on the company versus a node with amount and currency), so [`queries/bridge-revenue.rq`](queries/bridge-revenue.rq) converts it with a SPARQL rule; amounts stay in billions.
+
+To use it in GraphDB, load into an OWL2-RL repository that already holds the 2.0.0 files: `ontology/estx50-fibo-bridge.ttl`, `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl` and `ontology/icb-fibo-alignment.ttl`. Then, if you want the revenue nodes, run `queries/bridge-revenue.rq` with `CONSTRUCT` replaced by `INSERT`. The links only take effect with reasoning.
+
+What the bridged 2.0.0 data can and cannot answer is checked by:
+
+```bash
+python scripts/check_bridge.py   # -> reports/bridge-check.md
+```
+
+Expected: bridge checks 10/10. FIBO Track B on bridged 2.0.0 data: B1, B2, B5 and B6 give the FIBO answers; B3 and B4 return nothing, because 2.0.0 countries stay Wikidata IRIs and those queries read LCC country names.
 
 ## Scope
 
