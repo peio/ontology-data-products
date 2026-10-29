@@ -352,7 +352,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 ## FIBO variant
 
-**Goal:** a second, standalone ontology for the same data that reuses as much of FIBO as possible. Feasibility, term choices and rejected terms are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md).
+**Goal:** a second, standalone ontology for the same data that reuses as much of FIBO as possible. Feasibility, term choices and rejected terms are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md). Each mapping decision, with its rationale, rejected alternatives and guarding tests, is in [`fibo-decision-log.md`](fibo-decision-log.md).
 
 **Decisions**
 

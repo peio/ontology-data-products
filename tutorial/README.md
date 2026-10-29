@@ -73,7 +73,7 @@ Never load `violations-demo.ttl` into a production repository.
 
 ## FIBO variant
 
-A second, standalone ontology models the same data with FIBO, OMG Commons and LCC terms used directly. It sits next to 2.0.0, which is unchanged. The plan, every term choice and the terms that were rejected are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md); the decisions are in the [decision log](decision-log.md#fibo-variant).
+A second, standalone ontology models the same data with FIBO, OMG Commons and LCC terms used directly. It sits next to 2.0.0, which is unchanged. The plan, every term choice and the terms that were rejected are in [`fibo-feasibility-study.md`](fibo-feasibility-study.md); the mapping decisions, concept by concept, are in [`fibo-decision-log.md`](fibo-decision-log.md), with a summary in the [decision log](decision-log.md#fibo-variant).
 
 | Concept | 2.0.0 | FIBO variant |
 | --- | --- | --- |
