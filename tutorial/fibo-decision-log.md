@@ -5,7 +5,7 @@ This log records how the EURO STOXX 50 data was mapped to FIBO: which FIBO term 
 - **Author:** Peio Popov · Graphwise
 - **FIBO release:** 2026Q2 production (`ontologies/QuickFIBOProd.ttl`), with OMG Commons 1.3 and LCC 1.2
 - **Ontology:** `https://graphwise.ai/ontology/estx50-fibo`, version 1.0.0 (`gwf:`); instances `gwfi:`
-- **Commits:** `84783e3` FIBO variant (2026-10-28), `393b1cd` bridge from 2.0.0 (2026-10-29)
+- **Commits:** `84783e3` FIBO variant (2026-10-28), `393b1cd` bridge from 2.0.0 (2026-10-29), `37e32b6` FIBO explorer (2026-10-29)
 
 ---
 
@@ -166,21 +166,21 @@ This log records how the EURO STOXX 50 data was mapped to FIBO: which FIBO term 
 
 ---
 
-## A: Architecture
+## AR: Architecture
 
-**A1: standalone file, 2.0.0 untouched (D2).** New namespace `gwf:` and instance namespace `gwfi:`, so both variants can share a repository.
+**AR1: standalone file, 2.0.0 untouched (D2).** New namespace `gwf:` and instance namespace `gwfi:`, so both variants can share a repository.
 - Rejected:
   - Version 3.0.0 of the existing ontology: it would rewrite the tutorial's nine steps.
   - A thin alignment file over 2.0.0: it cannot align a plain revenue number with FIBO's amount-plus-currency node (M6).
 
-**A2: reference FIBO, do not import it.** A generated extract (`ontology/fibo-extract.ttl`, about 480 triples) carries the labels, definitions, named parents, domains and ranges of the terms used, up to the top of each hierarchy, plus the needed individuals. Restrictions are left out, and the MIT copyright notice is kept.
+**AR2: reference FIBO, do not import it.** A generated extract (`ontology/fibo-extract.ttl`, about 480 triples) carries the labels, definitions, named parents, domains and ranges of the terms used, up to the top of each hierarchy, plus the needed individuals. Restrictions are left out, and the MIT copyright notice is kept.
 - Rejected: `owl:imports` of FIBO, which adds about 132,600 triples to a 50-company dataset.
 
-**A3: FIBO types are asserted on the instances.** No reasoner is needed to see them. This is the same choice as Revision 1 of 2.0.0.
+**AR3: FIBO types are asserted on the instances.** No reasoner is needed to see them. This is the same choice as Revision 1 of 2.0.0.
 
-**A4: the shapes check the source, not FIBO.** They enforce what the data provides and leave FIBO's own cardinalities alone (M1).
+**AR4: the shapes check the source, not FIBO.** They enforce what the data provides and leave FIBO's own cardinalities alone (M1).
 
-**A5: no merge with 2.0.0.**
+**AR5: no merge with 2.0.0.**
 - Rejected: one file holding both ontologies. It would hold two models of the same facts with duplicate labels, fail each suite's "declares no terms it doesn't own" check, and fold two versions into one.
 
 ---
@@ -215,4 +215,3 @@ This log records how the EURO STOXX 50 data was mapped to FIBO: which FIBO term 
 | Fiscal-year dates (M6) | Fiscal years differ; the source has no dates | One period per company with its start and end dates |
 | ICB subsectors | Provisional, chosen from the taxonomy labels | Verify against FTSE Russell (applies to both variants) |
 | FIBO release | Pinned to 2026Q2 | Replace `QuickFIBOProd.ttl`, update the expected version in `build_fibo_files.py`, rebuild; the build fails on any term that moved |
-| Explorer | Covers 2.0.0 only (a FIBO variant is in progress) | Finish the FIBO explorer page |

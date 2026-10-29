@@ -1,0 +1,7 @@
+# F7 experiment: what if the bridge used equivalence instead of a one-way link?
+# Load it with --add, together with the FIBO variant's data. Never use it for real.
+@prefix gw:  <https://graphwise.ai/ontology/estx50/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/> .
+
+gw:Company owl:equivalentClass fibo-be-le-cb:PubliclyHeldCompany .

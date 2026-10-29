@@ -1,0 +1,10 @@
+# C8b (Step 8, Revision 2): the five largest constituents by revenue, with the currency each one reports in.
+# Works from Revision 2 on (gw:reportingCurrency does not exist before it).
+PREFIX gw:   <https://graphwise.ai/ontology/estx50/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?company ?revenue ?currency WHERE {
+  ?c a gw:Company ; rdfs:label ?company ; gw:revenueFY2024 ?revenue ; gw:reportingCurrency ?currency .
+}
+ORDER BY DESC(?revenue)
+LIMIT 5

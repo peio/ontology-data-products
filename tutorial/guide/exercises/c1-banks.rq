@@ -1,0 +1,12 @@
+# C1 (Step 1): Which constituents are banks? (Track B question B1)
+# A bank is any company whose subsector rolls up to the ICB "Banks" supersector, icb:3010.
+PREFIX gw:   <https://graphwise.ai/ontology/estx50/>
+PREFIX icb:  <https://graphwise.ai/taxonomy/icb/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?company ?subsector WHERE {
+  ?c a gw:Company ; rdfs:label ?company ; gw:icbSubsector ?s .
+  ?s skos:broader* icb:3010 ; skos:prefLabel ?subsector .
+}
+ORDER BY ?company

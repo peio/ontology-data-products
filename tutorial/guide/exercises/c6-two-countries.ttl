@@ -1,0 +1,13 @@
+# C6 (Step 6) experiment: a fourth broken company, with two countries. Append this block to
+# data/violations-demo.ttl, run the tests, then undo with: git restore data/violations-demo.ttl
+
+gwi:demo-two-countries a gw:Company ;
+    rdfs:label "Demo: two countries" ;
+    schema:name "Demo Two Countries NV"^^xsd:string ;
+    schema:url <https://example.org/two-countries> ;
+    gw:country wd:Q183 , wd:Q142 ;    # Germany and France
+    gw:icbSubsector icb:10101015 ;
+    gw:revenueFY2024 3.0 ;
+    gw:reportingCurrency "EUR" ;
+    gw:isConstituentOf gwi:index-euro-stoxx-50 ;
+    prov:wasDerivedFrom gwi:distribution-csv2 .

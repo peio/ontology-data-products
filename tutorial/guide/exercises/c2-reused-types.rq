@@ -1,0 +1,15 @@
+# C2 (Step 2) and C8a (Step 8, Revision 1): how many resources carry each reused class?
+# Run it without and with --reason and compare.
+PREFIX schema: <https://schema.org/>
+PREFIX fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/>
+
+SELECT ?reusedClass ?instances WHERE {
+  { { SELECT (COUNT(?x) AS ?instances) WHERE { ?x a schema:Corporation } }
+    BIND(schema:Corporation AS ?reusedClass) }
+  UNION
+  { { SELECT (COUNT(?x) AS ?instances) WHERE { ?x a schema:Country } }
+    BIND(schema:Country AS ?reusedClass) }
+  UNION
+  { { SELECT (COUNT(?x) AS ?instances) WHERE { ?x a fibo-ind-mkt-bas:EquityIndex } }
+    BIND(fibo-ind-mkt-bas:EquityIndex AS ?reusedClass) }
+}

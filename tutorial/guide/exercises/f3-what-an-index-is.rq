@@ -1,0 +1,10 @@
+# F3: every class above FIBO's equity index, from the extract.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fibo-fnd-utl-alx: <https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/>
+PREFIX cmns-qtu: <https://www.omg.org/spec/Commons/QuantitiesAndUnits/>
+PREFIX fibo-ind-mkt-bas: <https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/>
+
+SELECT ?class ?label WHERE {
+  fibo-ind-mkt-bas:EquityIndex rdfs:subClassOf+ ?class .
+  ?class rdfs:label ?label .
+}

@@ -1,0 +1,11 @@
+# C4 (Step 4): the minted classes, the reused class each one specialises, and its definition.
+PREFIX gw:   <https://graphwise.ai/ontology/estx50/>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?class ?superclass ?definition WHERE {
+  ?class a owl:Class ; rdfs:subClassOf ?superclass ; skos:definition ?definition .
+  FILTER(STRSTARTS(STR(?class), STR(gw:)))
+}
+ORDER BY ?class

@@ -1,0 +1,10 @@
+# F2: what is SAP, once a reasoner has followed FIBO's class hierarchy? Run with --reason.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX cmns-pts: <https://www.omg.org/spec/Commons/PartiesAndSituations/>
+
+SELECT ?type WHERE {
+  ?c rdfs:label "SAP" ; a ?type .
+  FILTER(isIRI(?type) && ?type NOT IN (owl:Thing, rdfs:Resource, owl:NamedIndividual))
+}
+ORDER BY ?type
