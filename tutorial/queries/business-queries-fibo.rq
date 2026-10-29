@@ -58,7 +58,7 @@ SELECT (STR(?country) AS ?countryName) (COUNT(DISTINCT ?ind) AS ?industries) WHE
   ?ctry lcc-cr:hasEnglishShortName ?country .
 }
 GROUP BY ?country
-ORDER BY DESC(?industries) ?country
+ORDER BY DESC(?industries) ?countryName
 
 # @query B5 | Which is the largest constituent by revenue in each reporting currency (returned with the comparability caveat)?
 # Ranked within a currency only; across currencies the order would depend on an FX rate.

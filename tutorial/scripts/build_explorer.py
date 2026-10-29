@@ -80,15 +80,24 @@ TABLE_NOTES = {
 LEVEL = {2: "Industry", 4: "Supersector", 6: "Sector", 8: "Subsector"}
 
 
+def lang_rank(v):
+    """Sort key for literals: English first, then untagged, then other English variants."""
+    lang = v.language if isinstance(v, Literal) else None
+    return ({"en": 0, None: 1}.get(lang, 2 if lang and lang.lower().startswith("en") else 3), str(v))
+
+
 def text(g, s, p):
-    """One value of s p, preferring English or untagged literals."""
+    """One value of s p, chosen the same way on every run (rdflib's order is not stable)."""
     if s is None:
         return ""
-    vals = list(g.objects(s, p))
-    for v in vals:
-        if not isinstance(v, Literal) or v.language in (None, "en"):
-            return str(v)
+    vals = sorted(g.objects(s, p), key=lang_rank)
     return str(vals[0]) if vals else ""
+
+
+def first(g, s, p):
+    """The smallest of several values, so a multi-valued property gives a stable result."""
+    vals = sorted(g.objects(s, p))
+    return vals[0] if vals else None
 
 
 # ---------------------------------------------------------------------------
@@ -462,7 +471,7 @@ def main(variant: str, fragment) -> int:
         info = dict(curie=curie, source=s, notes=[], inherited=[], facets=[],
                     label=text(lookup, x, RDFS.label) or text(lookup, x, SKOS.prefLabel) or text(lookup, x, DCTERMS.title))
         for kind, p in note_kinds:
-            for v in lookup.objects(x, p):
+            for v in sorted(lookup.objects(x, p)):
                 if isinstance(v, Literal) and v.language not in (None, "en"):
                     continue
                 info["notes"].append(dict(kind="definition" if s == "schema" and p == RDFS.comment else kind, text=str(v)))
@@ -474,10 +483,10 @@ def main(variant: str, fragment) -> int:
                         else "record" if str(x).startswith("https://graphwise.ai/instance/") else "property")
         if OWL.FunctionalProperty in types:
             info["facets"].append("one value per company (functional)")
-        d, r = lookup.value(x, RDFS.domain), lookup.value(x, RDFS.range)
+        d, r = first(lookup, x, RDFS.domain), first(lookup, x, RDFS.range)
         if isinstance(d, URIRef) or isinstance(r, URIRef):
             info["facets"].append(f"from {short(d) if isinstance(d, URIRef) else 'anything'} to {short(r) if isinstance(r, URIRef) else 'anything'}")
-        inv = lookup.value(x, OWL.inverseOf)
+        inv = first(lookup, x, OWL.inverseOf)
         if inv is not None:
             info["facets"].append(f"inverse: {short(inv)}, inferred by the reasoner")
         if x in shape_msgs:
