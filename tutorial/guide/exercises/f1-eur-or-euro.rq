@@ -1,0 +1,10 @@
+# F1: two FIBO individuals that both look like "the euro". Which one is the currency?
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fibo-fnd-acc-4217: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/ISO4217-CurrencyCodes/>
+
+SELECT ?individual ?type ?label WHERE {
+  VALUES ?individual { fibo-fnd-acc-4217:EUR fibo-fnd-acc-4217:Euro }
+  ?individual a ?type ; rdfs:label ?label .
+  FILTER(?type != <http://www.w3.org/2002/07/owl#NamedIndividual>)
+}
+ORDER BY ?individual

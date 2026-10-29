@@ -1,0 +1,13 @@
+# F7: companies per country, named the FIBO way (LCC English short name).
+# Run it on the FIBO variant, then on 2.0.0 data through the bridge.
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX cmns-loc: <https://www.omg.org/spec/Commons/Locations/>
+PREFIX lcc-cr:   <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/>
+PREFIX fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+
+SELECT ?country (COUNT(?c) AS ?companies) WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; cmns-loc:hasCountry ?ctry .
+  ?ctry lcc-cr:hasEnglishShortName ?country .
+}
+GROUP BY ?country
+ORDER BY DESC(?companies) ?country

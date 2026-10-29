@@ -1,0 +1,13 @@
+# F7: the banks question (B1) asked in FIBO terms only. Run it on the FIBO variant,
+# then on 2.0.0 data through the bridge (--variant bridge --reason).
+PREFIX icb:  <https://graphwise.ai/taxonomy/icb/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+PREFIX cmns-cls: <https://www.omg.org/spec/Commons/Classifiers/>
+
+SELECT ?company WHERE {
+  ?c a fibo-be-le-cb:PubliclyHeldCompany ; rdfs:label ?company ;
+     cmns-cls:isClassifiedBy/skos:broader* icb:3010 .
+}
+ORDER BY ?company

@@ -1,0 +1,11 @@
+# F5: the names of the LCC countries in the data: the label, and the English short name.
+PREFIX gwf:    <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX lcc-cr: <https://www.omg.org/spec/LCC/Countries/CountryRepresentation/>
+
+SELECT DISTINCT ?country ?label ?language ?englishShortName WHERE {
+  ?c gwf:indexAssignedCountry ?country .
+  ?country rdfs:label ?label ; lcc-cr:hasEnglishShortName ?englishShortName .
+  BIND(LANG(?label) AS ?language)
+}
+ORDER BY ?englishShortName ?language

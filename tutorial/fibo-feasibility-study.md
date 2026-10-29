@@ -14,7 +14,7 @@ Answer: **yes, feasible.** Every concept in the data has a FIBO or OMG Commons/L
 | D2 | Namespace and version | **Separate file, named and namespaced as the FIBO-aligned version** | New file `ontology/estx50-fibo-ontology.ttl`, namespace `https://graphwise.ai/ontology/estx50-fibo/`, version 1.0.0. The 2.0.0 ontology, its data, tests and docs stay untouched. |
 | D3 | Revenue amount | **Amounts in billions** | `fibo-fnd-acc-cur:hasAmount 34.2` means 34.2 billion. The scale goes in the definition of `gwf:Revenue` (see risk R5). |
 | D4 | Countries | **Switch to FIBO (LCC) countries** | `lcc-3166-1:` individuals replace the Wikidata IRIs as country values. |
-| D5 | Company name | *Not yet decided.* Default: `cmns-dsg:hasTextualName` for the short name | Change only if real legal names are sourced (then `fibo-fnd-rel-rel:hasLegalName`). |
+| D5 | Company name | **Short name with `cmns-dsg:hasTextualName`** (the default, kept) | Change only if real legal names are sourced (then `fibo-fnd-rel-rel:hasLegalName`). |
 
 D2 confirmed: a new, standalone ontology that uses FIBO terms directly. A thin alignment file over the unchanged 2.0.0 terms was considered and rejected: it would work for classes but not for revenue, because 2.0.0 stores revenue as a plain number on the company, and that number cannot be aligned to FIBO's amount-plus-currency node.
 

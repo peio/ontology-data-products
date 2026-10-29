@@ -1,0 +1,16 @@
+# F2: what FIBO says every publicly held company must have, through every class above it.
+# Only "must" restrictions are listed: some-values-from, and cardinalities of 1 or more.
+# Run with --add ontologies/QuickFIBOProd.ttl: the extract leaves restrictions out.
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+
+SELECT DISTINCT ?from ?property WHERE {
+  { SELECT DISTINCT ?from WHERE { fibo-be-le-cb:PubliclyHeldCompany rdfs:subClassOf* ?from } }
+  ?from rdfs:subClassOf ?r .
+  ?r owl:onProperty ?property .
+  { ?r owl:someValuesFrom ?v }
+  UNION { ?r owl:qualifiedCardinality ?n FILTER(?n >= 1) }
+  UNION { ?r owl:minQualifiedCardinality ?n FILTER(?n >= 1) }
+}
+ORDER BY ?from ?property

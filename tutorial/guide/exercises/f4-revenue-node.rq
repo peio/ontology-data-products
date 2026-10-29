@@ -1,0 +1,15 @@
+# F4: SAP's revenue in the FIBO variant: a node with an amount, a currency and a period.
+# The ISO code is read through FIBO's currency identifier, which identifies the currency.
+PREFIX gwf:  <https://graphwise.ai/ontology/estx50-fibo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fibo-fnd-acc-cur: <https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/>
+PREFIX fibo-fnd-arr-doc: <https://spec.edmcouncil.org/fibo/ontology/FND/Arrangements/Documents/>
+PREFIX fibo-fnd-rel-rel: <https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/>
+PREFIX cmns-id: <https://www.omg.org/spec/Commons/Identifiers/>
+
+SELECT ?revenue ?amount ?currency ?code ?period WHERE {
+  ?c rdfs:label "SAP" ; gwf:hasRevenue ?revenue .
+  ?revenue fibo-fnd-acc-cur:hasAmount ?amount ; fibo-fnd-acc-cur:hasCurrency ?currency ;
+           fibo-fnd-arr-doc:hasReportingPeriod/rdfs:label ?period .
+  ?id cmns-id:identifies ?currency ; fibo-fnd-rel-rel:hasTag ?code .
+}

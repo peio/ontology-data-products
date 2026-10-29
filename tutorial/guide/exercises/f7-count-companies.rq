@@ -1,0 +1,11 @@
+# F7: how many resources are 2.0.0 companies (gw:Company), and how many FIBO publicly held companies?
+PREFIX gw: <https://graphwise.ai/ontology/estx50/>
+PREFIX fibo-be-le-cb: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/>
+
+SELECT ?class ?instances WHERE {
+  { { SELECT (COUNT(?x) AS ?instances) WHERE { ?x a gw:Company } }
+    BIND(gw:Company AS ?class) }
+  UNION
+  { { SELECT (COUNT(?x) AS ?instances) WHERE { ?x a fibo-be-le-cb:PubliclyHeldCompany } }
+    BIND(fibo-be-le-cb:PubliclyHeldCompany AS ?class) }
+}

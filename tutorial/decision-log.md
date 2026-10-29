@@ -44,6 +44,10 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 **Decisions**
 
 - **Domain:** the 50 constituents of the EURO STOXX 50, with country, ICB classification and FY2024 revenue.
+- **Intended use:** a teaching example for the AI Week Frankfurt workshop (October 2026). It shows the method on real data; it is not a production asset.
+- **Users:** workshop participants following the [guide](guide/README.md).
+- **Maintainer:** Peio Popov, Graphwise.
+  - Why it matters: a teaching example favours small, explicit, testable choices over coverage, which is why legal names, share data and membership history stay out of scope.
 - **Out of scope, by agreement:**
   - country currency (dropped; implied by the country). Reporting currency was out of scope too until Revision 2, which maps it.
   - index membership over time (snapshot only)
@@ -86,9 +90,11 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 | Index | `fibo-ind-mkt-bas:EquityIndex` (superclass) | FIBO's equity index class, checked against the FIBO source on GitHub |
 | Provenance | DCAT (`Dataset`, `Distribution`), PROV-O (`wasDerivedFrom`), Dublin Core | W3C standards for dataset metadata |
 
+- **Why schema.org for the company and country, but FIBO for the index.** Schema.org is the most widely used vocabulary for organizations and places, so it is the first choice where it fits. It has no stock-index class; FIBO's `EquityIndex` is the closest standard term.
 - **Align, don't import.** FIBO and schema.org are referenced with `rdfs:subClassOf`, with no `owl:imports`.
   - Why: FIBO's import closure is large and would swamp a 50-row tutorial.
   - Rejected: importing FIBO IND, because it is heavyweight for no gain in the competency questions.
+  - **Import plan: none, by design.** The methodology's Step 2 asks for an `owl:imports` plan. This build deliberately has none: every reused vocabulary is aligned to, used directly, or loaded alongside (ICB). Reference copies are kept in `ontologies/` for looking terms up, not for loading.
 - **Reuse is applied in three ways.** Each way decides whether the reused term shows up in the files or only after reasoning.
 
   | Mechanism | Terms | Visible in the plain data? |
@@ -110,6 +116,21 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Terms collected:** company, website, country, index, constituent, industry, supersector, sector, subsector, ICB code, revenue, fiscal year, source dataset, approximation, reporting currency, country currency.
 
+**Relationships between the terms** (recorded 2026-10-29, after the fact)
+
+| From | Relationship | To |
+| --- | --- | --- |
+| company | is assigned to | country |
+| company | is classified in | subsector |
+| subsector → sector → supersector → industry | is part of the next level up | (ICB hierarchy) |
+| company | is a constituent of | index |
+| company | reports | revenue, for a fiscal year, in a reporting currency |
+| company, revenue | come from | source dataset |
+| revenue | carries | approximation (a caveat) |
+| country | has | country currency (out of scope) |
+
+The remaining terms are attributes: website (of a company), ICB code (of each ICB level).
+
 **Decisions**
 
 - Every CSV column is listed with its fate: five are mapped, three ICB columns are cross-checked and then derived rather than stored, and one is dropped (see Step 7).
@@ -126,6 +147,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Decisions**
 
+- **Development approach: bottom-up** (recorded 2026-10-29, after the fact). The classes come from the things the source rows describe (company, country, index) and were then placed under more general reused classes (`schema:Corporation`, `schema:Country`, `fibo-ind-mkt-bas:EquityIndex`). No local top-level classes were designed first.
 - **Three minted classes, each a subclass of a reused class.**
 
   | Class | Superclass |
@@ -182,6 +204,12 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - The sector caveat is an `rdfs:comment` on the property and part of the dataset's `dcterms:description`.
   - Rejected: an observation pattern (`schema:MonetaryAmount` with a fiscal period), which is out of scope for one figure per company.
 - **Every minted term has `rdfs:label` and `skos:definition`.**
+- **Naming conventions** (methodology §6):
+  - Classes in UpperCamelCase and singular (`gw:Company`, `gw:StockIndex`); properties in lowerCamelCase (`gw:country`, `gw:icbSubsector`).
+  - Relations read as verbs where a direction matters (`gw:isConstituentOf` / `gw:hasConstituent`); single-valued links are named after their value (`gw:country`).
+  - No abbreviations except established codes (ICB, FY); no "Class" or "Property" in names.
+  - Instance IRIs: `gwi:<kind>-<slug>`, for example `gwi:company-loreal`, `gwi:index-euro-stoxx-50`.
+  - Known exception: `gw:revenueFY2024` puts a value (the fiscal year) in a property name. It is listed under deferred candidates in Step 8.
 
 **Produced:** properties in `ontology/estx50-ontology.ttl`.
 
@@ -344,9 +372,38 @@ This log records what was decided at each step of the Graphwise ontology-enginee
   - creator Peio Popov, publisher Graphwise, license CC BY 4.0
   - `vann:preferredNamespacePrefix` `gw`
 - **HTML documentation** generated with pyLODE: `docs/estx50-ontology.html`.
+- **Semantic-layer explorer:** `docs/estx50-explorer.html`, a single page that shows the CSV next to its meaning, one company as a row and as a graph, the business questions, the rules and the ICB hierarchy. `scripts/build_explorer.py` builds it from the repository files and `docs/explorer-template.html`.
+  - Why: it shows the result to people who will not read Turtle or SPARQL.
 - **GraphDB deployment is documented in the README, not executed.** Load order: ontology, ICB, instances, then shapes as a SHACL graph.
+- **Maintenance** (added 2026-10-29):
+  - Every change to the data, ontology, shapes or queries is followed by the full pipeline: `map_csv.py`, `make_answer_key.py`, `run_tests.py`. A change is accepted only if `run_tests.py` exits 0, and a fix for a new kind of mistake adds a test (as A1f and A1g did in Revision 1).
+  - Versioning: semantic versions in `owl:versionInfo` and `owl:versionIRI`. A change to any term IRI is a major version (1.0.0 → 2.0.0 in Revision 2), with `owl:priorVersion` pointing back and an entry in Step 8.
+  - Planned updates: verify the provisional subsectors against FTSE Russell (only `data/icb-subsector-assignments.csv` changes); a new FIBO release for the FIBO variant (see the [FIBO decision log](fibo-decision-log.md#open-items)); a new fiscal year, which triggers the deferred observation pattern.
+  - Owner: Peio Popov, Graphwise (see Step 1).
+- **Success measures** (added 2026-10-29):
+  - All competency questions answered correctly: Track B 6/6 against the independent answer key.
+  - The model is built correctly: Track A 22/22, and 0 SHACL violations on the clean data.
+  - Reproducible: with the pinned dependencies the generated files reproduce byte for byte, apart from the report date.
+  - For a teaching example: participants can run every guide module and get the results it states. Every command and number in the guide was checked on 2026-10-29; not yet measured with participants.
 
-**Produced:** `README.md`, `docs/estx50-ontology.html`, this log.
+**Produced:** `README.md`, `docs/estx50-ontology.html`, `docs/estx50-explorer.html`, `scripts/build_explorer.py`, this log.
+
+---
+
+## Assumption register
+
+Assumptions the model and data depend on, and what happens if one is wrong. Added 2026-10-29.
+
+| # | Assumption | Where it matters | Impact if wrong |
+| --- | --- | --- | --- |
+| AS1 | Each company's ICB subsector is the one chosen from the taxonomy labels for its main business | `data/icb-subsector-assignments.csv`, B1, B2, B4 | Wrong bank list or industry totals. Mitigated: the mapping refuses any subsector that does not roll up to the industry in the CSV, so only the subsector, never the industry, can be wrong. Fix by editing the CSV and re-running |
+| AS2 | Revenue figures in the CSV are approximate FY2024 values, in billions, in each company's reporting currency | `gw:revenueFY2024`, B2, B3, B5 | Totals and rankings shift. The caveat is attached to the property and the dataset, so consumers are told |
+| AS3 | Revenue is comparable within a currency, but not across sectors | B2, B5 | A "largest" ranking mixes bank and industrial revenue definitions. Stated as a remark, not modelled |
+| AS4 | The CSV's country column is the index provider's assignment, not domicile or headquarters | `gw:country`, B3, B4 | Country totals would mean something else. Checked for Stellantis (domiciled in the Netherlands, assigned to Italy) |
+| AS5 | Each company's "FY2024" is its own fiscal year 2024, whatever its start and end dates | `gw:revenueFY2024`; the FIBO variant's reporting period | Figures for companies with non-calendar years (Infineon, September) cover different months |
+| AS6 | Wikidata IRIs for the eight countries are stable | Country instances | Links break or point elsewhere; low risk |
+| AS7 | The 50 rows are the index membership at one point in time | `gw:isConstituentOf` | Membership changes at rebalancing; the model holds no history (out of scope) |
+| AS8 | FIBO variant only: amounts on `gwf:Revenue` are read as billions | `fibo-fnd-acc-cur:hasAmount` | A FIBO-aware tool reading units would be a factor of a billion off. Mitigated by the class definition and test A6c |
 
 ---
 
@@ -375,7 +432,7 @@ This log records what was decided at each step of the Graphwise ontology-enginee
 
 **Tests:** Track A 26/26 (new: A1h extract completeness, A1i currencies and countries are individuals of the right kind, A2a companies inferred as FIBO legal entities, A2d `cmns-loc:hasCountry` inferred, A4e ICB alignment), Track B 6/6 against `answer-key-fibo.csv`, which differs from `answer-key.csv` only in the Netherlands' LCC name, "Netherlands (the)".
 
-**Produced:** `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl`, `ontology/icb-fibo-alignment.ttl`, `data/estx50-fibo-instances.ttl`, `data/violations-demo-fibo.ttl`, `shapes/shapes-fibo.ttl`, `queries/*-fibo.*`, `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py`, `reports/test-report-fibo.md`, `docs/estx50-fibo-ontology.html`.
+**Produced:** `ontology/estx50-fibo-ontology.ttl`, `ontology/fibo-extract.ttl`, `ontology/icb-fibo-alignment.ttl`, `data/estx50-fibo-instances.ttl`, `data/violations-demo-fibo.ttl`, `shapes/shapes-fibo.ttl`, `queries/*-fibo.*`, `scripts/map_csv_fibo.py`, `scripts/build_fibo_files.py`, `reports/test-report-fibo.md`, `docs/estx50-fibo-ontology.html`, `docs/estx50-fibo-explorer.html` (built with `scripts/build_explorer.py --variant fibo`).
 
 ### Bridge from 2.0.0 (2026-10-29)
 

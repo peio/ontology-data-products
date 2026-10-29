@@ -1,0 +1,6 @@
+# C6 (Step 6): has the reasoner decided that Germany and France are the same individual?
+# Run with --reason, without and with --add data/violations-demo.ttl after the experiment.
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX wd:  <http://www.wikidata.org/entity/>
+
+ASK { wd:Q183 owl:sameAs wd:Q142 }

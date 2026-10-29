@@ -1,0 +1,12 @@
+# C5 (Step 5): from Siemens's subsector up to its industry. Only the subsector is stored;
+# every level above it is reached with skos:broader.
+PREFIX gw:   <https://graphwise.ai/ontology/estx50/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?code ?label WHERE {
+  ?c rdfs:label "Siemens" ; gw:icbSubsector ?s .
+  ?s skos:broader* ?level .
+  ?level skos:notation ?code ; skos:prefLabel ?label .
+}
+ORDER BY DESC(STRLEN(STR(?code)))
